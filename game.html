@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Space Shooter Game</title>
     <link rel="stylesheet" href="style.css">
     <style>
@@ -11,51 +11,48 @@
             padding: 0;
             overflow: hidden;
             background: #0d1117;
+            touch-action: none; /* Prevent scrolling on mobile */
         }
 
         #gameCanvas {
             display: block;
             margin: 0 auto;
             background: linear-gradient(180deg, #0d1117 0%, #1a1f2e 100%);
+            max-width: 100%;
+            max-height: 100vh;
         }
 
         .game-ui {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 10px;
+            left: 10px;
             color: #fff;
             font-family: 'JetBrains Mono', monospace;
             z-index: 100;
+            font-size: 0.9rem;
         }
 
         .score {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: #7ee787;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .level {
-            font-size: 1.3rem;
+            font-size: 1rem;
             color: #ffa657;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .lives {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #ff6b6b;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .timer {
-            font-size: 1.2rem;
-            color: #58a6ff;
-        }
-
-        .laser-info {
             font-size: 1rem;
-            color: #bc8cff;
-            margin-top: 10px;
-            font-style: italic;
+            color: #58a6ff;
         }
 
         .game-over {
@@ -68,6 +65,7 @@
             font-family: 'JetBrains Mono', monospace;
             display: none;
             z-index: 200;
+            padding: 20px;
         }
 
         .game-over.show {
@@ -75,13 +73,13 @@
         }
 
         .game-over h1 {
-            font-size: 3rem;
+            font-size: 2rem;
             color: #ff6b6b;
             margin-bottom: 20px;
         }
 
         .game-over p {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-bottom: 10px;
         }
 
@@ -89,32 +87,32 @@
             background: #58a6ff;
             color: #0d1117;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 12px 24px;
+            font-size: 1rem;
             font-family: 'JetBrains Mono', monospace;
             cursor: pointer;
             border-radius: 5px;
             transition: all 0.3s;
-            margin: 10px;
+            margin: 10px 5px;
         }
 
         .game-over button:hover {
             background: #7ee787;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .back-button {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 10px;
+            right: 10px;
             background: #bc8cff;
             color: #0d1117;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             font-family: 'JetBrains Mono', monospace;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             z-index: 100;
             transition: all 0.3s;
         }
@@ -122,6 +120,81 @@
         .back-button:hover {
             background: #58a6ff;
             transform: scale(1.05);
+        }
+
+        /* Mobile Controls */
+        .mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .control-left, .control-right {
+            width: 80px;
+            height: 80px;
+            background: rgba(88, 166, 255, 0.3);
+            border: 3px solid #58a6ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #58a6ff;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .control-shoot {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 107, 107, 0.3);
+            border: 3px solid #ff6b6b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #ff6b6b;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .control-left:active, .control-right:active, .control-shoot:active {
+            background: rgba(88, 166, 255, 0.6);
+            transform: scale(0.95);
+        }
+
+        .control-shoot:active {
+            background: rgba(255, 107, 107, 0.6);
+        }
+
+        /* Show mobile controls on small screens */
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: flex;
+            }
+
+            .game-ui {
+                font-size: 0.8rem;
+            }
+
+            .score {
+                font-size: 1rem;
+            }
+
+            .level, .lives, .timer {
+                font-size: 0.9rem;
+            }
+
+            .controls-info {
+                display: none;
+            }
         }
 
         .controls-info {
@@ -138,14 +211,13 @@
     </style>
 </head>
 <body>
-    <button class="back-button" onclick="window.location.href='index.html'">← Back to Portfolio</button>
+    <button class="back-button" onclick="window.location.href='index.html'">← Back</button>
 
     <div class="game-ui">
         <div class="score">SCORE: <span id="scoreValue">0</span></div>
         <div class="level">LEVEL: <span id="levelValue">1</span></div>
         <div class="lives">LIVES: <span id="livesValue">3</span></div>
         <div class="timer">TIME: <span id="timerValue">00:00</span></div>
-        <div class="laser-info">LASERS: Press 1-9 or SPACE</div>
     </div>
 
     <div class="game-over" id="gameOver">
@@ -160,8 +232,15 @@
 
     <canvas id="gameCanvas"></canvas>
 
+    <!-- Mobile Controls -->
+    <div class="mobile-controls" id="mobileControls">
+        <button class="control-left" id="btnLeft">◄</button>
+        <button class="control-shoot" id="btnShoot">🚀</button>
+        <button class="control-right" id="btnRight">►</button>
+    </div>
+
     <div class="controls-info">
-        ← → Arrow Keys to Move | SPACE to Shoot | 1-9 Keys for Multiple Lasers | ESC to Pause
+        ← → Arrow Keys to Move | SPACE to Shoot | ESC to Pause
     </div>
 
     <script>
@@ -180,7 +259,7 @@
         let gameTime = 0;
         let timerInterval;
 
-        // Level thresholds - MORE POINTS NEEDED
+        // Level thresholds
         const levelThresholds = [0, 100, 250, 500, 800, 1200, 1700, 2300, 3000, 4000];
 
         // Player
@@ -196,6 +275,46 @@
         let enemies = [];
         let particles = [];
         const keys = {};
+
+        // Mobile touch controls
+        let touchLeft = false;
+        let touchRight = false;
+
+        // Mobile control buttons
+        const btnLeft = document.getElementById('btnLeft');
+        const btnRight = document.getElementById('btnRight');
+        const btnShoot = document.getElementById('btnShoot');
+
+        if (btnLeft) {
+            btnLeft.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                touchLeft = true;
+            });
+            btnLeft.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touchLeft = false;
+            });
+        }
+
+        if (btnRight) {
+            btnRight.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                touchRight = true;
+            });
+            btnRight.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touchRight = false;
+            });
+        }
+
+        if (btnShoot) {
+            btnShoot.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (gameRunning && !paused) {
+                    shoot(1);
+                }
+            });
+        }
 
         // Start timer
         function startTimer() {
@@ -214,7 +333,6 @@
                 `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
-        // Check and update level
         function checkLevel() {
             const oldLevel = level;
             
@@ -238,7 +356,7 @@
             levelUpDiv.style.top = '50%';
             levelUpDiv.style.left = '50%';
             levelUpDiv.style.transform = 'translate(-50%, -50%)';
-            levelUpDiv.style.fontSize = '3rem';
+            levelUpDiv.style.fontSize = '2rem';
             levelUpDiv.style.color = '#ffa657';
             levelUpDiv.style.fontFamily = '"JetBrains Mono", monospace';
             levelUpDiv.style.fontWeight = 'bold';
@@ -258,10 +376,9 @@
             
             if (e.key === ' ' && gameRunning && !paused) {
                 e.preventDefault();
-                shoot(1); // Single laser with spacebar
+                shoot(1);
             }
             
-            // Number keys 1-9 for multiple lasers!
             if (e.key >= '1' && e.key <= '9' && gameRunning && !paused) {
                 e.preventDefault();
                 const laserCount = parseInt(e.key);
@@ -277,9 +394,8 @@
             keys[e.key] = false;
         });
 
-        // Shoot multiple lasers!
         function shoot(count = 1) {
-            const spacing = 15; // Space between lasers
+            const spacing = 15;
             const totalWidth = (count - 1) * spacing;
             const startX = player.x + player.width / 2 - totalWidth / 2;
             
@@ -294,12 +410,9 @@
             }
         }
 
-        // Spawn enemy - STARTS SLOW, GETS FASTER WITH LEVEL
         function spawnEnemy() {
-            // Base speed = 1 (VERY SLOW)
-            // Each level adds 0.4 speed
-            const baseSpeed = 1;  // SLOWER START!
-            const speedIncrease = (level - 1) * 0.4;  // Gradual increase
+            const baseSpeed = 1;
+            const speedIncrease = (level - 1) * 0.4;
             const finalSpeed = baseSpeed + speedIncrease + (Math.random() * 0.5);
             
             enemies.push({
@@ -307,7 +420,7 @@
                 y: -50,
                 width: 35,
                 height: 35,
-                speed: finalSpeed,  // Gets faster with level!
+                speed: finalSpeed,
                 color: '#7ee787'
             });
         }
@@ -514,6 +627,7 @@
             drawStars();
 
             if (gameRunning && !paused) {
+                // Keyboard controls
                 if (keys['ArrowLeft'] && player.x > 0) {
                     player.x -= player.speed;
                 }
@@ -521,13 +635,19 @@
                     player.x += player.speed;
                 }
 
-                // Spawn enemies - frequency increases with level
-                const spawnRate = Math.max(40, 70 - (level * 3));  // Slower spawn at start!
+                // Mobile touch controls
+                if (touchLeft && player.x > 0) {
+                    player.x -= player.speed;
+                }
+                if (touchRight && player.x < canvas.width - player.width) {
+                    player.x += player.speed;
+                }
+
+                const spawnRate = Math.max(40, 70 - (level * 3));
                 enemySpawnTimer++;
                 if (enemySpawnTimer > spawnRate) {
                     spawnEnemy();
                     
-                    // Multiple enemies at higher levels
                     if (level >= 3 && Math.random() > 0.7) {
                         spawnEnemy();
                     }
