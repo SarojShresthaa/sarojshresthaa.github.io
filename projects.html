@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — Your Name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="pixelCanvas"></canvas>
+
+    <nav>
+        <div class="logo">yourname.dev</div>
+        
+  
+        
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html"># home</a></li>
+            <li><a href="projects.html" class="active"># projects</a></li>
+            <li><a href="skills.html"># skills</a></li>
+            <li><a href="about.html"># about</a></li>
+            <li><a href="contact.html"># contact</a></li>
+                  <!-- Theme Toggle Button -->
+        <!-- <button class="theme-toggle" id="themeToggle" title="Change Theme">
+            <span class="theme-icon">🌙</span>
+        </button> -->
+        </ul>
+    </nav>
+
+    <main>
+        <section class="projects-section">
+            <div class="section-header">
+                <h1 class="section-title">Featured Projects</h1>
+                <p class="section-subtitle">A collection of my recent work</p>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">🚀</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Space Shooter Game</h3>
+                        <p>Interactive HTML5 canvas game with level progression and scoring system</p>
+                        <div class="project-tech">
+                            <span>JavaScript</span>
+                            <span>Canvas</span>
+                            <span>CSS3</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="game.html" class="project-link">Play Game →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">🌐</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>E-Commerce Platform</h3>
+                        <p>Full-stack online store with payment integration and admin dashboard</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">📱</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Task Management App</h3>
+                        <p>Collaborative project management tool with real-time updates</p>
+                        <div class="project-tech">
+                            <span>Vue.js</span>
+                            <span>Firebase</span>
+                            <span>Tailwind</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">🎨</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Portfolio Generator</h3>
+                        <p>Create beautiful developer portfolios with customizable templates</p>
+                        <div class="project-tech">
+                            <span>Next.js</span>
+                            <span>TypeScript</span>
+                            <span>Prisma</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">📊</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Analytics Dashboard</h3>
+                        <p>Real-time data visualization dashboard with interactive charts</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>D3.js</span>
+                            <span>Express</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">🤖</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>AI Chat Bot</h3>
+                        <p>Intelligent chatbot with natural language processing capabilities</p>
+                        <div class="project-tech">
+                            <span>Python</span>
+                            <span>TensorFlow</span>
+                            <span>Flask</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Demo →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Your Name. Built with passion and code.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourname" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourname" target="_blank">LinkedIn</a>
+                <a href="https://twitter.com/yourname" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="game-terminal-btn" id="gameTerminalBtn">🎮</button>
+    <div class="game-terminal" id="gameTerminal">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <span class="terminal-title">🎮 Game Terminal</span>
+            <button class="terminal-close-btn" id="terminalCloseBtn">✕</button>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-history" id="terminalHistory">
+                <p class="terminal-line"><span class="prompt">$</span> Welcome to Game Terminal!</p>
+                <p class="terminal-line info">Type 'play game' to launch space shooter! 🚀</p>
+            </div>
+            <div class="terminal-input-wrapper">
+                <span class="prompt">$</span>
+                <input type="text" class="terminal-input" id="terminalInput" placeholder="Type command...">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

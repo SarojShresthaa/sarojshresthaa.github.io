@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills — Your Name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="pixelCanvas"></canvas>
+
+    <nav>
+        <div class="logo">yourname.dev</div>
+        <!-- <button class="theme-toggle" id="themeToggle" title="Change Theme">
+            <span class="theme-icon">🌙</span>
+        </button> -->
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html"># home</a></li>
+            <li><a href="projects.html"># projects</a></li>
+            <li><a href="skills.html" class="active"># skills</a></li>
+            <li><a href="about.html"># about</a></li>
+            <li><a href="contact.html"># contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="skills-section">
+            <div class="section-header">
+                <h1 class="section-title">Skills & Technologies</h1>
+                <p class="section-subtitle">Tools and languages I work with</p>
+            </div>
+
+     <div class="skills-grid">
+    <div class="skill-category">
+        <h3>CMS & Backend</h3>
+        <div class="skill-list">
+            <span class="skill-item">Umbraco CMS (v9–v17)</span>
+            <span class="skill-item">.NET</span>
+            <span class="skill-item">C# (Basics)</span>
+            <span class="skill-item">Razor (.cshtml)</span>
+            <span class="skill-item">MVC Architecture</span>
+            <span class="skill-item">Examine / Lucene Search</span>
+        </div>
+    </div>
+
+    <div class="skill-category">
+        <h3>Frontend Development</h3>
+        <div class="skill-list">
+            <span class="skill-item">HTML5</span>
+            <span class="skill-item">CSS3</span>
+            <span class="skill-item">JavaScript</span>
+            <span class="skill-item">AngularJS (Umbraco Backoffice)</span>
+            <span class="skill-item">Responsive Design</span>
+        </div>
+    </div>
+
+    <div class="skill-category">
+        <h3>Umbraco Features</h3>
+        <div class="skill-list">
+            <span class="skill-item">Block List</span>
+            <span class="skill-item">Custom Dashboards</span>
+            <span class="skill-item">Property Editors</span>
+            <span class="skill-item">Content & Media Models</span>
+            <span class="skill-item">Backoffice Extensions</span>
+        </div>
+    </div>
+
+    <div class="skill-category">
+        <h3>Search & Performance</h3>
+        <div class="skill-list">
+            <span class="skill-item">Examine Indexing</span>
+            <span class="skill-item">Custom Indexers</span>
+            <span class="skill-item">Search Optimization</span>
+            <span class="skill-item">SEO-friendly URLs</span>
+        </div>
+    </div>
+
+    <div class="skill-category">
+        <h3>Tools & Workflow</h3>
+        <div class="skill-list">
+            <span class="skill-item">Git / GitHub</span>
+            <span class="skill-item">Visual Studio</span>
+            <span class="skill-item">VS Code</span>
+            <span class="skill-item">Debugging</span>
+            <span class="skill-item">Team Collaboration</span>
+        </div>
+    </div>
+
+    <div class="skill-category">
+        <h3>Other Skills</h3>
+        <div class="skill-list">
+            <span class="skill-item">Problem Solving</span>
+            <span class="skill-item">Clean Code Practices</span>
+            <span class="skill-item">Learning New Technologies</span>
+            <span class="skill-item">Experimentation</span>
+        </div>
+    </div>
+</div>
+
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Your Name. Built with passion and code.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourname" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourname" target="_blank">LinkedIn</a>
+                <a href="https://twitter.com/yourname" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="game-terminal-btn" id="gameTerminalBtn">🎮</button>
+    <div class="game-terminal" id="gameTerminal">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <span class="terminal-title">🎮 Game Terminal</span>
+            <button class="terminal-close-btn" id="terminalCloseBtn">✕</button>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-history" id="terminalHistory">
+                <p class="terminal-line"><span class="prompt">$</span> Welcome to Game Terminal!</p>
+                <p class="terminal-line info">Type 'play game' to launch space shooter! 🚀</p>
+            </div>
+            <div class="terminal-input-wrapper">
+                <span class="prompt">$</span>
+                <input type="text" class="terminal-input" id="terminalInput" placeholder="Type command...">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

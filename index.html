@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saroj Shrestha – Umbraco & .NET Web Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="pixelCanvas"></canvas>
+
+    <nav>
+        <div class="logo">saroj.dev</div>
+
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active"># home</a></li>
+            <li><a href="projects.html"># projects</a></li>
+            <li><a href="skills.html"># skills</a></li>
+            <li><a href="about.html"># about</a></li>
+            <li><a href="contact.html"># contact</a></li>
+            <button class="theme-toggle" id="themeToggle" title="Change Theme">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="home" class="hero visible">
+            <div class="hero-content">
+                <h1>
+                    <span class="name">Saroj Shrestha</span>
+                    <span class="title">Umbraco & .NET Web Developer</span>
+                </h1>
+                <p class="hero-subtitle">
+                    <span class="terminal-prompt">›</span>
+                    building clean, scalable, and editor-friendly web experiences
+                </p>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Your Name. Built with passion and code.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourname" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourname" target="_blank">LinkedIn</a>
+                <a href="https://twitter.com/yourname" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="game-terminal-btn" id="gameTerminalBtn" title="Chat with AI Assistant">
+        🤖
+    </button>
+
+    <div class="game-terminal" id="gameTerminal">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <span class="terminal-title">🤖 AI Assistant</span>
+            <button class="terminal-close-btn" id="terminalCloseBtn">✕</button>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-history" id="terminalHistory">
+                <p class="terminal-line system">🤖 Hello! I'm your AI assistant.</p>
+                <p class="terminal-line info">Ask me about this portfolio, skills, projects, or anything else! 💬</p>
+            </div>
+            <div class="terminal-input-wrapper">
+                <span class="prompt">$</span>
+                <input type="text" class="terminal-input" id="terminalInput" placeholder="Ask me anything..."
+                    autocomplete="off">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

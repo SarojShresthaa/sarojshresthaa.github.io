@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Your Name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="pixelCanvas"></canvas>
+
+    <nav>
+        <div class="logo">yourname.dev</div>
+        <!-- <button class="theme-toggle" id="themeToggle" title="Change Theme">
+            <span class="theme-icon">🌙</span>
+        </button> -->
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html"># home</a></li>
+            <li><a href="projects.html"># projects</a></li>
+            <li><a href="skills.html"># skills</a></li>
+            <li><a href="about.html" class="active"># about</a></li>
+            <li><a href="contact.html"># contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="about-section">
+            <div class="section-header">
+                <h1 class="section-title">About Me</h1>
+                <p class="section-subtitle">Get to know me better</p>
+            </div>
+
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Hi, I'm Saroj Shrestha 👋</h2>
+
+                    <p>
+                        I'm an Umbraco Web Developer focused on building clean, scalable, and
+                        editor-friendly websites using Umbraco CMS and .NET.
+                        I enjoy turning ideas and designs into reliable, real-world solutions.
+                    </p>
+
+                    <p>
+                        My work mainly involves developing Umbraco-based websites, creating custom
+                        Block List components, dashboards, and implementing search functionality
+                        using Examine. I enjoy experimenting, refining existing implementations,
+                        and improving overall content editing experiences.
+                    </p>
+
+                    <p>
+                        Outside of development work, I like learning new technologies, working on
+                        side projects, cycling in the morning, and exploring how AI can support
+                        and improve developer workflows.
+                    </p>
+
+                    <h3>What I Do</h3>
+                    <ul class="about-list">
+                        <li>🧩 Build and customize Umbraco CMS websites</li>
+                        <li>🖥️ Develop Razor views and .NET controllers</li>
+                        <li>🔍 Implement custom search with Examine</li>
+                        <li>⚙️ Create dashboards and backoffice tools</li>
+                        <li>🤝 Collaborate with designers and development teams</li>
+                    </ul>
+
+                    <h3>My Approach</h3>
+                    <p>
+                        I focus on writing clean, readable code and building solutions that are easy
+                        to maintain and simple for content editors to use. I value clarity,
+                        performance, and continuous improvement in everything I build.
+                    </p>
+                </div>
+
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">2+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">Projects Contributed To</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Umbraco Features Built</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Learning & Growth</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Your Name. Built with passion and code.</p>
+            <div class="social-links">
+                <a href="https://github.com/yourname" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/yourname" target="_blank">LinkedIn</a>
+                <a href="https://twitter.com/yourname" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="game-terminal-btn" id="gameTerminalBtn">🎮</button>
+    <div class="game-terminal" id="gameTerminal">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <span class="terminal-title">🎮 Game Terminal</span>
+            <button class="terminal-close-btn" id="terminalCloseBtn">✕</button>
+        </div>
+        <div class="terminal-body">
+            <div class="terminal-history" id="terminalHistory">
+                <p class="terminal-line"><span class="prompt">$</span> Welcome to Game Terminal!</p>
+                <p class="terminal-line info">Type 'play game' to launch space shooter! 🚀</p>
+            </div>
+            <div class="terminal-input-wrapper">
+                <span class="prompt">$</span>
+                <input type="text" class="terminal-input" id="terminalInput" placeholder="Type command...">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
