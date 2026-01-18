@@ -46,82 +46,90 @@
                 <p class="hero-subtitle">
                     <span class="terminal-prompt">›</span>
                     building clean, scalable, and editor-friendly web experiences
+                    <span class="typing-dots" id="typingDots">......</span>
+                    <input 
+                        type="text" 
+                        class="command-input hidden" 
+                        id="commandInput" 
+                        placeholder=""
+                        autocomplete="off"
+                    >
                 </p>
-
             </div>
         </section>
+        
         <section class="about-section" style="padding-bottom: 10rem;">
-    <div class="section-header">
-        <h2 class="section-title">About Me</h2>
-        <p class="section-subtitle">
-            A quick introduction about who I am and what I do
-        </p>
-    </div>
+            <div class="section-header">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">
+                    A quick introduction about who I am and what I do
+                </p>
+            </div>
 
-    <div class="about-content">
-        <p>
-            I’m a <strong> Umbraco Web Developer</strong> with experience in building
-            dynamic and editor-friendly websites using Umbraco CMS, Razor views,
-            and .NET.
-        </p>
+            <div class="about-content">
+                <p>
+                    I'm a <strong> Umbraco Web Developer</strong> with experience in building
+                    dynamic and editor-friendly websites using Umbraco CMS, Razor views,
+                    and .NET.
+                </p>
 
-        <p>
-            I enjoy working on clean UI, reusable components, and performance-focused
-            solutions. I’m continuously learning and improving my skills while
-            contributing to real-world projects.
-        </p>
-    </div>
-</section>
+                <p>
+                    I enjoy working on clean UI, reusable components, and performance-focused
+                    solutions. I'm continuously learning and improving my skills while
+                    contributing to real-world projects.
+                </p>
+            </div>
+        </section>
 
         <section class="projects-section">
-    <div class="section-header">
-        <h2 class="section-title">What I Work With</h2>
-        <p class="section-subtitle">
-            Core technologies and areas I focus on
-        </p>
-    </div>
-
-    <div class="projects-grid">
-        <div class="project-card">
-            <div class="project-image">
-                <div class="project-placeholder">🧩</div>
-            </div>
-            <div class="project-content">
-                <h3>Umbraco CMS</h3>
-                <p>
-                    Building scalable, editor-friendly websites using Umbraco CMS
-                    with custom document types and Block Lists.
+            <div class="section-header">
+                <h2 class="section-title">What I Work With</h2>
+                <p class="section-subtitle">
+                    Core technologies and areas I focus on
                 </p>
             </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-image">
-                <div class="project-placeholder">🖥️</div>
-            </div>
-            <div class="project-content">
-                <h3>.NET & Razor</h3>
-                <p>
-                    Developing Razor views, controllers, and clean server-side
-                    logic with .NET.
-                </p>
-            </div>
-        </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">🧩</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Umbraco CMS</h3>
+                        <p>
+                            Building scalable, editor-friendly websites using Umbraco CMS
+                            with custom document types and Block Lists.
+                        </p>
+                    </div>
+                </div>
 
-        <div class="project-card">
-            <div class="project-image">
-                <div class="project-placeholder">🔍</div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">🖥️</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>.NET & Razor</h3>
+                        <p>
+                            Developing Razor views, controllers, and clean server-side
+                            logic with .NET.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="project-placeholder">🔍</div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Search & Performance</h3>
+                        <p>
+                            Implementing custom search using Examine and optimizing
+                            content discovery.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="project-content">
-                <h3>Search & Performance</h3>
-                <p>
-                    Implementing custom search using Examine and optimizing
-                    content discovery.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
     </main>
 
@@ -160,6 +168,12 @@
                     autocomplete="off">
             </div>
         </div>
+    </div>
+
+    <!-- Launch Message for Game -->
+    <div class="launch-message" id="launchMessage">
+        🚀 Launching Space Shooter...<br>
+        <span style="font-size: 1rem; opacity: 0.8;">3... 2... 1... BLAST OFF!</span>
     </div>
 
     <script src="script.js"></script>

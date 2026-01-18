@@ -71,6 +71,8 @@ if (hamburger && navLinks) {
     });
 }
 
+// Find the THEME SWITCHER section in your script.js and replace it with this:
+
 // ============================================
 // THEME SWITCHER WITH DEVICE DETECTION
 // ============================================
@@ -106,13 +108,13 @@ function loadTheme() {
 function applyTheme(theme) {
     if (theme === 'system') {
         html.removeAttribute('data-theme');
-        themeIcon.textContent = getDeviceType(); // Dynamic device icon
+        themeIcon.textContent = '💡'; // Lightbulb for system/auto mode
     } else if (theme === 'light') {
         html.setAttribute('data-theme', 'light');
-        themeIcon.textContent = '☀️';
+        themeIcon.textContent = '☀️'; // Sun for light mode
     } else {
         html.setAttribute('data-theme', 'dark');
-        themeIcon.textContent = '🌙';
+        themeIcon.textContent = '🌙'; // Moon for dark mode
     }
     localStorage.setItem('theme', theme);
 }
@@ -136,9 +138,11 @@ loadTheme();
 window.addEventListener('resize', function() {
     const currentTheme = localStorage.getItem('theme') || 'dark';
     if (currentTheme === 'system') {
-        themeIcon.textContent = getDeviceType();
+        themeIcon.textContent = '💡'; // Keep lightbulb for system mode
     }
 });
+
+
 
 // ============================================
 // AI CHATBOT - SMART WEBSITE ASSISTANT
@@ -538,3 +542,272 @@ window.addEventListener('scroll', function() {
 console.log('%c🤖 AI Assistant Ready!', 'font-size: 20px; color: #7ee787; font-weight: bold;');
 console.log('%cClick the chat icon to start a conversation!', 'font-size: 14px; color: #58a6ff;');
 console.log('%cType "play game" to launch the space shooter! 🚀', 'font-size: 12px; color: #bc8cff;');
+
+
+
+
+
+
+// Replace the INLINE COMMAND INPUT section in your script.js with this updated code:
+
+// ============================================
+// INLINE COMMAND INPUT FOR GAME LAUNCHER WITH MENU
+// ============================================
+const typingDots = document.getElementById('typingDots');
+const commandInput = document.getElementById('commandInput');
+const launchMessage = document.getElementById('launchMessage');
+
+if (typingDots && commandInput && launchMessage) {
+    // Define games
+    const games = [
+        {
+            name: 'Space Shooter',
+            file: 'game.html',
+            icon: '🚀',
+            description: 'Classic space shooter game'
+        },
+        {
+            name: 'Tetris',
+            file: 'tetris.html',
+            icon: '🎮',
+            description: 'Classic block puzzle game'
+        }
+    ];
+
+    // Commands that show game menu
+    const menuCommands = ['game', 'play', 'start', 'play game', 'start game', 'launch'];
+    
+    // Direct game commands
+    const directCommands = {
+        'shooter': 'game.html',
+        'space': 'game.html',
+        'space shooter': 'game.html',
+        'tetris': 'tetris.html',
+        'blocks': 'tetris.html',
+        'play tetris': 'tetris.html',
+        'start tetris': 'tetris.html',
+        'play shooter': 'game.html',
+        'start shooter': 'game.html'
+    };
+
+    // Create game menu
+    function showGameMenu() {
+        // Create menu overlay
+        const menuOverlay = document.createElement('div');
+        menuOverlay.id = 'gameMenuOverlay';
+        menuOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        `;
+
+        const menuContainer = document.createElement('div');
+        menuContainer.style.cssText = `
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        `;
+
+        const menuTitle = document.createElement('h2');
+        menuTitle.textContent = 'Choose a Game';
+        menuTitle.style.cssText = `
+            color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        `;
+
+        const gameGrid = document.createElement('div');
+        gameGrid.style.cssText = `
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        `;
+
+        // Create game cards
+        games.forEach(game => {
+            const gameCard = document.createElement('div');
+            gameCard.style.cssText = `
+                background: var(--bg-tertiary);
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                padding: 20px;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            `;
+
+            gameCard.innerHTML = `
+                <div style="font-size: 40px;">${game.icon}</div>
+                <div style="flex: 1;">
+                    <h3 style="color: var(--accent-green); margin-bottom: 5px; font-family: 'JetBrains Mono', monospace;">${game.name}</h3>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">${game.description}</p>
+                </div>
+            `;
+
+            gameCard.addEventListener('mouseenter', () => {
+                gameCard.style.borderColor = 'var(--accent-blue)';
+                gameCard.style.transform = 'translateY(-5px)';
+                gameCard.style.boxShadow = '0 5px 20px rgba(88, 166, 255, 0.3)';
+            });
+
+            gameCard.addEventListener('mouseleave', () => {
+                gameCard.style.borderColor = 'var(--border-color)';
+                gameCard.style.transform = 'translateY(0)';
+                gameCard.style.boxShadow = 'none';
+            });
+
+            gameCard.addEventListener('click', () => {
+                launchGame(game.file, game.name);
+                document.body.removeChild(menuOverlay);
+            });
+
+            gameGrid.appendChild(gameCard);
+        });
+
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'Cancel';
+        closeButton.style.cssText = `
+            width: 100%;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        `;
+
+        closeButton.addEventListener('mouseenter', () => {
+            closeButton.style.background = 'var(--accent-red)';
+            closeButton.style.borderColor = 'var(--accent-red)';
+            closeButton.style.color = 'var(--bg-primary)';
+        });
+
+        closeButton.addEventListener('mouseleave', () => {
+            closeButton.style.background = 'var(--bg-tertiary)';
+            closeButton.style.borderColor = 'var(--border-color)';
+            closeButton.style.color = 'var(--text-primary)';
+        });
+
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(menuOverlay);
+            commandInput.value = '';
+            commandInput.classList.add('hidden');
+            typingDots.classList.remove('hidden');
+        });
+
+        menuContainer.appendChild(menuTitle);
+        menuContainer.appendChild(gameGrid);
+        menuContainer.appendChild(closeButton);
+        menuOverlay.appendChild(menuContainer);
+        document.body.appendChild(menuOverlay);
+
+        // Close on ESC key
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('gameMenuOverlay')) {
+                    document.body.removeChild(menuOverlay);
+                    commandInput.value = '';
+                    commandInput.classList.add('hidden');
+                    typingDots.classList.remove('hidden');
+                }
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+
+    // Launch game function
+    function launchGame(gameFile, gameName) {
+        launchMessage.innerHTML = `🚀 Launching ${gameName}...<br><span style="font-size: 1rem; opacity: 0.8;">3... 2... 1... BLAST OFF!</span>`;
+        launchMessage.style.display = 'block';
+        
+        setTimeout(() => {
+            window.location.href = gameFile;
+        }, 1500);
+    }
+
+    // Click on dots to show input
+    typingDots.addEventListener('click', () => {
+        typingDots.classList.add('hidden');
+        commandInput.classList.remove('hidden');
+        commandInput.focus();
+    });
+
+    // Handle typing - auto-resize input based on content
+    commandInput.addEventListener('input', (e) => {
+        const value = e.target.value;
+        commandInput.style.width = Math.max(100, value.length * 15) + 'px';
+    });
+
+    // Handle enter key
+    commandInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const command = commandInput.value.toLowerCase().trim();
+            
+            // Check if command shows menu
+            if (menuCommands.includes(command)) {
+                commandInput.value = '';
+                commandInput.classList.add('hidden');
+                typingDots.classList.remove('hidden');
+                showGameMenu();
+            }
+            // Check if command is a direct game command
+            else if (directCommands[command]) {
+                const gameFile = directCommands[command];
+                const gameName = gameFile === 'game.html' ? 'Space Shooter' : 'Tetris';
+                commandInput.value = '';
+                commandInput.classList.add('hidden');
+                typingDots.classList.remove('hidden');
+                launchGame(gameFile, gameName);
+            }
+            // Invalid command
+            else if (command) {
+                commandInput.value = '';
+                commandInput.classList.add('hidden');
+                typingDots.classList.remove('hidden');
+            }
+        } else if (e.key === 'Escape') {
+            // Cancel typing
+            commandInput.value = '';
+            commandInput.classList.add('hidden');
+            typingDots.classList.remove('hidden');
+        }
+    });
+
+    // Click outside to cancel
+    commandInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            if (commandInput.value === '') {
+                commandInput.classList.add('hidden');
+                typingDots.classList.remove('hidden');
+            }
+        }, 200);
+    });
+
+    console.log('%c🎮 Available Commands:', 'font-size: 16px; color: #7ee787; font-weight: bold;');
+    console.log('%c  Show Game Menu: game, play, start, launch', 'font-size: 12px; color: #58a6ff;');
+    console.log('%c  Direct Launch - Space Shooter: shooter, space', 'font-size: 12px; color: #ffa657;');
+    console.log('%c  Direct Launch - Tetris: tetris, blocks', 'font-size: 12px; color: #bc8cff;');
+    console.log('%cClick the dots (...) to start typing! 🚀', 'font-size: 12px; color: #7ee787;');
+}

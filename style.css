@@ -1166,3 +1166,89 @@ footer {
         font-size: 0.95rem;
     }
 }
+
+
+
+/* Inline Command Input Styles */
+.typing-dots {
+    display: inline-block;
+    color: var(--accent-green);
+    cursor: pointer;
+    margin-left: 0.5rem;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.typing-dots:hover {
+    color: var(--accent-blue);
+}
+
+.command-input {
+    display: inline;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--accent-green);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    width: auto;
+    min-width: 100px;
+    max-width: 300px;
+    font-weight: 500;
+    caret-color: var(--accent-green);
+}
+
+.command-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Launch Message */
+.launch-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-green);
+    border-radius: 12px;
+    padding: 2rem 3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    color: var(--accent-green);
+    z-index: 10000;
+    display: none;
+    box-shadow: 0 0 50px rgba(126, 231, 135, 0.3);
+    animation: fadeIn 0.3s ease-out;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Mobile Responsive for Command Input */
+@media (max-width: 768px) {
+    .command-input {
+        display: block;
+        margin-top: 0.5rem;
+        margin-left: 2rem;
+    }
+    
+    .typing-dots {
+        display: block;
+        margin-top: 0.5rem;
+        margin-left: 2rem;
+    }
+}
