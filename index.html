@@ -7,9 +7,7 @@
     <title>Saroj Shrestha – Umbraco & .NET Web Developer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -18,7 +16,6 @@
 
     <nav>
         <div class="logo">saroj.dev</div>
-
         <div class="hamburger">
             <span></span>
             <span></span>
@@ -30,9 +27,6 @@
             <li><a href="skills.html"># skills</a></li>
             <li><a href="about.html"># about</a></li>
             <li><a href="contact.html"># contact</a></li>
-            <button class="theme-toggle" id="themeToggle" title="Change Theme">
-                <span class="theme-icon">🌙</span>
-            </button>
         </ul>
     </nav>
 
@@ -47,95 +41,72 @@
                     <span class="terminal-prompt">›</span>
                     building clean, scalable, and editor-friendly web experiences
                     <span class="typing-dots" id="typingDots">......</span>
-                    <input 
-                        type="text" 
-                        class="command-input hidden" 
-                        id="commandInput" 
+                    <input
+                        type="text"
+                        class="command-input hidden"
+                        id="commandInput"
                         placeholder=""
                         autocomplete="off"
                     >
                 </p>
             </div>
         </section>
-        
+
         <section class="about-section" style="padding-bottom: 10rem;">
             <div class="section-header">
                 <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">
-                    A quick introduction about who I am and what I do
-                </p>
+                <p class="section-subtitle">A quick introduction about who I am and what I do</p>
             </div>
-
             <div class="about-content">
-                <p>
-                    I'm a <strong> Umbraco Web Developer</strong> with experience in building
-                    dynamic and editor-friendly websites using Umbraco CMS, Razor views,
-                    and .NET.
-                </p>
-
-                <p>
-                    I enjoy working on clean UI, reusable components, and performance-focused
-                    solutions. I'm continuously learning and improving my skills while
-                    contributing to real-world projects.
-                </p>
+                <p>I'm a <strong>Umbraco Web Developer</strong> with experience in building dynamic and editor-friendly websites using Umbraco CMS, Razor views, and .NET.</p>
+                <p>I enjoy working on clean UI, reusable components, and performance-focused solutions. I'm continuously learning and improving my skills while contributing to real-world projects.</p>
             </div>
         </section>
 
         <section class="projects-section">
             <div class="section-header">
                 <h2 class="section-title">What I Work With</h2>
-                <p class="section-subtitle">
-                    Core technologies and areas I focus on
-                </p>
+                <p class="section-subtitle">Core technologies and areas I focus on</p>
             </div>
-
             <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-image">
-                        <div class="project-placeholder">🧩</div>
+                        <div class="project-placeholder">
+                            <img src="/img/Umbcms.png" alt="">
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3>Umbraco CMS</h3>
-                        <p>
-                            Building scalable, editor-friendly websites using Umbraco CMS
-                            with custom document types and Block Lists.
-                        </p>
+                        <p>Building scalable, editor-friendly websites using Umbraco CMS with custom document types and Block Lists.</p>
                     </div>
                 </div>
-
                 <div class="project-card">
                     <div class="project-image">
-                        <div class="project-placeholder">🖥️</div>
+                        <div class="project-placeholder">
+                            <img src="/img/1664036789225.jpg" alt="">
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3>.NET & Razor</h3>
-                        <p>
-                            Developing Razor views, controllers, and clean server-side
-                            logic with .NET.
-                        </p>
+                        <p>Developing Razor views, controllers, and clean server-side logic with .NET.</p>
                     </div>
                 </div>
-
                 <div class="project-card">
                     <div class="project-image">
-                        <div class="project-placeholder">🔍</div>
+                        <div class="project-placeholder"></div>
                     </div>
                     <div class="project-content">
                         <h3>Search & Performance</h3>
-                        <p>
-                            Implementing custom search using Examine and optimizing
-                            content discovery.
-                        </p>
+                        <p>Implementing custom search using Examine and optimizing content discovery.</p>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <footer>
         <div class="footer-content">
-            <p>&copy; 2024 Your Name. Built with passion and code.</p>
+            <p>&copy; 2026 Saroj Shrestha. Built with passion and code.</p>
             <div class="social-links">
                 <a href="https://github.com/SarojShresthaa" target="_blank">GitHub</a>
                 <a href="https://np.linkedin.com/in/saroj-shrestha-220681275" target="_blank">LinkedIn</a>
@@ -143,34 +114,6 @@
         </div>
     </footer>
 
-    <!-- <button class="game-terminal-btn" id="gameTerminalBtn" title="Chat with AI Assistant">
-        🤖
-    </button> -->
-
-    <div class="game-terminal" id="gameTerminal">
-        <div class="terminal-header">
-            <div class="terminal-dots">
-                <span class="dot red"></span>
-                <span class="dot yellow"></span>
-                <span class="dot green"></span>
-            </div>
-            <span class="terminal-title">🤖 AI Assistant</span>
-            <button class="terminal-close-btn" id="terminalCloseBtn">✕</button>
-        </div>
-        <div class="terminal-body">
-            <div class="terminal-history" id="terminalHistory">
-                <p class="terminal-line system">🤖 Hello! I'm your AI assistant.</p>
-                <p class="terminal-line info">Ask me about this portfolio, skills, projects, or anything else! 💬</p>
-            </div>
-            <div class="terminal-input-wrapper">
-                <span class="prompt">$</span>
-                <input type="text" class="terminal-input" id="terminalInput" placeholder="Ask me anything..."
-                    autocomplete="off">
-            </div>
-        </div>
-    </div>
-
-    <!-- Launch Message for Game -->
     <div class="launch-message" id="launchMessage">
         🚀 Launching Space Shooter...<br>
         <span style="font-size: 1rem; opacity: 0.8;">3... 2... 1... BLAST OFF!</span>
@@ -178,5 +121,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>

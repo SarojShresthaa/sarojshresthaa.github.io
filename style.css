@@ -1,7 +1,7 @@
 :root {
-    --bg-primary: #0d1117;
-    --bg-secondary: #161b22;
-    --bg-tertiary: #21262d;
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-tertiary: #111111;
     --text-primary: #c9d1d9;
     --text-secondary: #8b949e;
     --accent-purple: #bc8cff;
@@ -10,7 +10,7 @@
     --accent-orange: #ffa657;
     --accent-pink: #f778ba;
     --accent-red: #ff6b6b;
-    --border-color: #30363d;
+    --border-color: #222222;
 }
 
 /* Light Theme */
@@ -80,7 +80,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
-    background: rgba(13, 17, 23, 0.9);
+    background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
 }
@@ -99,15 +99,15 @@ nav {
     background: var(--bg-secondary);
     border: 2px solid var(--border-color);
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s;
     z-index: 1001;
-    font-size: 1.3rem;
+    color: var(--text-primary);
 }
 
 .theme-toggle:hover {
@@ -657,7 +657,6 @@ footer {
 .project-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    border-color: var(--accent-blue);
 }
 
 .project-image {
@@ -670,6 +669,20 @@ footer {
 
 .project-placeholder {
     font-size: 4rem;
+    margin-top: 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0;
 }
 
 .project-content {
@@ -1251,4 +1264,132 @@ footer {
         margin-top: 0.5rem;
         margin-left: 2rem;
     }
+}
+/* ============================================
+   Game Menu Modal
+   ============================================ */
+.game-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: gameModalFadeIn 0.2s ease-out;
+}
+
+@keyframes gameModalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.game-modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 460px;
+    width: 90%;
+    animation: gameModalSlideIn 0.25s ease-out;
+}
+
+@keyframes gameModalSlideIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.game-modal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 6px 0;
+}
+
+.game-modal-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 0 0 24px 0;
+}
+
+.game-grid {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.game-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+}
+
+.game-card:hover {
+    border-color: var(--accent-blue);
+    background: var(--bg-primary);
+    transform: translateY(-2px);
+}
+
+.game-card-icon {
+    font-size: 32px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.game-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent-green);
+    margin: 0 0 3px 0;
+}
+
+.game-card-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.game-card-arrow {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 18px;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.game-card:hover .game-card-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+.game-modal-cancel {
+    width: 100%;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.game-modal-cancel:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
 }

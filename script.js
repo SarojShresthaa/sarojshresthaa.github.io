@@ -1,55 +1,3 @@
-// ============================================
-// BACKGROUND ANIMATION
-// ============================================
-const canvas = document.getElementById('pixelCanvas');
-const html = document.documentElement;
-
-if (canvas) {
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const stars = [];
-    for (let i = 0; i < 100; i++) {
-        stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2,
-            speed: Math.random() * 2 + 1
-        });
-    }
-
-    function drawStars() {
-        const isDark = !html.hasAttribute('data-theme') || html.getAttribute('data-theme') === 'dark';
-        ctx.fillStyle = isDark ? '#fff' : '#000';
-        
-        stars.forEach(star => {
-            star.y += star.speed;
-            if (star.y > canvas.height) {
-                star.y = 0;
-                star.x = Math.random() * canvas.width;
-            }
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
-    }
-
-    function animate() {
-        const isDark = !html.hasAttribute('data-theme') || html.getAttribute('data-theme') === 'dark';
-        ctx.fillStyle = isDark ? '#0d1117' : '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        drawStars();
-        requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-}
 
 // ============================================
 // HAMBURGER MENU
@@ -71,76 +19,8 @@ if (hamburger && navLinks) {
     });
 }
 
-// Find the THEME SWITCHER section in your script.js and replace it with this:
 
-// ============================================
-// THEME SWITCHER WITH DEVICE DETECTION
-// ============================================
-const themeToggle = document.getElementById('themeToggle');
-const themeIcon = document.querySelector('.theme-icon');
-const themes = ['dark', 'light', 'system'];
-let currentThemeIndex = 0;
 
-// Detect device type
-function getDeviceType() {
-    const width = window.innerWidth;
-    const userAgent = navigator.userAgent.toLowerCase();
-    
-    // Check if mobile or tablet
-    const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
-    const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobile))/i.test(userAgent);
-    
-    if (isMobile && !isTablet) {
-        return '📱'; // Mobile phone
-    } else if (isTablet) {
-        return '📱'; // Tablet (using same icon)
-    } else {
-        return '💻'; // Desktop/Laptop
-    }
-}
-
-function loadTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    currentThemeIndex = themes.indexOf(savedTheme);
-    applyTheme(savedTheme);
-}
-
-function applyTheme(theme) {
-    if (theme === 'system') {
-        html.removeAttribute('data-theme');
-        themeIcon.textContent = '💡'; // Lightbulb for system/auto mode
-    } else if (theme === 'light') {
-        html.setAttribute('data-theme', 'light');
-        themeIcon.textContent = '☀️'; // Sun for light mode
-    } else {
-        html.setAttribute('data-theme', 'dark');
-        themeIcon.textContent = '🌙'; // Moon for dark mode
-    }
-    localStorage.setItem('theme', theme);
-}
-
-if (themeToggle) {
-    themeToggle.addEventListener('click', function() {
-        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-        const newTheme = themes[currentThemeIndex];
-        applyTheme(newTheme);
-        
-        themeToggle.style.transform = 'rotate(360deg)';
-        setTimeout(() => {
-            themeToggle.style.transform = '';
-        }, 300);
-    });
-}
-
-loadTheme();
-
-// Update icon on window resize (in case device orientation changes)
-window.addEventListener('resize', function() {
-    const currentTheme = localStorage.getItem('theme') || 'dark';
-    if (currentTheme === 'system') {
-        themeIcon.textContent = '💡'; // Keep lightbulb for system mode
-    }
-});
 
 
 
@@ -592,149 +472,53 @@ if (typingDots && commandInput && launchMessage) {
 
     // Create game menu
     function showGameMenu() {
-        // Create menu overlay
-        const menuOverlay = document.createElement('div');
-        menuOverlay.id = 'gameMenuOverlay';
-        menuOverlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 17, 23, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease-out;
-        `;
-
-        const menuContainer = document.createElement('div');
-        menuContainer.style.cssText = `
-            background: var(--bg-secondary);
-            border: 2px solid var(--accent-blue);
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        `;
-
-        const menuTitle = document.createElement('h2');
-        menuTitle.textContent = 'Choose a Game';
-        menuTitle.style.cssText = `
-            color: var(--accent-blue);
-            font-family: 'JetBrains Mono', monospace;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-        `;
-
-        const gameGrid = document.createElement('div');
-        gameGrid.style.cssText = `
-            display: grid;
-            gap: 15px;
-            margin-bottom: 20px;
-        `;
-
-        // Create game cards
-        games.forEach(game => {
-            const gameCard = document.createElement('div');
-            gameCard.style.cssText = `
-                background: var(--bg-tertiary);
-                border: 2px solid var(--border-color);
-                border-radius: 8px;
-                padding: 20px;
-                cursor: pointer;
-                transition: all 0.3s;
-                display: flex;
-                align-items: center;
-                gap: 15px;
-            `;
-
-            gameCard.innerHTML = `
-                <div style="font-size: 40px;">${game.icon}</div>
-                <div style="flex: 1;">
-                    <h3 style="color: var(--accent-green); margin-bottom: 5px; font-family: 'JetBrains Mono', monospace;">${game.name}</h3>
-                    <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">${game.description}</p>
-                </div>
-            `;
-
-            gameCard.addEventListener('mouseenter', () => {
-                gameCard.style.borderColor = 'var(--accent-blue)';
-                gameCard.style.transform = 'translateY(-5px)';
-                gameCard.style.boxShadow = '0 5px 20px rgba(88, 166, 255, 0.3)';
-            });
-
-            gameCard.addEventListener('mouseleave', () => {
-                gameCard.style.borderColor = 'var(--border-color)';
-                gameCard.style.transform = 'translateY(0)';
-                gameCard.style.boxShadow = 'none';
-            });
-
-            gameCard.addEventListener('click', () => {
-                launchGame(game.file, game.name);
-                document.body.removeChild(menuOverlay);
-            });
-
-            gameGrid.appendChild(gameCard);
-        });
-
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'Cancel';
-        closeButton.style.cssText = `
-            width: 100%;
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-color);
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-        `;
-
-        closeButton.addEventListener('mouseenter', () => {
-            closeButton.style.background = 'var(--accent-red)';
-            closeButton.style.borderColor = 'var(--accent-red)';
-            closeButton.style.color = 'var(--bg-primary)';
-        });
-
-        closeButton.addEventListener('mouseleave', () => {
-            closeButton.style.background = 'var(--bg-tertiary)';
-            closeButton.style.borderColor = 'var(--border-color)';
-            closeButton.style.color = 'var(--text-primary)';
-        });
-
-        closeButton.addEventListener('click', () => {
-            document.body.removeChild(menuOverlay);
+        function closeMenu() {
+            const existing = document.getElementById('gameMenuOverlay');
+            if (existing) document.body.removeChild(existing);
             commandInput.value = '';
             commandInput.classList.add('hidden');
             typingDots.classList.remove('hidden');
+            document.removeEventListener('keydown', escHandler);
+        }
+
+        const escHandler = (e) => { if (e.key === 'Escape') closeMenu(); };
+        document.addEventListener('keydown', escHandler);
+
+        const menuOverlay = document.createElement('div');
+        menuOverlay.id = 'gameMenuOverlay';
+        menuOverlay.className = 'game-modal-overlay';
+        menuOverlay.addEventListener('click', (e) => { if (e.target === menuOverlay) closeMenu(); });
+
+        const gameGrid = games.map(game => `
+            <div class="game-card" data-file="${game.file}" data-name="${game.name}">
+                <span class="game-card-icon">${game.icon}</span>
+                <div style="flex:1">
+                    <p class="game-card-name">${game.name}</p>
+                    <p class="game-card-desc">${game.description}</p>
+                </div>
+                <span class="game-card-arrow">›</span>
+            </div>
+        `).join('');
+
+        menuOverlay.innerHTML = `
+            <div class="game-modal">
+                <h2 class="game-modal-title">Choose a Game</h2>
+                <p class="game-modal-subtitle">Select a game to launch</p>
+                <div class="game-grid">${gameGrid}</div>
+                <button class="game-modal-cancel">Cancel</button>
+            </div>
+        `;
+
+        menuOverlay.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', () => {
+                launchGame(card.dataset.file, card.dataset.name);
+                closeMenu();
+            });
         });
 
-        menuContainer.appendChild(menuTitle);
-        menuContainer.appendChild(gameGrid);
-        menuContainer.appendChild(closeButton);
-        menuOverlay.appendChild(menuContainer);
-        document.body.appendChild(menuOverlay);
+        menuOverlay.querySelector('.game-modal-cancel').addEventListener('click', closeMenu);
 
-        // Close on ESC key
-        const escHandler = (e) => {
-            if (e.key === 'Escape') {
-                if (document.getElementById('gameMenuOverlay')) {
-                    document.body.removeChild(menuOverlay);
-                    commandInput.value = '';
-                    commandInput.classList.add('hidden');
-                    typingDots.classList.remove('hidden');
-                }
-                document.removeEventListener('keydown', escHandler);
-            }
-        };
-        document.addEventListener('keydown', escHandler);
+        document.body.appendChild(menuOverlay);
     }
 
     // Launch game function
