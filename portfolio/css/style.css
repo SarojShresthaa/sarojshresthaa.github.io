@@ -626,11 +626,61 @@ select {
   position: relative;
 }
 
-.about-hero p {
+.about-hero p,
+.about-body {
   color: var(--gray);
   font-size: 1rem;
   line-height: 1.75rem;
   flex: 1;
+}
+
+.about-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.about-body h3 {
+  color: var(--white);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.about-body p {
+  color: var(--gray);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 0 0 5rem;
+}
+
+.stat-card {
+  border: 1px solid var(--gray);
+  padding: 1.25rem 1rem;
+  background: var(--bg);
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-label {
+  color: var(--gray);
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
 }
 
 .about-hero .about-art {
@@ -1226,8 +1276,13 @@ select {
     width: min(360px, 100%);
   }
 
-  .skills-grid-5 {
+  .skills-grid-5,
+  .skills-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .quote {
@@ -1359,12 +1414,18 @@ select {
 
   .projects-grid,
   .apps-grid,
-  .skills-grid-5 {
+  .skills-grid-5,
+  .skills-grid {
     grid-template-columns: 1fr;
   }
 
-  .skills-grid-5 {
+  .skills-grid-5,
+  .skills-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
   .hero {
