@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saroj Shrestha – Umbraco & .NET Web Developer</title>
+  <meta name="description" content="Saroj Shrestha is an Umbraco and .NET web developer building clean, scalable, and editor-friendly web experiences." />
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");</script>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-mark" aria-hidden="true"></span>
+        saroj.dev
+      </a>
+      <div class="menu-cont">
+        <button class="menu-btn" type="button" aria-label="Open menu">
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="menubar">
+          <li><a class="nav-link active" href="index.html">home</a></li>
+          <li><a class="nav-link" href="projects.html">projects</a></li>
+          <li><a class="nav-link" href="about-me.html">about</a></li>
+          <li><a class="nav-link" href="contact.html">contact</a></li>
+          <li>
+            <button class="theme-btn" type="button" aria-label="Toggle light and dark mode">
+              <svg class="icon-lamp-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18h6M10 21h4"/>
+                <path d="M8 14.2C6.5 12.7 5.5 10.8 5.5 8.7a6.5 6.5 0 1 1 13 0c0 2.1-1 4-2.5 5.5L15.4 16H8.6L8 14.2Z"/>
+              </svg>
+              <svg class="icon-lamp-on" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 18h6v1.1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V18Z"/>
+                <path d="M8.2 14.1C6.6 12.6 5.6 10.7 5.6 8.6a6.4 6.4 0 1 1 12.8 0c0 2.1-1 4-2.6 5.5l-.6 1.4H8.8l-.6-1.4Z"/>
+                <path d="M12 1.6v1.6M4.4 4.8l1.1 1.1M19.6 4.8l-1.1 1.1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </li>
+          <div class="social-rail animate-bounce-slower">
+            <span class="social-line"></span>
+            <a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a>
+            <a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="container page">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Saroj Shrestha is an <span class="accent">Umbraco</span> and<br><span class="accent">.NET web developer</span></h1>
+        <p class="hero-sub">building clean, scalable, and editor-friendly web experiences......</p>
+        <a class="primary-btn" href="contact.html">Contact me</a>
+      </div>
+      <div class="hero-art">
+        <div class="hero-frame">
+          <img class="logo-outline animate-show-ltr" src="img/logo-outline.png" alt="" />
+          <img class="hero-photo" src="img/saroj.png" alt="Saroj Shrestha" />
+          <img class="dots animate-show-rtl" src="img/dots.png" alt="" />
+        </div>
+        <p class="status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Currently working on <strong>Umbraco CMS</strong></span>
+        </p>
+      </div>
+    </section>
+
+    <div class="quote-wrap">
+      <p class="quote">Clean UI, reusable components, and performance-focused solutions</p>
+      <span class="quote-author">- Saroj</span>
+      <span class="deco-square sm quote-sq animate-bounce-slow"></span>
+    </div>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-heading after">projects</h2>
+        <a class="view-all" href="projects.html">See all →</a>
+      </div>
+      <div class="projects-grid">
+        <article class="project-card">
+          <div class="thumb"><img src="img/project-01.png" alt="Umbraco CMS" /></div>
+          <ul class="tools">
+            <li>Umbraco</li>
+            <li>Block Lists</li>
+            <li>Document Types</li>
+          </ul>
+          <div class="body">
+            <h3>Umbraco CMS</h3>
+            <p>Building scalable, editor-friendly websites with custom document types and Block Lists.</p>
+            <div class="btns">
+              <a class="primary-btn" href="https://umbraco.com" target="_blank" rel="noreferrer">Learn more</a>
+            </div>
+          </div>
+        </article>
+        <article class="project-card">
+          <div class="thumb"><img src="img/project-02.png" alt=".NET and Razor" /></div>
+          <ul class="tools">
+            <li>.NET</li>
+            <li>C#</li>
+            <li>Razor</li>
+          </ul>
+          <div class="body">
+            <h3>.NET & Razor</h3>
+            <p>Developing Razor views, controllers, and clean server-side logic with .NET.</p>
+            <div class="btns">
+              <a class="primary-btn" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+          </div>
+        </article>
+        <article class="project-card">
+          <div class="thumb"><img src="img/project-03.png" alt="Search and Performance" /></div>
+          <ul class="tools">
+            <li>Examine</li>
+            <li>Search</li>
+            <li>.NET</li>
+          </ul>
+          <div class="body">
+            <h3>Search & Performance</h3>
+            <p>Implementing custom search using Examine and optimizing content discovery.</p>
+            <div class="btns">
+              <a class="primary-btn" href="projects.html">See work</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <span class="deco-square md deco-projects animate-bounce-slow"></span>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-heading after">skills</h2>
+      </div>
+      <div class="skills-layout">
+        <div class="skills-art">
+          <img class="dots-a" src="img/dots.png" alt="" />
+          <div class="sq-a"></div>
+          <img class="logo-a" src="img/logo-outline.png" alt="" />
+          <img class="dots-b" src="img/dots.png" alt="" />
+          <div class="sq-b"></div>
+        </div>
+        <div class="skills-cols">
+          <div class="skills-col">
+            <div class="card">
+              <h4>CMS</h4>
+              <ul>
+                <li>Umbraco CMS</li>
+                <li>Block Lists</li>
+                <li>Document Types</li>
+              </ul>
+            </div>
+          </div>
+          <div class="skills-col">
+            <div class="card">
+              <h4>Backend</h4>
+              <ul>
+                <li>.NET</li>
+                <li>C#</li>
+                <li>Razor</li>
+                <li>Examine</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>Frontend</h4>
+              <ul>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+              </ul>
+            </div>
+          </div>
+          <div class="skills-col">
+            <div class="card">
+              <h4>Focus</h4>
+              <ul>
+                <li>Clean UI</li>
+                <li>Reusable components</li>
+                <li>Performance</li>
+                <li>Editor-friendly sites</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>Tools</h4>
+              <ul>
+                <li>Git</li>
+                <li>GitHub</li>
+                <li>Visual Studio</li>
+                <li>VS Code</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="about-grid">
+        <div class="about-copy">
+          <h2 class="section-heading after">about-me</h2>
+          <p>I'm a <strong>Umbraco Web Developer</strong> with experience in building dynamic and editor-friendly websites using Umbraco CMS, Razor views, and .NET.<br><br>I enjoy working on clean UI, reusable components, and performance-focused solutions. I'm continuously learning and improving my skills while contributing to real-world projects.</p>
+          <a class="primary-btn" href="about-me.html">Read more -&gt;</a>
+        </div>
+        <div class="about-art">
+          <img src="img/saroj.png" alt="Saroj Shrestha" />
+        </div>
+      </div>
+      <span class="deco-square md deco-about-sq animate-bounce-slow"></span>
+      <img class="float-dots deco-about-dots animate-bounce-slow" src="img/dots.png" alt="" />
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-heading after">contact</h2>
+      </div>
+      <div class="contact-grid">
+        <p class="lead">I'm interested in freelance opportunities and real-world Umbraco projects. If you have a request or question, don't hesitate to contact me.</p>
+        <div class="contact-box">
+          <h4>Message me here</h4>
+          <p class="contact-row"><span class="soc" data-icon="github" aria-hidden="true"></span> github.com/SarojShresthaa</p>
+          <p class="contact-row"><span class="soc" data-icon="linkedin" aria-hidden="true"></span> Saroj Shrestha</p>
+        </div>
+      </div>
+      <img class="float-dots deco-contact-dots animate-bounce-slow" src="img/dots.png" alt="" />
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="footer-top">
+          <a class="logo" href="index.html">
+            <span class="logo-mark" aria-hidden="true"></span>
+            saroj.dev
+          </a>
+        </div>
+        <p>Umbraco & .NET Web Developer</p>
+      </div>
+      <div class="footer-media">
+        <h3>Media</h3>
+        <ul class="media-links">
+          <li><a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a></li>
+          <li><a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="copyright">© 2026 Saroj Shrestha. Built with passion and code.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
