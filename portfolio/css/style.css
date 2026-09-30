@@ -122,22 +122,12 @@ select {
 }
 
 .logo-mark {
-  width: 16px;
-  height: 16px;
-  border: 1.5px solid var(--primary);
-  position: relative;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-}
-
-.logo-mark::after {
-  content: "";
-  position: absolute;
-  left: 3px;
-  right: 3px;
-  top: 3px;
-  bottom: 3px;
-  background: var(--primary);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background-color: var(--primary);
+  -webkit-mask: url("../img/logo.svg") center / contain no-repeat;
+  mask: url("../img/logo.svg") center / contain no-repeat;
 }
 
 .menu-btn {
@@ -365,7 +355,7 @@ select {
   z-index: 0;
   pointer-events: none;
   mix-blend-mode: lighten;
-  filter: hue-rotate(110deg) saturate(1.35);
+  opacity: 0.9;
 }
 
 .hero-frame .hero-photo {
