@@ -55,87 +55,72 @@
   <main class="container page">
     <div class="page-title">
       <h2>projects</h2>
-      <p>Core technologies and areas I focus on</p>
+      <p>Things I've built or contributed to — most of it professional work, a couple personal</p>
     </div>
 
     <section class="section">
       <div class="section-head">
-        <h2 class="section-heading">what-i-work-with</h2>
+        <h2 class="section-heading">professional</h2>
       </div>
       <div class="apps-grid">
         <article class="project-card">
-          <div class="thumb"><img src="img/project-01.png" alt="Umbraco CMS" /></div>
+          <div class="thumb"><img src="img/project-01.png" alt="Multi-page Umbraco site" /></div>
           <ul class="tools">
-            <li>Umbraco</li>
-            <li>Block Lists</li>
-            <li>Document Types</li>
-          </ul>
-          <div class="body">
-            <h3>Umbraco CMS</h3>
-            <p>Building scalable, editor-friendly websites using Umbraco CMS with custom document types and Block Lists.</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://umbraco.com" target="_blank" rel="noreferrer">Learn more</a>
-            </div>
-          </div>
-        </article>
-        <article class="project-card">
-          <div class="thumb"><img src="img/project-02.png" alt=".NET and Razor" /></div>
-          <ul class="tools">
+            <li>Umbraco CMS</li>
             <li>.NET</li>
-            <li>C#</li>
             <li>Razor</li>
           </ul>
           <div class="body">
-            <h3>.NET & Razor</h3>
-            <p>Developing Razor views, controllers, and clean server-side logic with .NET.</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
+            <h3>Multi-page Umbraco site</h3>
+            <p>Built from scratch — custom document types, Block List components, and Razor views. The main challenge was designing the content structure so editors could manage pages without developer help for every change.</p>
           </div>
         </article>
         <article class="project-card">
-          <div class="thumb"><img src="img/project-03.png" alt="Search and Performance" /></div>
+          <div class="thumb"><img src="img/project-02.png" alt="Block List search with Examine" /></div>
           <ul class="tools">
+            <li>Umbraco</li>
             <li>Examine</li>
-            <li>Search</li>
-            <li>Performance</li>
+            <li>Lucene</li>
           </ul>
           <div class="body">
-            <h3>Search & Performance</h3>
-            <p>Implementing custom search using Examine and optimizing content discovery.</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
+            <h3>Block List search with Examine</h3>
+            <p>The default Examine setup doesn't index Block List content well. I wrote custom indexers that flatten nested components into searchable fields, with partial keyword matching on top.</p>
           </div>
         </article>
         <article class="project-card">
-          <div class="thumb"><img src="img/project-05.png" alt="Portfolio" /></div>
+          <div class="thumb"><img src="img/project-03.png" alt="Custom backoffice dashboard" /></div>
           <ul class="tools">
-            <li>HTML</li>
-            <li>CSS</li>
+            <li>Umbraco Backoffice</li>
+            <li>AngularJS</li>
+            <li>REST API</li>
+          </ul>
+          <div class="body">
+            <h3>Custom backoffice dashboard</h3>
+            <p>Editors needed to pull in external data and optionally create content nodes from it. Built a dashboard that talks to an API, shows the results in a table, and handles the node creation.</p>
+          </div>
+        </article>
+        <article class="project-card">
+          <div class="thumb"><img src="img/project-04.png" alt="Interactive image map" /></div>
+          <ul class="tools">
+            <li>Umbraco</li>
             <li>JavaScript</li>
+            <li>CSS</li>
           </ul>
           <div class="body">
-            <h3>Portfolio</h3>
-            <p>You're using it rn — my personal site for Umbraco and .NET work.</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://sarojshresthaa.github.io/" target="_blank" rel="noreferrer">Live</a>
-              <a class="gray-btn" href="https://github.com/SarojShresthaa/sarojshresthaa.github.io" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
+            <h3>Interactive image map</h3>
+            <p>Clickable hotspots on a large image — popups, clustering when hotspots overlap, and responsive resizing so the coordinates stay correct on smaller screens.</p>
           </div>
         </article>
         <article class="project-card">
-          <div class="thumb"><img src="img/project-04.png" alt="Bock Grid" /></div>
+          <div class="thumb"><img src="img/project-05.png" alt="Orphaned media cleaner" /></div>
           <ul class="tools">
+            <li>Umbraco</li>
             <li>C#</li>
             <li>.NET</li>
           </ul>
           <div class="body">
-            <h3>Bock-Grid</h3>
-            <p>C# / .NET project exploring grid and block-style layouts.</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://github.com/SarojShresthaa/Bock-Grid" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
+            <h3>Orphaned media cleaner</h3>
+            <p>The media library had hundreds of files nobody was using anymore. Wrote a tool that detects unused and broken media references and lets you bulk-delete them from inside the backoffice.</p>
           </div>
         </article>
       </div>
@@ -143,71 +128,20 @@
 
     <section class="section">
       <div class="section-head">
-        <h2 class="section-heading">small-projects</h2>
+        <h2 class="section-heading">personal</h2>
       </div>
       <div class="apps-grid">
         <article class="project-card">
           <ul class="tools no-top">
-            <li>C#</li>
-            <li>.NET</li>
-          </ul>
-          <div class="body">
-            <h3>CRUD</h3>
-            <p>C# CRUD practice for clean server-side data operations.</p>
-            <div class="btns">
-              <a class="gray-btn" href="https://github.com/SarojShresthaa/CRUD" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
-          </div>
-        </article>
-        <article class="project-card">
-          <ul class="tools no-top">
-            <li>HTML</li>
+            <li>JavaScript</li>
+            <li>Canvas API</li>
             <li>CSS</li>
           </ul>
           <div class="body">
-            <h3>demo-hub</h3>
-            <p>HTML demo hub for UI experiments and reusable pieces.</p>
+            <h3>Space shooter (this site)</h3>
+            <p>Built as a side project while learning canvas-based game development. It's on the homepage terminal — type "game" to launch it.</p>
             <div class="btns">
-              <a class="gray-btn" href="https://github.com/SarojShresthaa/demo-hub" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
-          </div>
-        </article>
-        <article class="project-card">
-          <ul class="tools no-top">
-            <li>Umbraco</li>
-            <li>.NET</li>
-          </ul>
-          <div class="body">
-            <h3>Umbraco CMS</h3>
-            <p>Open-source CMS work and contributions around editor-friendly digital experiences.</p>
-            <div class="btns">
-              <a class="gray-btn" href="https://github.com/SarojShresthaa/Umbraco-CMS" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
-          </div>
-        </article>
-        <article class="project-card">
-          <ul class="tools no-top">
-            <li>Umbraco</li>
-            <li>Performance</li>
-          </ul>
-          <div class="body">
-            <h3>Community Sustainability</h3>
-            <p>Umbraco community package that helps see and improve website carbon impact.</p>
-            <div class="btns">
-              <a class="gray-btn" href="https://github.com/SarojShresthaa/Umbraco.Community.Sustainability" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
-          </div>
-        </article>
-        <article class="project-card">
-          <ul class="tools no-top">
-            <li>HTML</li>
-            <li>Fun</li>
-          </ul>
-          <div class="body">
-            <h3>Space Shooter</h3>
-            <p>🚀 Launching Space Shooter... 3... 2... 1... BLAST OFF!</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://sarojshresthaa.github.io/" target="_blank" rel="noreferrer">Live</a>
+              <a class="primary-btn" href="../game.html">Play →</a>
             </div>
           </div>
         </article>
