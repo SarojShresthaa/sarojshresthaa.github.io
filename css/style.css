@@ -685,6 +685,82 @@ select {
   color: var(--white);
 }
 
+.about-hero.about-page {
+  width: 100%;
+  max-width: 44rem;
+  margin-inline: auto;
+  margin-bottom: 4rem;
+}
+
+.about-eyebrow {
+  color: var(--gray);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.about-eyebrow::before {
+  content: "#";
+  color: var(--primary);
+}
+
+.about-lead {
+  font-size: clamp(1.75rem, 3.5vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  max-width: 22ch;
+}
+
+.about-work .section-heading {
+  margin-bottom: 0;
+}
+
+.about-work-kicker {
+  color: var(--gray);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.about-work .help-intro {
+  margin-top: 1rem;
+}
+
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.about-tag {
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--gray);
+  background: var(--surface);
+}
+
+.about-life .section-heading {
+  margin-bottom: 0;
+}
+
+.about-life .help-intro {
+  margin-top: 1rem;
+  max-width: 40rem;
+}
+
+.about-talk .help-intro {
+  max-width: 40rem;
+}
+
 .help-intro {
   max-width: 42rem;
   margin: 1.5rem 0 2rem;
