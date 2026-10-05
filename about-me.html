@@ -10,7 +10,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <script>document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");</script>
+  <script>
+    (function () {
+      var saved = localStorage.getItem("theme");
+      var theme = saved;
+      if (!theme && window.matchMedia) {
+        theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", theme || "dark");
+    })();
+  </script>
 </head>
 <body>
   <header class="header">
@@ -66,6 +75,23 @@
     </section>
 
     <section class="section">
+      <h2 class="section-heading">how-i-work</h2>
+      <div class="facts-layout">
+        <div class="facts">
+          <p class="fact">I have <span class="hl">2+ years</span> at ZAAKS!</p>
+          <p class="fact">I build <span class="hl">Umbraco CMS</span> sites and custom packages</p>
+          <p class="fact">I write <span class="hl">.NET Core</span>, <span class="hl">C#</span>, and Razor every day</p>
+          <p class="fact">I work with <span class="hl">Azure</span> and practical <span class="hl">AI features</span></p>
+          <p class="fact">I contribute to <span class="hl">Umbraco community</span> packages</p>
+          <p class="fact">Stuck on Umbraco? I can <span class="hl">help</span></p>
+        </div>
+        <div class="facts-art">
+          <img class="logo-a" src="img/logo-outline.svg" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <h2 class="section-heading">what-i-work-with</h2>
       <div class="skills-grid-5">
         <div class="card">
@@ -110,23 +136,6 @@
             <li>Visual Studio</li>
             <li>VS Code</li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-heading">how-i-work</h2>
-      <div class="facts-layout">
-        <div class="facts">
-          <p class="fact">I have <span class="hl">2+ years</span> at ZAAKS!</p>
-          <p class="fact">I build <span class="hl">Umbraco CMS</span> sites and custom packages</p>
-          <p class="fact">I write <span class="hl">.NET Core</span>, <span class="hl">C#</span>, and Razor every day</p>
-          <p class="fact">I work with <span class="hl">Azure</span> and practical <span class="hl">AI features</span></p>
-          <p class="fact">I contribute to <span class="hl">Umbraco community</span> packages</p>
-          <p class="fact">Stuck on Umbraco? I can <span class="hl">help</span></p>
-        </div>
-        <div class="facts-art">
-          <img class="logo-a" src="img/logo-outline.svg" alt="" />
         </div>
       </div>
     </section>

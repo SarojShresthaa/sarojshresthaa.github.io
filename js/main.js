@@ -33,13 +33,29 @@ document.querySelectorAll("[data-icon]").forEach((el) => {
   if (svg && !el.querySelector("svg")) el.insertAdjacentHTML("afterbegin", svg);
 });
 
-const savedTheme = localStorage.getItem("theme") || "dark";
-root.setAttribute("data-theme", savedTheme);
+function getSystemTheme() {
+  if (window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
+  return "dark";
+}
+
+function getStoredTheme() {
+  return localStorage.getItem("theme");
+}
+
+function applyTheme(theme) {
+  root.setAttribute("data-theme", theme);
+}
+
+applyTheme(getStoredTheme() || getSystemTheme());
+
+window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", () => {
+  if (!getStoredTheme()) applyTheme(getSystemTheme());
+});
 
 document.querySelectorAll(".theme-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
+    applyTheme(next);
     localStorage.setItem("theme", next);
   });
 });

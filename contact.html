@@ -10,7 +10,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <script>document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");</script>
+  <script>
+    (function () {
+      var saved = localStorage.getItem("theme");
+      var theme = saved;
+      if (!theme && window.matchMedia) {
+        theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", theme || "dark");
+    })();
+  </script>
 </head>
 <body>
   <header class="header">
@@ -67,14 +76,6 @@
     </section>
 
     <section class="section">
-      <h2 class="section-heading">all-media</h2>
-      <div class="media-list">
-        <a href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer"><span class="soc" data-icon="github" aria-hidden="true"></span> @SarojShresthaa</a>
-        <a href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer"><span class="soc" data-icon="linkedin" aria-hidden="true"></span> Saroj Shrestha</a>
-      </div>
-    </section>
-
-    <section class="section">
       <h2 class="section-heading">what-to-ask</h2>
       <p class="help-intro">People usually write about one of these. If yours is none of them, still write.</p>
       <div class="help-grid">
@@ -94,6 +95,14 @@
           <h3>Just a question</h3>
           <p>That's enough. GitHub or LinkedIn, either works.</p>
         </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-heading">all-media</h2>
+      <div class="media-list">
+        <a href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer"><span class="soc" data-icon="github" aria-hidden="true"></span> @SarojShresthaa</a>
+        <a href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer"><span class="soc" data-icon="linkedin" aria-hidden="true"></span> Saroj Shrestha</a>
       </div>
     </section>
   </main>

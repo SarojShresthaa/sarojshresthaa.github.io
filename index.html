@@ -10,7 +10,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <script>document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");</script>
+  <script>
+    (function () {
+      var saved = localStorage.getItem("theme");
+      var theme = saved;
+      if (!theme && window.matchMedia) {
+        theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", theme || "dark");
+    })();
+  </script>
 </head>
 <body>
   <header class="header">
@@ -75,6 +84,20 @@
       <span class="deco-square sm quote-sq animate-bounce-slow"></span>
     </div>
 
+    <section class="section about-snippet">
+      <div class="about-snippet-inner">
+        <div class="about-copy">
+          <h2 class="section-heading after">about-me</h2>
+          <p>I'm Saroj. I build <strong>Umbraco</strong> and .NET sites in Kathmandu, at <strong>ZAAKS!</strong> since 2023. Document types, Block Lists, Razor, the odd package.</p>
+          <p>If you're starting with Umbraco, already in it, or just wondering if it's the right CMS, I can help. Ask.</p>
+          <a class="primary-btn" href="about-me.html">Read more -&gt;</a>
+        </div>
+        <figure class="about-snippet-art">
+          <img src="img/about-coding.jpg" alt="Illustration of Saroj sitting at a desk, coding on a laptop" width="480" height="360" loading="lazy" />
+        </figure>
+      </div>
+    </section>
+
     <section class="section">
       <div class="section-head">
         <h2 class="section-heading after">projects</h2>
@@ -112,6 +135,32 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2 class="section-heading after">umbraco-help</h2>
+      </div>
+      <p class="help-intro">If Umbraco is on your mind and you want someone who actually works with it, that's me. New site, messy old one, or just a question. I can help with:</p>
+      <div class="help-grid">
+        <article class="help-card">
+          <h3>New Umbraco sites</h3>
+          <p>Getting a site standing. Document types, templates, Block Lists. So editors aren't lost on day one.</p>
+        </article>
+        <article class="help-card">
+          <h3>Existing sites</h3>
+          <p>Something already running and it's a pain to edit? I can tidy the backoffice and the code around it.</p>
+        </article>
+        <article class="help-card">
+          <h3>.NET &amp; Razor</h3>
+          <p>Views, controllers, Azure, and the server-side stuff Umbraco sits on. I do that too.</p>
+        </article>
+        <article class="help-card">
+          <h3>Just questions</h3>
+          <p>Not sure if Umbraco is even the right call? That's fine. Write me anyway.</p>
+        </article>
+      </div>
+      <a class="primary-btn help-cta" href="contact.html">Write me</a>
     </section>
 
     <section class="section">
@@ -178,46 +227,6 @@
           </div>
         </div>
       </div>
-    </section>
-
-    <section class="section">
-      <div class="about-grid">
-        <div class="about-copy">
-          <h2 class="section-heading after">about-me</h2>
-          <p>I'm Saroj. I build <strong>Umbraco</strong> and .NET sites in Kathmandu, at <strong>ZAAKS!</strong> since 2023. Document types, Block Lists, Razor, the odd package.</p>
-          <p>If you're starting with Umbraco, already in it, or just wondering if it's the right CMS, I can help. Ask.</p>
-          <a class="primary-btn" href="about-me.html">Read more -&gt;</a>
-        </div>
-        <div class="about-art">
-          <img src="img/saroj.png" alt="Saroj Shrestha" />
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <h2 class="section-heading after">umbraco-help</h2>
-      </div>
-      <p class="help-intro">If Umbraco is on your mind and you want someone who actually works with it, that's me. New site, messy old one, or just a question. I can help with:</p>
-      <div class="help-grid">
-        <article class="help-card">
-          <h3>New Umbraco sites</h3>
-          <p>Getting a site standing. Document types, templates, Block Lists. So editors aren't lost on day one.</p>
-        </article>
-        <article class="help-card">
-          <h3>Existing sites</h3>
-          <p>Something already running and it's a pain to edit? I can tidy the backoffice and the code around it.</p>
-        </article>
-        <article class="help-card">
-          <h3>.NET &amp; Razor</h3>
-          <p>Views, controllers, Azure, and the server-side stuff Umbraco sits on. I do that too.</p>
-        </article>
-        <article class="help-card">
-          <h3>Just questions</h3>
-          <p>Not sure if Umbraco is even the right call? That's fine. Write me anyway.</p>
-        </article>
-      </div>
-      <a class="primary-btn help-cta" href="contact.html">Write me</a>
     </section>
 
     <section class="section">
