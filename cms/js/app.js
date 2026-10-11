@@ -551,4 +551,11 @@ async function main() {
   await loadContent();
 }
 
-main();
+main().catch((err) => {
+  console.error("CMS failed to start:", err);
+  const box = document.getElementById("bo-editor");
+  if (box) {
+    box.innerHTML = `<div class="bo-empty"><p><strong>CMS failed to load.</strong></p><p>${err.message}</p><p>Hard-refresh (Ctrl+F5) or check the browser console.</p></div>`;
+  }
+  toast(err.message, false);
+});

@@ -19,7 +19,7 @@ export class GitHubClient {
 
   login() {
     if (!this.config.oauth_proxy_url || !this.config.github_client_id) {
-      throw new Error("OAuth is not configured. Copy cms/config.example.json to cms/config.json.");
+      throw new Error("OAuth is not configured. Edit cms/config.public.json.");
     }
     const redirect = encodeURIComponent(`${location.origin}/cms/oauth-callback.html`);
     const url = `${this.config.oauth_proxy_url}/auth?provider=github&scope=repo&client_id=${encodeURIComponent(this.config.github_client_id)}&redirect_uri=${redirect}`;
@@ -109,20 +109,9 @@ export class GitHubClient {
 }
 
 export async function loadCmsConfig() {
-  let base = null;
   const pub = await fetch("/cms/config.public.json", { cache: "no-cache" });
-  if (pub.ok) base = await pub.json();
-  // Optional local overrides (gitignored) — only on dev server to avoid 404 noise on GitHub Pages
-  const isLocal =
-    location.hostname === "localhost" || location.hostname === "127.0.0.1";
-  if (isLocal) {
-    const local = await fetch("/cms/config.json", { cache: "no-cache" });
-    if (local.ok) {
-      const overrides = await local.json();
-      base = { ...(base || {}), ...overrides };
-    }
-  }
-  return base;
+  if (!pub.ok) throw new Error("Could not load /cms/config.public.json");
+  return pub.json();
 }
 
 export function isOAuthConfigured(config) {
