@@ -1,13 +1,16 @@
 {
   "status": "published",
   "hero": {
-    "heading": "Saroj Shrestha",
+    "heading": "Saroj Shrestha.",
     "headingAccent": "Umbraco & .NET Developer",
     "subtitle": "I work with Umbraco at ZAAKS! in Kathmandu. If you're looking at it and need a hand, I can help.",
     "profileImage": "/img/saroj.png",
     "profileImageAlt": "Saroj Shrestha",
     "statusText": "Currently at ZAAKS! · Kathmandu",
-    "cta": { "label": "Say hi", "href": "/contact" }
+    "cta": {
+      "label": "Say hi",
+      "href": "/contact"
+    }
   },
   "quote": {
     "text": "The best Umbraco build is the one editors run without calling me.",
@@ -21,9 +24,15 @@
     ],
     "image": "/img/about-coding.jpg",
     "imageAlt": "Illustration of Saroj sitting at a desk, coding on a laptop",
-    "cta": { "label": "Read more ->", "href": "/about" }
+    "cta": {
+      "label": "Read more ->",
+      "href": "/about"
+    }
   },
-  "featuredProjectSlugs": ["block-field-visibility", "open-source-github"],
+  "featuredProjectSlugs": [
+    "block-field-visibility",
+    "open-source-github"
+  ],
   "skillsSection": {
     "heading": "skills",
     "kicker": "what I use",
