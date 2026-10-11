@@ -112,10 +112,15 @@ export async function loadCmsConfig() {
   let base = null;
   const pub = await fetch("/cms/config.public.json", { cache: "no-cache" });
   if (pub.ok) base = await pub.json();
-  const local = await fetch("/cms/config.json", { cache: "no-cache" });
-  if (local.ok) {
-    const overrides = await local.json();
-    base = { ...(base || {}), ...overrides };
+  // Optional local overrides (gitignored) — only on dev server to avoid 404 noise on GitHub Pages
+  const isLocal =
+    location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  if (isLocal) {
+    const local = await fetch("/cms/config.json", { cache: "no-cache" });
+    if (local.ok) {
+      const overrides = await local.json();
+      base = { ...(base || {}), ...overrides };
+    }
   }
   return base;
 }
