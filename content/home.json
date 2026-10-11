@@ -29,6 +29,11 @@
       "href": "/about"
     }
   },
+  "projectsSection": {
+    "heading": "projects",
+    "viewAllLabel": "See all →",
+    "viewAllHref": "/projects"
+  },
   "featuredProjectSlugs": [
     "block-field-visibility",
     "open-source-github"
@@ -40,6 +45,7 @@
   },
   "contactSection": {
     "heading": "contact",
-    "lead": "Fastest route: GitHub or LinkedIn below. A short note about your Umbraco situation is enough to start."
+    "lead": "Fastest route: GitHub or LinkedIn below. A short note about your Umbraco situation is enough to start.",
+    "messageBoxHeading": "Message me here"
   }
 }

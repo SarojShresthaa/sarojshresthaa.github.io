@@ -5,7 +5,12 @@ import {
   renderListPageForm,
   renderSkillsForm,
   renderCustomPageForm,
-  renderNavigationForm,
+  renderHomeForm,
+  renderAboutForm,
+  renderSiteSettingsForm,
+  renderContactForm,
+  renderProjectForm,
+  renderProjectsIndexForm,
   REPEATER_DEFAULTS,
   RESERVED_PAGE_SLUGS,
 } from "./content-forms.js";
@@ -364,6 +369,12 @@ function wireRepeaters(form, doc) {
       } else if (kind === "navigation") {
         if (!doc.data.navigation) doc.data.navigation = [];
         doc.data.navigation.push({ label: "", href: "/" });
+      } else if (kind === "social") {
+        if (!doc.data.social) doc.data.social = [];
+        doc.data.social.push({ id: "", label: "", url: "", display: "" });
+      } else if (kind === "biography") {
+        if (!doc.data.biography) doc.data.biography = [];
+        doc.data.biography.push("");
       } else if (REPEATER_DEFAULTS[kind]) {
         if (!doc.data.items) doc.data.items = [];
         doc.data.items.push(JSON.parse(JSON.stringify(REPEATER_DEFAULTS[kind])));
@@ -381,6 +392,8 @@ function wireRepeaters(form, doc) {
       if (Number.isNaN(idx)) return;
       if (kind === "skills" && doc.data.columns) doc.data.columns.splice(idx, 1);
       else if (kind === "navigation" && doc.data.navigation) doc.data.navigation.splice(idx, 1);
+      else if (kind === "social" && doc.data.social) doc.data.social.splice(idx, 1);
+      else if (kind === "biography" && doc.data.biography) doc.data.biography.splice(idx, 1);
       else if (doc.data.items) doc.data.items.splice(idx, 1);
       state.dirty = true;
       render();
@@ -453,6 +466,28 @@ function wireEditorForm(form, doc) {
     doc.data.paragraphs = e.target.value.split(/\n\n+/).map((s) => s.trim()).filter(Boolean);
     state.dirty = true;
   });
+  form.querySelector("[data-key='_featuredSlugs']")?.addEventListener("input", (e) => {
+    doc.data.featuredProjectSlugs = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
+    state.dirty = true;
+  });
+  form.querySelector("[data-key='_slugOrder']")?.addEventListener("input", (e) => {
+    doc.data.slugs = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
+    state.dirty = true;
+  });
+  form.querySelector("[data-key='_gallery']")?.addEventListener("input", (e) => {
+    doc.data.gallery = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
+    state.dirty = true;
+  });
+  form.querySelector("[data-key='workSection._tags']")?.addEventListener("input", (e) => {
+    if (!doc.data.workSection) doc.data.workSection = {};
+    doc.data.workSection.tags = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
+    state.dirty = true;
+  });
+  form.querySelector("[data-key='lifeSection._tags']")?.addEventListener("input", (e) => {
+    if (!doc.data.lifeSection) doc.data.lifeSection = {};
+    doc.data.lifeSection.tags = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
+    state.dirty = true;
+  });
 }
 
 function bindEditor(form, doc) {
@@ -498,42 +533,21 @@ function renderEditorForm(doc) {
   }
 
   const d = doc.data;
-  if (doc.id === "home") {
-    return `<h2>Home</h2>${field("Status", "status", d.status, "select-status")}
-      ${field("Heading", "hero.heading", d.hero?.heading)}${field("Heading accent", "hero.headingAccent", d.hero?.headingAccent)}
-      ${field("Subtitle", "hero.subtitle", d.hero?.subtitle, "textarea")}
-      ${imageField("Profile image", "hero.profileImage", d.hero?.profileImage)}
-      ${field("Profile image alt", "hero.profileImageAlt", d.hero?.profileImageAlt)}
-      ${imageField("About snippet image", "aboutSnippet.image", d.aboutSnippet?.image)}
-      ${field("CTA label", "hero.cta.label", d.hero?.cta?.label)}${field("CTA link", "hero.cta.href", d.hero?.cta?.href)}
-      ${field("Quote", "quote.text", d.quote?.text, "textarea")}${field("About snippet (para 1)", "aboutSnippet.paragraphs.0", d.aboutSnippet?.paragraphs?.[0], "textarea")}`;
-  }
-  if (doc.id === "about") {
-    return `<h2>About</h2>${field("Status", "status", d.status, "select-status")}${field("Page heading", "heading", d.heading)}${field("Biography (paragraph 1)", "biography.0", d.biography?.[0], "textarea")}${field("Biography (paragraph 2)", "biography.1", d.biography?.[1], "textarea")}${field("Biography (paragraph 3)", "biography.2", d.biography?.[2], "textarea")}`;
-  }
+  if (doc.id === "home") return renderHomeForm(d, field, imageField);
+  if (doc.id === "about") return renderAboutForm(d, field, imageField, escapeHtml);
   if (doc.kind === "project") {
     const visHint =
       d.status === "draft"
-        ? `<p class="hint"><strong>Public site:</strong> Draft projects are hidden on <code>/projects</code>. Sign in with GitHub, then <strong>Save</strong> and <strong>Publish</strong> (or set Status to Published and Save). Wait ~1–2 min for GitHub Pages after save.</p>`
-        : `<p class="hint"><strong>Public site:</strong> Published projects appear on <code>/projects</code> after Save and GitHub Pages deploy.</p>`;
-    return `${visHint}<h2>Project</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Slug", "slug", d.slug, "text", "Used in /projects/slug")}${field("Category", "category", d.category, "text", "main-work or small-projects")}${field("Description", "description", d.description, "textarea")}${field("Long description", "longDescription", d.longDescription, "textarea")}${imageField("Thumbnail", "thumbnail", d.thumbnail)}${field("Technologies (comma-separated)", "_technologies", (d.technologies || []).join(", "))}${field("GitHub URL", "githubUrl", d.githubUrl)}${field("Demo URL", "demoUrl", d.demoUrl)}${field("Featured", "featured", d.featured, "checkbox")}`;
+        ? `<p class="hint"><strong>Public site:</strong> Draft projects are hidden on <code>/projects</code>. Sign in with GitHub, then <strong>Save</strong> and <strong>Publish</strong>.</p>`
+        : `<p class="hint"><strong>Public site:</strong> Published projects appear on <code>/projects</code> after Save.</p>`;
+    return `${visHint}<h2>Project</h2>${renderProjectForm(d, field, imageField)}`;
   }
-  if (doc.kind === "custom-page") {
-    return renderCustomPageForm(d, field, imageField);
-  }
-  if (doc.id === "site-settings") {
-    return `<h2>Site settings</h2><p class="hint">${escapeHtml(d.cmsNotice || "")}</p>
-      ${field("Site name", "siteName", d.siteName)}${field("Footer blurb", "footer.blurb", d.footer?.blurb, "textarea")}${field("Default SEO title", "seo.defaultTitle", d.seo?.defaultTitle)}${field("Default SEO description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}
-      ${renderNavigationForm(d, field)}`;
-  }
-  if (doc.id === "skills") {
-    return renderSkillsForm(d, field, imageField, escapeHtml);
-  }
+  if (doc.kind === "custom-page") return renderCustomPageForm(d, field, imageField);
+  if (doc.id === "site-settings") return renderSiteSettingsForm(d, field, imageField, escapeHtml);
+  if (doc.id === "skills") return renderSkillsForm(d, field, imageField, escapeHtml);
   const listForm = renderListPageForm(doc, field, escapeHtml);
   if (listForm) return listForm;
-  if (doc.id === "contact") {
-    return `<h2>Contact</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Subtitle", "subtitle", d.subtitle)}${field("Lead", "lead", d.lead, "textarea")}`;
-  }
+  if (doc.id === "contact") return renderContactForm(d, field);
   if (doc.id === "pages-index") {
     const slugList = (d.slugs || []).join("\n");
     return `<h2>Custom pages</h2>
@@ -541,19 +555,8 @@ function renderEditorForm(doc) {
       ${field("Status", "status", d.status, "select-status")}
       <div class="bo-field"><label>Page slugs (read-only)</label><textarea readonly tabindex="-1" style="font-family:monospace;min-height:100px;background:#f4f6f8">${escapeHtml(slugList || "(none yet)")}</textarea></div>`;
   }
-  if (doc.id === "projects-index") {
-    const slugList = (d.slugs || []).join("\n");
-    return `<h2>Projects page</h2>
-      <p class="hint">This controls the <code>/projects</code> page heading and section labels. Individual projects are edited under <strong>Projects</strong> in the tree (or <strong>New project</strong>).</p>
-      ${field("Status", "status", d.status, "select-status")}
-      ${field("Page title", "title", d.title)}
-      ${field("Page subtitle", "subtitle", d.subtitle, "textarea")}
-      ${field("Main work section heading", "mainWorkHeading", d.mainWorkHeading)}
-      ${field("Small projects section heading", "smallProjectsHeading", d.smallProjectsHeading)}
-      <div class="bo-field"><label>Project slugs (read-only)</label><textarea readonly tabindex="-1" style="font-family:monospace;min-height:120px;background:#f4f6f8">${escapeHtml(slugList || "(none yet)")}</textarea><p class="hint">Slugs update automatically when you save or delete projects. Reorder by editing <code>content/projects/index.json</code> only if needed.</p></div>`;
-  }
-  return `<h2>${escapeHtml(doc.id)}</h2><p>No visual editor for this type yet — use the fields below or raw JSON.</p>
-    ${field("Status", "status", d.status, "select-status")}<div class="bo-field"><label>Raw JSON</label><textarea id="raw-json" style="min-height:320px;font-family:monospace">${escapeHtml(JSON.stringify(d, null, 2))}</textarea></div>`;
+  if (doc.id === "projects-index") return renderProjectsIndexForm(d, field, escapeHtml);
+  return `<h2>${escapeHtml(doc.id)}</h2><p class="hint">This document has no editor yet. Try reloading the CMS (Ctrl+F5).</p>`;
 }
 
 function renderInfoPanel(doc) {
@@ -667,17 +670,6 @@ function renderEditor() {
   }
   el.editor.innerHTML = `<form class="bo-editor" id="bo-form">${renderEditorForm(doc)}</form>`;
   wireEditorForm(document.getElementById("bo-form"), doc);
-  const raw = document.getElementById("raw-json");
-  if (raw) {
-    raw.addEventListener("change", () => {
-      try {
-        doc.data = JSON.parse(raw.value);
-        state.dirty = true;
-      } catch {
-        toast("Invalid JSON", false);
-      }
-    });
-  }
 }
 
 function updateStatusPill(status) {

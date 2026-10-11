@@ -92,6 +92,20 @@
     });
   }
 
+  function applyPageMeta(title, description, settings) {
+    const site = settings?.siteName || "saroj.dev";
+    if (title) document.title = title.includes("–") ? title : title + " – " + site;
+    if (description) {
+      let meta = document.querySelector('meta[name="description"]');
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.name = "description";
+        document.head.appendChild(meta);
+      }
+      meta.content = description;
+    }
+  }
+
   function applySiteChrome(settings) {
     document.querySelectorAll("[data-site-name]").forEach((el) => {
       el.textContent = settings.siteName || "saroj.dev";
@@ -131,7 +145,19 @@
   async function renderHome(settings) {
     const home = await fetchJson(CONTENT + "home.json");
     if (home.status !== "published") return;
+    applyPageMeta(settings.seo?.defaultTitle, settings.seo?.defaultDescription, settings);
     const { projects } = await loadProjects();
+    const projHead = document.querySelector("[data-home-projects-heading]");
+    if (projHead) projHead.textContent = home.projectsSection?.heading || "projects";
+    const projView = document.querySelector("[data-home-projects-viewall]");
+    if (projView) {
+      projView.textContent = home.projectsSection?.viewAllLabel || "See all →";
+      projView.href = absUrl(home.projectsSection?.viewAllHref || "/projects");
+    }
+    const skillsHead = document.querySelector("[data-home-skills-heading]");
+    if (skillsHead) skillsHead.textContent = home.skillsSection?.heading || "skills";
+    const contactHead = document.querySelector("[data-home-contact-heading]");
+    if (contactHead) contactHead.textContent = home.contactSection?.heading || "contact";
     const hero = document.querySelector("[data-home-hero]");
     if (hero) {
       hero.innerHTML = `<div class="hero-copy">
@@ -184,8 +210,9 @@
     if (contactLead) contactLead.textContent = home.contactSection.lead;
     const contactBox = document.querySelector("[data-home-contact-box]");
     if (contactBox && settings.social) {
+      const boxHeading = home.contactSection?.messageBoxHeading || "Message me here";
       contactBox.innerHTML =
-        "<h4>Message me here</h4>" +
+        `<h4>${escapeHtml(boxHeading)}</h4>` +
         settings.social
           .map(
             (s) =>
@@ -229,6 +256,11 @@
 
   async function renderProjectsPage() {
     const { index, projects } = await loadProjects();
+    applyPageMeta(index.title, index.subtitle, null);
+    const mainHeading = document.querySelector("[data-projects-main-heading]");
+    if (mainHeading) mainHeading.textContent = index.mainWorkHeading || "main-work";
+    const smallHeading = document.querySelector("[data-projects-small-heading]");
+    if (smallHeading) smallHeading.textContent = index.smallProjectsHeading || "small-projects";
     const title = document.querySelector("[data-projects-header]");
     if (title) {
       title.innerHTML = `<h2>${escapeHtml(index.title)}</h2><p>${escapeHtml(index.subtitle)}</p>`;
@@ -252,6 +284,7 @@
   async function renderAboutPage() {
     const about = await fetchJson(CONTENT + "about.json");
     if (about.status !== "published") return;
+    applyPageMeta(about.heading, about.biography?.[0], null);
     const root = document.querySelector("[data-about-root]");
     if (!root) return;
     root.innerHTML = `<section class="about-hero about-page">
@@ -275,6 +308,7 @@
 
   async function renderContactPage(settings) {
     const contact = await fetchJson(CONTENT + "contact.json");
+    applyPageMeta(contact.title, contact.lead, settings);
     const header = document.querySelector("[data-contact-header]");
     if (header) {
       header.innerHTML = `<h2>${escapeHtml(contact.title)}</h2><p>${escapeHtml(contact.subtitle)}</p>`;
@@ -307,6 +341,7 @@
     const data = await fetchJson(CONTENT + file);
     const root = document.querySelector(rootSelector);
     if (!root || data.status !== "published") return;
+    applyPageMeta(data.title, data.subtitle, null);
     const header = root.querySelector("[data-list-header]");
     if (header) {
       header.innerHTML = `<h2>${escapeHtml(data.title)}</h2><p>${escapeHtml(data.subtitle)}</p>`;

@@ -116,6 +116,150 @@ export function renderCustomPageForm(d, field, imageField) {
     ${field("Show in main navigation", "showInNav", d.showInNav, "checkbox")}`;
 }
 
+export function renderHomeForm(d, field, imageField) {
+  const featured = (d.featuredProjectSlugs || []).join("\n");
+  const bioBlocks = (d.aboutSnippet?.paragraphs || [])
+    .map((p, i) => field(`About paragraph ${i + 1}`, `aboutSnippet.paragraphs.${i}`, p, "textarea"))
+    .join("");
+  return `<h2>Home</h2>
+    ${field("Status", "status", d.status, "select-status")}
+    <h3 class="bo-form-section">Hero</h3>
+    ${field("Heading", "hero.heading", d.hero?.heading)}
+    ${field("Heading accent", "hero.headingAccent", d.hero?.headingAccent)}
+    ${field("Subtitle", "hero.subtitle", d.hero?.subtitle, "textarea")}
+    ${imageField("Profile image", "hero.profileImage", d.hero?.profileImage)}
+    ${field("Profile image alt", "hero.profileImageAlt", d.hero?.profileImageAlt)}
+    ${field("Status line", "hero.statusText", d.hero?.statusText, "textarea", "Shown under hero photo")}
+    ${field("Hero CTA label", "hero.cta.label", d.hero?.cta?.label)}
+    ${field("Hero CTA link", "hero.cta.href", d.hero?.cta?.href)}
+    <h3 class="bo-form-section">Quote</h3>
+    ${field("Quote text", "quote.text", d.quote?.text, "textarea")}
+    ${field("Quote author", "quote.author", d.quote?.author)}
+    <h3 class="bo-form-section">About snippet</h3>
+    ${field("Section heading", "aboutSnippet.heading", d.aboutSnippet?.heading)}
+    ${bioBlocks || field("About paragraph 1", "aboutSnippet.paragraphs.0", d.aboutSnippet?.paragraphs?.[0], "textarea")}
+    ${field("About paragraph 2", "aboutSnippet.paragraphs.1", d.aboutSnippet?.paragraphs?.[1], "textarea")}
+    ${imageField("About image", "aboutSnippet.image", d.aboutSnippet?.image)}
+    ${field("About image alt", "aboutSnippet.imageAlt", d.aboutSnippet?.imageAlt)}
+    ${field("About CTA label", "aboutSnippet.cta.label", d.aboutSnippet?.cta?.label)}
+    ${field("About CTA link", "aboutSnippet.cta.href", d.aboutSnippet?.cta?.href)}
+    <h3 class="bo-form-section">Featured projects</h3>
+    ${field("Section heading", "projectsSection.heading", d.projectsSection?.heading, "text", "Home page projects block")}
+    ${field("View all label", "projectsSection.viewAllLabel", d.projectsSection?.viewAllLabel)}
+    ${field("View all link", "projectsSection.viewAllHref", d.projectsSection?.viewAllHref)}
+    ${field("Featured slugs (one per line)", "_featuredSlugs", featured, "textarea", "Must match project slugs")}
+    <h3 class="bo-form-section">Skills block (home)</h3>
+    ${field("Section heading", "skillsSection.heading", d.skillsSection?.heading)}
+    ${field("Kicker", "skillsSection.kicker", d.skillsSection?.kicker)}
+    ${field("Intro", "skillsSection.intro", d.skillsSection?.intro, "textarea")}
+    <h3 class="bo-form-section">Contact block (home)</h3>
+    ${field("Section heading", "contactSection.heading", d.contactSection?.heading)}
+    ${field("Lead", "contactSection.lead", d.contactSection?.lead, "textarea")}
+    ${field("Message box heading", "contactSection.messageBoxHeading", d.contactSection?.messageBoxHeading)}`;
+}
+
+export function renderAboutForm(d, field, imageField, escapeHtml) {
+  const bio = (d.biography || [])
+    .map(
+      (p, i) =>
+        itemCard(
+          "Paragraph",
+          i,
+          field("Text", `biography.${i}`, p, "textarea")
+        )
+    )
+    .join("");
+  return `<h2>About</h2>
+    ${field("Status", "status", d.status, "select-status")}
+    ${field("Eyebrow", "eyebrow", d.eyebrow)}
+    ${field("Page heading", "heading", d.heading)}
+    ${imageField("Profile image", "profileImage", d.profileImage)}
+    ${field("Profile image alt", "profileImageAlt", d.profileImageAlt)}
+    <h3 class="bo-form-section">Biography</h3>
+    <div class="bo-repeater" data-repeater="biography">${bio || `<p class="hint">No paragraphs yet.</p>`}</div>
+    <button type="button" class="bo-btn" data-add-repeater="biography">Add paragraph</button>
+    <h3 class="bo-form-section">Work section</h3>
+    ${field("Kicker", "workSection.kicker", d.workSection?.kicker)}
+    ${field("Heading", "workSection.heading", d.workSection?.heading)}
+    ${field("Intro", "workSection.intro", d.workSection?.intro, "textarea")}
+    ${field("Tags (one per line)", "workSection._tags", (d.workSection?.tags || []).join("\n"), "textarea")}
+    <h3 class="bo-form-section">Life section</h3>
+    ${field("Kicker", "lifeSection.kicker", d.lifeSection?.kicker)}
+    ${field("Heading", "lifeSection.heading", d.lifeSection?.heading)}
+    ${field("Intro", "lifeSection.intro", d.lifeSection?.intro, "textarea")}
+    ${field("Tags (one per line)", "lifeSection._tags", (d.lifeSection?.tags || []).join("\n"), "textarea")}`;
+}
+
+export function renderSiteSettingsForm(d, field, imageField, escapeHtml) {
+  const social = (d.social || [])
+    .map(
+      (s, i) =>
+        itemCard(
+          "Social link",
+          i,
+          `${field("ID (icon key)", `social.${i}.id`, s.id, "text", "e.g. github, linkedin")}
+          ${field("Label", `social.${i}.label`, s.label)}
+          ${field("URL", `social.${i}.url`, s.url)}
+          ${field("Display text", `social.${i}.display`, s.display)}`
+        )
+    )
+    .join("");
+  return `<h2>Site settings</h2>
+    <p class="hint">${escapeHtml(d.cmsNotice || "Global site name, SEO, footer, social links, and navigation.")}</p>
+    ${field("Site name", "siteName", d.siteName)}
+    ${field("Tagline", "tagline", d.tagline)}
+    ${imageField("Logo / icon path", "logo", d.logo, "Usually same as favicon")}
+    ${imageField("Favicon", "favicon", d.favicon)}
+    ${field("Footer blurb", "footer.blurb", d.footer?.blurb, "textarea")}
+    ${field("Copyright", "footer.copyright", d.footer?.copyright)}
+    <h3 class="bo-form-section">SEO defaults</h3>
+    ${field("Default title", "seo.defaultTitle", d.seo?.defaultTitle)}
+    ${field("Default description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}
+    <h3 class="bo-form-section">Social links</h3>
+    <div class="bo-repeater" data-repeater="social">${social || `<p class="hint">No social links.</p>`}</div>
+    <button type="button" class="bo-btn" data-add-repeater="social">Add social link</button>
+    ${renderNavigationForm(d, field)}`;
+}
+
+export function renderContactForm(d, field) {
+  return `<h2>Contact page</h2>
+    ${field("Status", "status", d.status, "select-status")}
+    ${field("Page title", "title", d.title)}
+    ${field("Subtitle", "subtitle", d.subtitle)}
+    ${field("Lead paragraph", "lead", d.lead, "textarea")}
+    ${field("Message box heading", "messageBoxHeading", d.messageBoxHeading)}
+    ${field("Media section heading", "mediaSectionHeading", d.mediaSectionHeading)}`;
+}
+
+export function renderProjectForm(d, field, imageField) {
+  const gallery = (d.gallery || []).join("\n");
+  return `${field("Status", "status", d.status, "select-status")}
+    ${field("Title", "title", d.title)}
+    ${field("Slug", "slug", d.slug, "text", "Used in /projects/slug")}
+    ${field("Category", "category", d.category, "text", "main-work or small-projects")}
+    ${field("Description", "description", d.description, "textarea")}
+    ${field("Long description", "longDescription", d.longDescription, "textarea")}
+    ${imageField("Thumbnail", "thumbnail", d.thumbnail)}
+    ${field("Thumbnail alt", "thumbnailAlt", d.thumbnailAlt)}
+    ${field("Gallery images (one path per line)", "_gallery", gallery, "textarea", "Use Choose on thumbnail; paste paths or pick from Media")}
+    ${field("Technologies (comma-separated)", "_technologies", (d.technologies || []).join(", "))}
+    ${field("GitHub URL", "githubUrl", d.githubUrl)}
+    ${field("Demo URL", "demoUrl", d.demoUrl)}
+    ${field("Featured on home", "featured", d.featured, "checkbox")}`;
+}
+
+export function renderProjectsIndexForm(d, field, escapeHtml) {
+  const slugList = (d.slugs || []).join("\n");
+  return `<h2>Projects page</h2>
+    <p class="hint">Controls <code>/projects</code> copy and section headings. Open each project under the tree to edit cards.</p>
+    ${field("Status", "status", d.status, "select-status")}
+    ${field("Page title", "title", d.title)}
+    ${field("Page subtitle", "subtitle", d.subtitle, "textarea")}
+    ${field("Main work section heading", "mainWorkHeading", d.mainWorkHeading)}
+    ${field("Small projects section heading", "smallProjectsHeading", d.smallProjectsHeading)}
+    ${field("Project order (slugs, one per line)", "_slugOrder", slugList, "textarea", "Must match existing project slugs")}`;
+}
+
 export function renderNavigationForm(d, field) {
   const nav = d.navigation || [];
   const rows = nav
@@ -151,6 +295,8 @@ export const REPEATER_DEFAULTS = {
   services: { name: "", description: "" },
   skills: { title: "", items: [] },
   navigation: { label: "", href: "/" },
+  social: { id: "", label: "", url: "", display: "" },
+  biography: "",
 };
 
 export const RESERVED_PAGE_SLUGS = new Set([

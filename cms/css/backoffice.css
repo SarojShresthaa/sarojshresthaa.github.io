@@ -546,6 +546,15 @@ body {
   font-size: 12px;
 }
 
+.bo-form-section {
+  margin: 28px 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bo-text);
+  border-bottom: 1px solid #e8ecf1;
+  padding-bottom: 8px;
+}
+
 .bo-login {
   max-width: 520px;
   margin: 80px auto;

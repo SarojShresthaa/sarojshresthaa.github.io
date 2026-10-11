@@ -91,3 +91,4 @@ In `/cms/`: **New project** → fill fields → **Save**. This commits:
 - **Custom pages:** **New page** in the CMS → `content/pages/{slug}.json` + `{slug}.html` at repo root. Optional **Show in nav** updates `site-settings.json` navigation.
 - **Images:** use **Choose…** on image fields (Home, Projects, custom pages) to pick from the media library; upload new files under **Media** (🖼).
 - **List pages** (Experience, Education, Skills, Services, Certifications) use visual repeaters instead of raw JSON.
+- **Full visual editing:** Home (all sections), About (biography + work/life blocks), Site settings (SEO, social, nav, favicon), Contact, Projects (including order & gallery), and custom pages. No raw JSON editor in normal use.
