@@ -510,7 +510,7 @@ function updateAuthUi() {
 async function initAuth() {
   state.config = await loadCmsConfig();
   state.github = state.config ? new GitHubClient(state.config) : null;
-  el.app.hidden = false;
+  el.app?.removeAttribute("hidden");
   updateAuthUi();
 }
 

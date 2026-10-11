@@ -5,10 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Portfolio CMS (Umbraco 17–inspired)</title>
-  <link rel="stylesheet" href="/cms/css/backoffice.css?v=3" />
+  <link rel="stylesheet" href="/cms/css/backoffice.css?v=4" />
 </head>
 <body>
-  <div class="bo-app" id="bo-app">
+  <div class="bo-gate" id="bo-login-gate" hidden>
+    <form class="bo-gate-card" id="bo-gate-form">
+      <h1>Portfolio CMS</h1>
+      <p class="bo-gate-sub">Sign in to open the backoffice. This is separate from GitHub (used when you save).</p>
+      <div class="bo-field">
+        <label for="bo-gate-user">Username</label>
+        <input id="bo-gate-user" name="username" autocomplete="username" required />
+      </div>
+      <div class="bo-field">
+        <label for="bo-gate-pass">Password</label>
+        <input id="bo-gate-pass" name="password" type="password" autocomplete="current-password" required />
+      </div>
+      <p class="bo-gate-error" id="bo-gate-error" hidden></p>
+      <button type="submit" class="bo-btn primary bo-gate-submit">Sign in</button>
+    </form>
+  </div>
+  <div class="bo-app" id="bo-app" hidden>
     <nav class="bo-rail" aria-label="Sections">
       <button type="button" class="bo-rail-btn active" data-section="content" title="Content">📄</button>
       <button type="button" class="bo-rail-btn" data-section="media" title="Media">🖼</button>
@@ -41,6 +57,6 @@
     </div>
   </div>
 
-  <script type="module" src="/cms/js/app.js?v=3"></script>
+  <script type="module" src="/cms/js/app.js?v=4"></script>
 </body>
 </html>

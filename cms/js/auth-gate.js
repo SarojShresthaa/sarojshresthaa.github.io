@@ -3,6 +3,9 @@ import { loadCmsConfig } from "./github-client.js";
 const SESSION_KEY = "portfolio_cms_gate";
 
 async function sha256(text) {
+  if (!crypto?.subtle) {
+    throw new Error("Password check needs a secure connection (HTTPS).");
+  }
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -45,49 +48,59 @@ export function clearCmsSession() {
   sessionStorage.removeItem(SESSION_KEY);
 }
 
-function renderLoginScreen(access, onSuccess) {
-  const root = document.createElement("div");
-  root.className = "bo-gate";
-  root.innerHTML = `
-    <form class="bo-gate-card" id="bo-gate-form">
-      <h1>Portfolio CMS</h1>
-      <p class="bo-gate-sub">Sign in to open the backoffice. This is separate from GitHub (used when you save).</p>
-      <div class="bo-field">
-        <label for="bo-gate-user">Username</label>
-        <input id="bo-gate-user" name="username" autocomplete="username" required />
-      </div>
-      <div class="bo-field">
-        <label for="bo-gate-pass">Password</label>
-        <input id="bo-gate-pass" name="password" type="password" autocomplete="current-password" required />
-      </div>
-      <p class="bo-gate-error" id="bo-gate-error" hidden></p>
-      <button type="submit" class="bo-btn primary bo-gate-submit">Sign in</button>
-    </form>`;
-  document.body.appendChild(root);
+function showApp() {
+  document.getElementById("bo-login-gate")?.setAttribute("hidden", "hidden");
+  document.getElementById("bo-app")?.removeAttribute("hidden");
+}
 
-  const form = root.querySelector("#bo-gate-form");
-  const errEl = root.querySelector("#bo-gate-error");
-  const userInput = root.querySelector("#bo-gate-user");
-  userInput.value = access.username;
+function showGate() {
+  document.getElementById("bo-app")?.setAttribute("hidden", "hidden");
+  document.getElementById("bo-login-gate")?.removeAttribute("hidden");
+}
+
+function wireLoginScreen(access, onSuccess) {
+  const root = document.getElementById("bo-login-gate");
+  const form = document.getElementById("bo-gate-form");
+  if (!root || !form) {
+    throw new Error("CMS login screen missing. Hard-refresh /cms/ (Ctrl+F5).");
+  }
+
+  const errEl = document.getElementById("bo-gate-error");
+  const userInput = document.getElementById("bo-gate-user");
+  if (userInput && !userInput.value) userInput.value = access.username;
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    errEl.hidden = true;
+    if (errEl) errEl.hidden = true;
     const username = form.username.value.trim();
     const password = form.password.value;
-    if (username !== access.username) {
-      errEl.textContent = "Invalid username or password.";
-      errEl.hidden = false;
+    const expectedUser = String(access.username).trim();
+    if (username.toLowerCase() !== expectedUser.toLowerCase()) {
+      if (errEl) {
+        errEl.textContent = "Invalid username or password.";
+        errEl.hidden = false;
+      }
       return;
     }
-    const hash = await sha256(password);
-    if (hash !== access.passwordSha256.toLowerCase()) {
-      errEl.textContent = "Invalid username or password.";
-      errEl.hidden = false;
+    try {
+      const hash = await sha256(password);
+      const expectedHash = String(access.passwordSha256).trim().toLowerCase();
+      if (hash !== expectedHash) {
+        if (errEl) {
+          errEl.textContent = "Invalid username or password.";
+          errEl.hidden = false;
+        }
+        return;
+      }
+    } catch (err) {
+      if (errEl) {
+        errEl.textContent = err.message || "Could not verify password.";
+        errEl.hidden = false;
+      }
       return;
     }
     setSession(access);
-    root.remove();
+    showApp();
     onSuccess();
   });
 }
@@ -96,16 +109,19 @@ function renderLoginScreen(access, onSuccess) {
 export async function ensureCmsAccess() {
   const config = await loadCmsConfig();
   const access = getAccessConfig(config);
-  if (!access) return;
+  if (!access) {
+    showApp();
+    return;
+  }
 
-  if (hasValidSession(access)) return;
+  if (hasValidSession(access)) {
+    showApp();
+    return;
+  }
 
-  document.getElementById("bo-app")?.setAttribute("hidden", "hidden");
+  showGate();
 
   await new Promise((resolve) => {
-    renderLoginScreen(access, () => {
-      document.getElementById("bo-app")?.removeAttribute("hidden");
-      resolve();
-    });
+    wireLoginScreen(access, resolve);
   });
 }
