@@ -8,15 +8,7 @@
   <link rel="stylesheet" href="/cms/css/backoffice.css" />
 </head>
 <body>
-  <div class="bo-login" id="bo-login" hidden>
-    <h1>Portfolio CMS</h1>
-    <p><strong>Custom Umbraco 17–inspired backoffice</strong> — not the official Umbraco CMS.</p>
-    <p>To enable GitHub publishing, copy <code>cms/config.example.json</code> to <code>cms/config.json</code> (gitignored) and configure a GitHub OAuth app plus OAuth proxy. See <code>docs/CMS-SETUP.md</code>.</p>
-    <p>You can still browse and edit content locally; saves require authentication.</p>
-    <button type="button" class="bo-btn primary" id="btn-open-readonly">Continue in read-only mode</button>
-  </div>
-
-  <div class="bo-app" id="bo-app" hidden>
+  <div class="bo-app" id="bo-app">
     <nav class="bo-rail" aria-label="Sections">
       <button type="button" class="bo-rail-btn active" data-section="content" title="Content">📄</button>
       <button type="button" class="bo-rail-btn" data-section="media" title="Media">🖼</button>
@@ -48,12 +40,6 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById("btn-open-readonly")?.addEventListener("click", () => {
-      document.getElementById("bo-login").hidden = true;
-      document.getElementById("bo-app").hidden = false;
-    });
-  </script>
   <script type="module" src="/cms/js/app.js"></script>
 </body>
 </html>

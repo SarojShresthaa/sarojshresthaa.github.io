@@ -19,15 +19,14 @@ GitHub Pages serves extensionless URLs for `.html` files (e.g. `/projects` → `
 
 ### Custom CMS (`/cms/`)
 
-1. Copy `cms/config.example.json` to `cms/config.json` (ignored by git).
-2. Create a **GitHub OAuth App** (callback URL must match your OAuth proxy).
-3. Deploy a small **GitHub OAuth proxy** service (any Decap-*compatible* proxy works as a generic OAuth bridge—you are not running Decap CMS). Example implementation: [decap-cms-github-backend](https://github.com/decaporg/decap-cms-github-backend) hosted on Render, Fly.io, etc.
-4. Set `oauth_proxy_url` and `github_client_id` in `cms/config.json`.
-5. Open `https://sarojshrestha.me/cms/`, sign in with GitHub, edit, **Save** (commit) or **Publish** (sets `status` to `published` then commits).
+1. Edit **`cms/config.public.json`** (committed to the repo): set `oauth_proxy_url` and `github_client_id` from your GitHub OAuth app. Optional local overrides: `cms/config.json` (gitignored).
+2. Create a **GitHub OAuth App** (callback URL must match your OAuth proxy — see below).
+3. Deploy a small **GitHub OAuth proxy** (e.g. [decap-cms-github-backend](https://github.com/decaporg/decap-cms-github-backend) on Render). Put the **client secret** only on the proxy, never in this repo.
+4. Push to GitHub and open **`https://sarojshrestha.me/cms/`** — use **Sign in with GitHub** in the top toolbar, then **Save** or **Publish**.
 
-**Security:** Never commit personal access tokens or OAuth secrets into this repo. Tokens live in session storage only after OAuth.
+**Security:** Never commit personal access tokens or OAuth **client secrets**. Only the public Client ID and proxy URL go in `config.public.json`.
 
-Without `cms/config.json`, the CMS runs in **read-only** mode (load and preview edits locally; no GitHub commits).
+Until OAuth is configured, **Sign in with GitHub** appears but is disabled; you can still edit in the UI and save via git by editing `content/` JSON files.
 
 ### Local git
 

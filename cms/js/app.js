@@ -1,4 +1,4 @@
-import { GitHubClient, loadCmsConfig } from "./github-client.js";
+import { GitHubClient, loadCmsConfig, isOAuthConfigured } from "./github-client.js";
 
 const PROJECT_PAGE_TEMPLATE = (slug) => `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -37,7 +37,6 @@ const state = {
 
 const el = {
   app: document.getElementById("bo-app"),
-  login: document.getElementById("bo-login"),
   tree: document.getElementById("bo-tree"),
   editor: document.getElementById("bo-editor"),
   breadcrumb: document.getElementById("bo-breadcrumb"),
@@ -486,20 +485,27 @@ function createProject() {
   toast("Project created locally. Save to commit to GitHub.");
 }
 
+function updateAuthUi() {
+  const oauthReady = isOAuthConfigured(state.config);
+  const authed = state.github?.isAuthenticated();
+  if (authed) {
+    el.authLabel.textContent = "Signed in to GitHub";
+  } else if (!oauthReady) {
+    el.authLabel.textContent = "Sign-in not configured — edit cms/config.public.json";
+  } else {
+    el.authLabel.textContent = "Not signed in";
+  }
+  el.btnLogin.style.display = authed ? "none" : "";
+  el.btnLogin.disabled = !oauthReady;
+  el.btnLogin.title = oauthReady ? "Sign in with GitHub to save changes" : "Add OAuth proxy URL and Client ID to cms/config.public.json, then push to GitHub";
+  el.btnLogout.style.display = authed ? "" : "none";
+}
+
 async function initAuth() {
   state.config = await loadCmsConfig();
-  if (state.config) state.github = new GitHubClient(state.config);
-  const authed = state.github?.isAuthenticated();
-  el.authLabel.textContent = authed ? "Signed in to GitHub" : "Not signed in";
-  el.btnLogin.style.display = state.config && !authed ? "" : "none";
-  el.btnLogout.style.display = authed ? "" : "none";
-  if (!state.config) {
-    el.login.hidden = false;
-    el.app.hidden = true;
-    return;
-  }
-  el.login.hidden = true;
+  state.github = state.config ? new GitHubClient(state.config) : null;
   el.app.hidden = false;
+  updateAuthUi();
 }
 
 async function main() {
@@ -520,8 +526,8 @@ async function main() {
     }
   });
   el.btnLogout?.addEventListener("click", () => {
-    state.github.setToken(null);
-    initAuth();
+    state.github?.setToken(null);
+    updateAuthUi();
     render();
   });
 

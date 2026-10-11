@@ -99,7 +99,17 @@ export class GitHubClient {
 }
 
 export async function loadCmsConfig() {
-  const res = await fetch("/cms/config.json", { cache: "no-cache" });
-  if (!res.ok) return null;
-  return res.json();
+  let base = null;
+  const pub = await fetch("/cms/config.public.json", { cache: "no-cache" });
+  if (pub.ok) base = await pub.json();
+  const local = await fetch("/cms/config.json", { cache: "no-cache" });
+  if (local.ok) {
+    const overrides = await local.json();
+    base = { ...(base || {}), ...overrides };
+  }
+  return base;
+}
+
+export function isOAuthConfigured(config) {
+  return Boolean(config?.oauth_proxy_url && config?.github_client_id && !String(config.oauth_proxy_url).includes("YOUR_") && !String(config.github_client_id).includes("YOUR_"));
 }
