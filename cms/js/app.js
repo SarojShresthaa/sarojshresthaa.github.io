@@ -1,4 +1,5 @@
 import { GitHubClient, loadCmsConfig, isOAuthConfigured } from "./github-client.js";
+import { ensureCmsAccess, clearCmsSession } from "./auth-gate.js";
 
 const PROJECT_PAGE_TEMPLATE = (slug) => `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -48,6 +49,7 @@ const el = {
   btnNewProject: document.getElementById("btn-new-project"),
   btnLogin: document.getElementById("btn-login"),
   btnLogout: document.getElementById("btn-logout"),
+  btnCmsLock: document.getElementById("btn-cms-lock"),
   authLabel: document.getElementById("bo-auth-label"),
 };
 
@@ -513,7 +515,17 @@ async function initAuth() {
 }
 
 async function main() {
+  await ensureCmsAccess();
+  const cfg = await loadCmsConfig();
+  const gateOn =
+    cfg?.cmsAccess?.passwordSha256 &&
+    !String(cfg.cmsAccess.passwordSha256).includes("YOUR_");
+  if (!gateOn && el.btnCmsLock) el.btnCmsLock.style.display = "none";
   wireRail();
+  el.btnCmsLock?.addEventListener("click", () => {
+    clearCmsSession();
+    location.reload();
+  });
   el.btnSave.addEventListener("click", saveSelected);
   el.btnPublish.addEventListener("click", publishSelected);
   el.btnPreview.addEventListener("click", () => {

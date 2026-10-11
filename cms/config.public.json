@@ -3,5 +3,10 @@
   "branch": "main",
   "oauth_proxy_url": "https://luffy-cms-oauth.onrender.com",
   "github_client_id": "Ov23lii35wclPrYpEXGo",
-  "site_url": "https://sarojshrestha.me"
+  "site_url": "https://sarojshrestha.me",
+  "cmsAccess": {
+    "username": "saroj",
+    "passwordSha256": "YOUR_PASSWORD_SHA256",
+    "sessionHours": 12
+  }
 }

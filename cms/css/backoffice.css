@@ -338,6 +338,46 @@ body {
   word-break: break-all;
 }
 
+.bo-gate {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--bo-workspace);
+}
+
+.bo-gate-card {
+  width: min(420px, 100%);
+  background: #fff;
+  border: 1px solid #dde3ea;
+  border-radius: 12px;
+  padding: 28px 28px 32px;
+  box-shadow: 0 12px 40px rgba(15, 20, 36, 0.08);
+}
+
+.bo-gate-card h1 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.bo-gate-sub {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--bo-muted);
+  line-height: 1.5;
+}
+
+.bo-gate-error {
+  color: var(--bo-danger);
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+.bo-gate-submit {
+  width: 100%;
+  margin-top: 8px;
+}
+
 .bo-login {
   max-width: 520px;
   margin: 80px auto;

@@ -28,6 +28,30 @@ GitHub Pages serves extensionless URLs for `.html` files (e.g. `/projects` → `
 
 Until OAuth is configured, **Sign in with GitHub** appears but is disabled; you can still edit in the UI and save via git by editing `content/` JSON files.
 
+## CMS username / password gate
+
+Optional extra lock on `/cms/` before the backoffice loads (separate from GitHub sign-in for Save).
+
+1. Choose a password and generate a SHA-256 hash locally (never commit the plain password):
+
+   ```bash
+   node scripts/hash-cms-password.js "your-strong-password"
+   ```
+
+2. In `cms/config.public.json`, set `cmsAccess`:
+
+   ```json
+   "cmsAccess": {
+     "username": "saroj",
+     "passwordSha256": "<paste hash here>",
+     "sessionHours": 12
+   }
+   ```
+
+3. Push to GitHub. Visiting `/cms/` shows a login form first; **Lock** in the toolbar ends the session.
+
+**Note:** On static GitHub Pages this is a **browser gate** (hash in public config). It keeps casual visitors out but is not as strong as server-side auth (e.g. Cloudflare Access). GitHub sign-in is still required to **Save** to the repository.
+
 ### Local git
 
 You can edit JSON under `content/` directly and push to `main`; GitHub Pages redeploys automatically.
