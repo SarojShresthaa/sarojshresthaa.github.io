@@ -9,11 +9,30 @@
     "defaultDescription": "Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu."
   },
   "navigation": [
-    { "label": "home", "href": "/" },
-    { "label": "projects", "href": "/projects" },
-    { "label": "about", "href": "/about" },
-    { "label": "experience", "href": "/experience" },
-    { "label": "contact", "href": "/contact" }
+    {
+      "label": "home",
+      "href": "/"
+    },
+    {
+      "label": "projects",
+      "href": "/projects"
+    },
+    {
+      "label": "about",
+      "href": "/about"
+    },
+    {
+      "label": "experience",
+      "href": "/experience"
+    },
+    {
+      "label": "contact",
+      "href": "/contact"
+    },
+    {
+      "label": "hello",
+      "href": "/hello"
+    }
   ],
   "footer": {
     "copyright": "© 2026 Saroj Shrestha",
