@@ -1,5 +1,25 @@
 {
   "status": "published",
   "title": "Recycle bin",
-  "items": []
+  "items": [
+    {
+      "id": "1791736366553-hello",
+      "deletedAt": "2026-10-11T16:32:46.553Z",
+      "type": "page",
+      "slug": "hello",
+      "title": "hello",
+      "data": {
+        "status": "published",
+        "slug": "hello",
+        "title": "hello",
+        "subtitle": "",
+        "heroImage": "",
+        "paragraphs": [
+          "Edit this page in the CMS."
+        ],
+        "navLabel": "hello",
+        "showInNav": true
+      }
+    }
+  ]
 }
