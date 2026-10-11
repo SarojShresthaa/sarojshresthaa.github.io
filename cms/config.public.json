@@ -6,7 +6,7 @@
   "site_url": "https://sarojshrestha.me",
   "cmsAccess": {
     "username": "saroj",
-    "passwordSha256": "YOUR_PASSWORD_SHA256",
+    "passwordSha256": "e65ec2b4e96ecae33c4c67da69cbd3cbf72c8635ac4fb3292b5980befc851802",
     "sessionHours": 12
   }
 }
