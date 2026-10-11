@@ -1,0 +1,17 @@
+{
+  "name": "saroj-portfolio-oauth-proxy",
+  "private": true,
+  "version": "1.0.0",
+  "description": "GitHub OAuth proxy for custom portfolio CMS (GitHub Pages)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  }
+}
