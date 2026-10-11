@@ -1,5 +1,14 @@
 import { GitHubClient, loadCmsConfig, isOAuthConfigured } from "./github-client.js";
 import { ensureCmsAccess, clearCmsSession } from "./auth-gate.js";
+import { imageFieldHtml, wireImagePickers } from "./media-picker.js";
+import {
+  renderListPageForm,
+  renderSkillsForm,
+  renderCustomPageForm,
+  renderNavigationForm,
+  REPEATER_DEFAULTS,
+  RESERVED_PAGE_SLUGS,
+} from "./content-forms.js";
 
 const PROJECT_PAGE_TEMPLATE = (slug) => `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -22,6 +31,27 @@ const PROJECT_PAGE_TEMPLATE = (slug) => `<!DOCTYPE html>
 </html>
 `;
 
+const CUSTOM_PAGE_HTML = (slug) => `<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page – Saroj Shrestha</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>window.__PAGE_SLUG__='${slug}';</script>
+  <script>(function(){var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();</script>
+</head>
+<body data-page="custom-page">
+  <header class="header"><div class="container header-inner"><a class="logo" href="/"><span class="logo-mark"></span><span data-site-name>saroj.dev</span></a><div class="menu-cont"><button class="menu-btn" type="button" aria-label="Open menu"><span></span><span></span></button><ul class="menubar" data-portfolio-nav-root><li data-portfolio-nav-insert><button class="soc theme-btn" type="button" aria-label="Toggle theme"><svg class="icon-lamp-off" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/></svg><svg class="icon-lamp-on" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/></svg></button></li><div class="social-rail animate-bounce-slower" data-social-rail></div></ul></div></div></header>
+  <main class="container page" data-custom-page-root><p class="lead">Loading…</p></main>
+  <footer class="footer"><div class="container footer-inner"><div class="footer-brand"><div class="footer-top"><a class="logo" href="/"><span class="logo-mark"></span><span data-site-name>saroj.dev</span></a></div><p data-footer-blurb></p></div><div class="footer-media"><h3>Media</h3><ul class="media-links" data-footer-social></ul></div></div><p class="copyright" data-copyright></p></footer>
+  <script src="/js/main.js"></script><script src="/js/portfolio.js"></script>
+</body>
+</html>
+`;
+
 const state = {
   section: "content",
   selected: null,
@@ -35,6 +65,7 @@ const state = {
   github: null,
   shas: new Map(),
   expandedProjects: true,
+  expandedCustomPages: true,
 };
 
 const el = {
@@ -48,6 +79,7 @@ const el = {
   btnPreview: document.getElementById("btn-preview"),
   btnDelete: document.getElementById("btn-delete"),
   btnNewProject: document.getElementById("btn-new-project"),
+  btnNewPage: document.getElementById("btn-new-page"),
   btnLogin: document.getElementById("btn-login"),
   btnLogout: document.getElementById("btn-logout"),
   btnCmsLock: document.getElementById("btn-cms-lock"),
@@ -83,6 +115,7 @@ async function loadContent() {
     ["services", "/content/services.json"],
     ["projects-index", "/content/projects/index.json"],
     ["recycle-bin", "/content/recycle-bin/index.json"],
+    ["pages-index", "/content/pages/index.json"],
   ];
   for (const [id, path] of paths) {
     let data;
@@ -92,11 +125,23 @@ async function loadContent() {
       } catch {
         data = { status: "published", title: "Recycle bin", items: [] };
       }
+    } else if (id === "pages-index") {
+      try {
+        data = await fetchJson(path);
+      } catch {
+        data = { status: "published", title: "Custom pages", slugs: [] };
+      }
     } else {
       data = await fetchJson(path);
     }
     const kind =
-      id === "projects-index" ? "projects-index" : id === "recycle-bin" ? "recycle-bin" : "page";
+      id === "projects-index"
+        ? "projects-index"
+        : id === "pages-index"
+          ? "pages-index"
+          : id === "recycle-bin"
+            ? "recycle-bin"
+            : "page";
     state.docs.set(id, {
       id,
       path: path.replace(/^\//, ""),
@@ -117,6 +162,22 @@ async function loadContent() {
       slug,
     });
   }
+  const pagesIndex = state.docs.get("pages-index")?.data;
+  for (const slug of pagesIndex?.slugs || []) {
+    const path = `/content/pages/${slug}.json`;
+    try {
+      state.docs.set(`page:${slug}`, {
+        id: `page:${slug}`,
+        path,
+        repoPath: `content/pages/${slug}.json`,
+        data: await fetchJson(path),
+        kind: "custom-page",
+        slug,
+      });
+    } catch {
+      /* orphan slug */
+    }
+  }
   state.media = await fetchJson("/content/media/index.json");
   state.loading = false;
   if (!state.selected) state.selected = "home";
@@ -136,6 +197,7 @@ function previewUrl(doc) {
   if (doc.id === "contact") return base + "/contact";
   if (doc.id === "projects-index") return base + "/projects";
   if (doc.kind === "project") return base + "/projects/" + doc.slug;
+  if (doc.kind === "custom-page") return base + "/" + doc.slug;
   if (doc.id === "experience") return base + "/experience";
   if (doc.id === "education") return base + "/education";
   if (doc.id === "skills") return base + "/skills";
@@ -150,6 +212,11 @@ function validateDoc(doc) {
   if (doc.kind === "project") {
     if (!doc.data.title?.trim()) return "Project title is required.";
     if (!doc.data.slug?.trim()) return "Project slug is required.";
+  }
+  if (doc.kind === "custom-page") {
+    if (!doc.data.title?.trim()) return "Page title is required.";
+    if (!doc.data.slug?.trim()) return "Page slug is required.";
+    if (RESERVED_PAGE_SLUGS.has(doc.data.slug)) return "That slug is reserved. Pick another.";
   }
   return null;
 }
@@ -190,6 +257,7 @@ function renderTree() {
     ["home", "Home"],
     ["about", "About"],
     ["projects-folder", null],
+    ["pages-folder", null],
     ["experience", "Experience"],
     ["education", "Education"],
     ["skills", "Skills"],
@@ -207,6 +275,18 @@ function renderTree() {
         const index = state.docs.get("projects-index")?.data;
         for (const slug of index?.slugs || []) {
           const pid = `project:${slug}`;
+          const title = state.docs.get(pid)?.data?.title || slug;
+          html += `<div class="bo-tree-item child${state.selected === pid ? " active" : ""}" data-id="${pid}">${escapeHtml(title)}</div>`;
+        }
+      }
+      continue;
+    }
+    if (id === "pages-folder") {
+      html += `<div class="bo-tree-item${state.selected === "pages-index" ? " active" : ""}" data-id="pages-index"><button type="button" class="bo-tree-toggle" data-toggle-pages>${state.expandedCustomPages ? "▾" : "▸"}</button> Pages</div>`;
+      if (state.expandedCustomPages) {
+        const pIndex = state.docs.get("pages-index")?.data;
+        for (const slug of pIndex?.slugs || []) {
+          const pid = `page:${slug}`;
           const title = state.docs.get(pid)?.data?.title || slug;
           html += `<div class="bo-tree-item child${state.selected === pid ? " active" : ""}" data-id="${pid}">${escapeHtml(title)}</div>`;
         }
@@ -234,6 +314,14 @@ function renderTree() {
       renderTree();
     });
   }
+  const togglePages = el.tree.querySelector("[data-toggle-pages]");
+  if (togglePages) {
+    togglePages.addEventListener("click", (e) => {
+      e.stopPropagation();
+      state.expandedCustomPages = !state.expandedCustomPages;
+      renderTree();
+    });
+  }
 }
 
 function idSection(id) {
@@ -256,7 +344,115 @@ function field(label, key, value, type = "text", hint = "") {
   if (type === "checkbox") {
     return `<div class="bo-field"><label><input type="checkbox" data-key="${key}" data-bool="1"${v ? " checked" : ""} /> ${label}</label></div>`;
   }
+  if (type === "image") {
+    return imageFieldHtml(label, key, v, hint, escapeHtml);
+  }
   return `<div class="bo-field"><label>${label}</label><input data-key="${key}" value="${escapeHtml(v)}" />${hint ? `<p class="hint">${hint}</p>` : ""}</div>`;
+}
+
+function imageField(label, key, value, hint = "") {
+  return field(label, key, value, "image", hint);
+}
+
+function wireRepeaters(form, doc) {
+  form.querySelectorAll("[data-add-repeater]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const kind = btn.dataset.addRepeater;
+      if (kind === "skills") {
+        if (!doc.data.columns) doc.data.columns = [];
+        doc.data.columns.push({ title: "", items: [] });
+      } else if (kind === "navigation") {
+        if (!doc.data.navigation) doc.data.navigation = [];
+        doc.data.navigation.push({ label: "", href: "/" });
+      } else if (REPEATER_DEFAULTS[kind]) {
+        if (!doc.data.items) doc.data.items = [];
+        doc.data.items.push(JSON.parse(JSON.stringify(REPEATER_DEFAULTS[kind])));
+      }
+      state.dirty = true;
+      render();
+    });
+  });
+  form.querySelectorAll("[data-remove-item]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".bo-repeater-card");
+      const idx = Number(card?.dataset.itemIndex);
+      const repeater = btn.closest("[data-repeater]");
+      const kind = repeater?.dataset.repeater;
+      if (Number.isNaN(idx)) return;
+      if (kind === "skills" && doc.data.columns) doc.data.columns.splice(idx, 1);
+      else if (kind === "navigation" && doc.data.navigation) doc.data.navigation.splice(idx, 1);
+      else if (doc.data.items) doc.data.items.splice(idx, 1);
+      state.dirty = true;
+      render();
+    });
+  });
+}
+
+function syncCustomPageNavigation(doc) {
+  if (doc.kind !== "custom-page") return false;
+  const settings = state.docs.get("site-settings");
+  if (!settings) return false;
+  const href = "/" + doc.data.slug;
+  const label = (doc.data.navLabel || doc.data.title || doc.data.slug || "").trim();
+  const nav = settings.data.navigation || [];
+  const idx = nav.findIndex((n) => n.href === href);
+  let changed = false;
+  if (doc.data.showInNav) {
+    if (idx < 0) {
+      nav.push({ label: label || doc.data.slug, href });
+      changed = true;
+    } else if (nav[idx].label !== label) {
+      nav[idx].label = label || doc.data.slug;
+      changed = true;
+    }
+  } else if (idx >= 0) {
+    nav.splice(idx, 1);
+    changed = true;
+  }
+  if (changed) settings.data.navigation = nav;
+  return changed;
+}
+
+function wireEditorForm(form, doc) {
+  bindEditor(form, doc);
+  wireImagePickers(form, doc, () => state.media?.items, (key, path) => {
+    setDeep(doc.data, key, path);
+    state.dirty = true;
+    updateStatusPill(doc.data.status);
+    el.btnSave.disabled = !state.github?.isAuthenticated();
+    render();
+  });
+  wireRepeaters(form, doc);
+  form.querySelectorAll("[data-key$='._technologies'], [data-key='_technologies']").forEach((input) => {
+    input.addEventListener("input", (e) => {
+      const docRef = getSelectedDoc();
+      if (!docRef) return;
+      docRef.data.technologies = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
+      state.dirty = true;
+    });
+  });
+  form.querySelectorAll("[data-key$='._achievements']").forEach((input) => {
+    input.addEventListener("input", (e) => {
+      const m = e.target.dataset.key.match(/^items\.(\d+)\._achievements$/);
+      if (!m) return;
+      const item = doc.data.items?.[Number(m[1])];
+      if (item) item.achievements = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
+      state.dirty = true;
+    });
+  });
+  form.querySelectorAll("[data-key$='._items']").forEach((input) => {
+    input.addEventListener("input", (e) => {
+      const m = e.target.dataset.key.match(/^columns\.(\d+)\._items$/);
+      if (!m) return;
+      const col = doc.data.columns?.[Number(m[1])];
+      if (col) col.items = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
+      state.dirty = true;
+    });
+  });
+  form.querySelector("[data-key='_paragraphs']")?.addEventListener("input", (e) => {
+    doc.data.paragraphs = e.target.value.split(/\n\n+/).map((s) => s.trim()).filter(Boolean);
+    state.dirty = true;
+  });
 }
 
 function bindEditor(form, doc) {
@@ -305,7 +501,10 @@ function renderEditorForm(doc) {
   if (doc.id === "home") {
     return `<h2>Home</h2>${field("Status", "status", d.status, "select-status")}
       ${field("Heading", "hero.heading", d.hero?.heading)}${field("Heading accent", "hero.headingAccent", d.hero?.headingAccent)}
-      ${field("Subtitle", "hero.subtitle", d.hero?.subtitle, "textarea")}${field("Profile image path", "hero.profileImage", d.hero?.profileImage)}
+      ${field("Subtitle", "hero.subtitle", d.hero?.subtitle, "textarea")}
+      ${imageField("Profile image", "hero.profileImage", d.hero?.profileImage)}
+      ${field("Profile image alt", "hero.profileImageAlt", d.hero?.profileImageAlt)}
+      ${imageField("About snippet image", "aboutSnippet.image", d.aboutSnippet?.image)}
       ${field("CTA label", "hero.cta.label", d.hero?.cta?.label)}${field("CTA link", "hero.cta.href", d.hero?.cta?.href)}
       ${field("Quote", "quote.text", d.quote?.text, "textarea")}${field("About snippet (para 1)", "aboutSnippet.paragraphs.0", d.aboutSnippet?.paragraphs?.[0], "textarea")}`;
   }
@@ -317,14 +516,30 @@ function renderEditorForm(doc) {
       d.status === "draft"
         ? `<p class="hint"><strong>Public site:</strong> Draft projects are hidden on <code>/projects</code>. Sign in with GitHub, then <strong>Save</strong> and <strong>Publish</strong> (or set Status to Published and Save). Wait ~1–2 min for GitHub Pages after save.</p>`
         : `<p class="hint"><strong>Public site:</strong> Published projects appear on <code>/projects</code> after Save and GitHub Pages deploy.</p>`;
-    return `${visHint}<h2>Project</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Slug", "slug", d.slug, "text", "Used in /projects/slug")}${field("Category", "category", d.category, "text", "main-work or small-projects")}${field("Description", "description", d.description, "textarea")}${field("Long description", "longDescription", d.longDescription, "textarea")}${field("Thumbnail path", "thumbnail", d.thumbnail)}${field("Technologies (comma-separated)", "_technologies", (d.technologies || []).join(", "))}${field("GitHub URL", "githubUrl", d.githubUrl)}${field("Demo URL", "demoUrl", d.demoUrl)}${field("Featured", "featured", d.featured, "checkbox")}`;
+    return `${visHint}<h2>Project</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Slug", "slug", d.slug, "text", "Used in /projects/slug")}${field("Category", "category", d.category, "text", "main-work or small-projects")}${field("Description", "description", d.description, "textarea")}${field("Long description", "longDescription", d.longDescription, "textarea")}${imageField("Thumbnail", "thumbnail", d.thumbnail)}${field("Technologies (comma-separated)", "_technologies", (d.technologies || []).join(", "))}${field("GitHub URL", "githubUrl", d.githubUrl)}${field("Demo URL", "demoUrl", d.demoUrl)}${field("Featured", "featured", d.featured, "checkbox")}`;
+  }
+  if (doc.kind === "custom-page") {
+    return renderCustomPageForm(d, field, imageField);
   }
   if (doc.id === "site-settings") {
     return `<h2>Site settings</h2><p class="hint">${escapeHtml(d.cmsNotice || "")}</p>
-      ${field("Site name", "siteName", d.siteName)}${field("Footer blurb", "footer.blurb", d.footer?.blurb, "textarea")}${field("Default SEO title", "seo.defaultTitle", d.seo?.defaultTitle)}${field("Default SEO description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}`;
+      ${field("Site name", "siteName", d.siteName)}${field("Footer blurb", "footer.blurb", d.footer?.blurb, "textarea")}${field("Default SEO title", "seo.defaultTitle", d.seo?.defaultTitle)}${field("Default SEO description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}
+      ${renderNavigationForm(d, field)}`;
   }
+  if (doc.id === "skills") {
+    return renderSkillsForm(d, field, imageField, escapeHtml);
+  }
+  const listForm = renderListPageForm(doc, field, escapeHtml);
+  if (listForm) return listForm;
   if (doc.id === "contact") {
     return `<h2>Contact</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Subtitle", "subtitle", d.subtitle)}${field("Lead", "lead", d.lead, "textarea")}`;
+  }
+  if (doc.id === "pages-index") {
+    const slugList = (d.slugs || []).join("\n");
+    return `<h2>Custom pages</h2>
+      <p class="hint">Use <strong>New page</strong> in the toolbar. Each page gets a URL like <code>/your-slug</code>.</p>
+      ${field("Status", "status", d.status, "select-status")}
+      <div class="bo-field"><label>Page slugs (read-only)</label><textarea readonly tabindex="-1" style="font-family:monospace;min-height:100px;background:#f4f6f8">${escapeHtml(slugList || "(none yet)")}</textarea></div>`;
   }
   if (doc.id === "projects-index") {
     const slugList = (d.slugs || []).join("\n");
@@ -451,8 +666,7 @@ function renderEditor() {
     return;
   }
   el.editor.innerHTML = `<form class="bo-editor" id="bo-form">${renderEditorForm(doc)}</form>`;
-  const form = document.getElementById("bo-form");
-  bindEditor(form, doc);
+  wireEditorForm(document.getElementById("bo-form"), doc);
   const raw = document.getElementById("raw-json");
   if (raw) {
     raw.addEventListener("change", () => {
@@ -464,10 +678,6 @@ function renderEditor() {
       }
     });
   }
-  form.querySelector("[data-key=_technologies]")?.addEventListener("input", (e) => {
-    doc.data.technologies = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
-    state.dirty = true;
-  });
 }
 
 function updateStatusPill(status) {
@@ -519,10 +729,10 @@ function render() {
   el.btnNewProject.style.display = state.section === "content" ? "" : "none";
   el.btnSave.disabled = !state.dirty || !state.github?.isAuthenticated();
   el.btnPublish.disabled = !state.github?.isAuthenticated() || !editingDoc;
-  el.btnDelete.style.display = editingDoc?.kind === "project" ? "" : "none";
-  if (el.btnDelete && editingDoc?.kind === "project") {
-    el.btnDelete.textContent = "Move to recycle bin";
-  }
+  const canRecycle = editingDoc?.kind === "project" || editingDoc?.kind === "custom-page";
+  el.btnDelete.style.display = canRecycle ? "" : "none";
+  if (el.btnDelete && canRecycle) el.btnDelete.textContent = "Move to recycle bin";
+  if (el.btnNewPage) el.btnNewPage.style.display = state.section === "content" ? "" : "none";
 }
 
 function wireRail() {
@@ -577,10 +787,24 @@ async function saveSelected() {
       const index = state.docs.get("projects-index");
       if (index) await commitDoc(index, `CMS: sync project index (${doc.slug})`);
     }
+    if (doc.kind === "custom-page") {
+      await state.github.putFile(`${doc.slug}.html`, CUSTOM_PAGE_HTML(doc.slug), `CMS: sync page ${doc.slug}`);
+      const pagesIndex = state.docs.get("pages-index");
+      if (pagesIndex) await commitDoc(pagesIndex, `CMS: sync pages index (${doc.slug})`);
+      if (syncCustomPageNavigation(doc)) {
+        const settings = state.docs.get("site-settings");
+        if (settings) await commitDoc(settings, `CMS: sync nav for ${doc.slug}`);
+      }
+    }
+    if (doc.id === "site-settings") {
+      /* navigation edited in settings form */
+    }
     state.dirty = false;
     const saved = getSelectedDoc();
     if (saved?.kind === "project" && saved.data.status === "draft") {
       toast("Saved. Project is still Draft — click Publish to show it on /projects.");
+    } else if (saved?.kind === "custom-page" && saved.data.status === "draft") {
+      toast("Saved. Page is Draft — Publish to show it on the live site.");
     } else {
       toast("Saved to GitHub. Site will update after GitHub Pages deploys.");
     }
@@ -615,9 +839,9 @@ async function commitRecycleBin(message) {
   await commitDoc(doc, message);
 }
 
-async function deleteSelectedProject() {
+async function deleteSelectedContent() {
   const doc = getSelectedDoc();
-  if (!doc || doc.kind !== "project") return;
+  if (!doc || (doc.kind !== "project" && doc.kind !== "custom-page")) return;
   if (
     !confirm(
       `Move “${doc.data.title}” to the recycle bin? It will disappear from the public site; you can restore it from the Recycle bin section.`
@@ -634,30 +858,50 @@ async function deleteSelectedProject() {
     bin.items.unshift({
       id: `${Date.now()}-${doc.slug}`,
       deletedAt: new Date().toISOString(),
-      type: "project",
+      type: doc.kind === "custom-page" ? "page" : "project",
       slug: doc.slug,
       title: doc.data.title,
       data: JSON.parse(JSON.stringify(doc.data)),
     });
-    await commitRecycleBin(`CMS: recycle project ${doc.slug}`);
+    await commitRecycleBin(`CMS: recycle ${doc.slug}`);
 
-    const index = state.docs.get("projects-index");
-    index.data.slugs = (index.data.slugs || []).filter((s) => s !== doc.slug);
-    await commitDoc(index, `CMS: remove slug ${doc.slug}`);
-
-    try {
-      await state.github.deleteFile(doc.repoPath, `CMS: remove project json ${doc.slug}`);
-    } catch {
-      /* never saved to GitHub */
+    if (doc.kind === "project") {
+      const index = state.docs.get("projects-index");
+      index.data.slugs = (index.data.slugs || []).filter((s) => s !== doc.slug);
+      await commitDoc(index, `CMS: remove slug ${doc.slug}`);
+      try {
+        await state.github.deleteFile(doc.repoPath, `CMS: remove project json ${doc.slug}`);
+      } catch {
+        /* never saved */
+      }
+      try {
+        await state.github.deleteFile(`projects/${doc.slug}/index.html`, `CMS: remove project page ${doc.slug}`);
+      } catch {
+        /* optional */
+      }
+      state.selected = "projects-index";
+    } else {
+      const pagesIndex = state.docs.get("pages-index");
+      pagesIndex.data.slugs = (pagesIndex.data.slugs || []).filter((s) => s !== doc.slug);
+      await commitDoc(pagesIndex, `CMS: remove page slug ${doc.slug}`);
+      doc.data.showInNav = false;
+      syncCustomPageNavigation(doc);
+      const settings = state.docs.get("site-settings");
+      if (settings) await commitDoc(settings, `CMS: remove nav ${doc.slug}`);
+      try {
+        await state.github.deleteFile(doc.repoPath, `CMS: remove page json ${doc.slug}`);
+      } catch {
+        /* */
+      }
+      try {
+        await state.github.deleteFile(`${doc.slug}.html`, `CMS: remove page html ${doc.slug}`);
+      } catch {
+        /* */
+      }
+      state.selected = "pages-index";
     }
-    try {
-      await state.github.deleteFile(`projects/${doc.slug}/index.html`, `CMS: remove project page ${doc.slug}`);
-    } catch {
-      /* page may not exist */
-    }
 
-    toast("Project moved to recycle bin.");
-    state.selected = "projects-index";
+    toast("Moved to recycle bin.");
     state.dirty = false;
     await loadContent();
   } catch (e) {
@@ -674,7 +918,45 @@ async function restoreFromRecycleBin(itemId) {
   const idx = (bin?.items || []).findIndex((i) => i.id === itemId);
   if (idx < 0) return;
   const item = bin.items[idx];
-  if (item.type !== "project" || !item.slug || !item.data) {
+  if (!item.slug || !item.data) {
+    toast("Unsupported recycle item.", false);
+    return;
+  }
+  if (item.type === "page") {
+    if (state.docs.has(`page:${item.slug}`)) {
+      toast("A page with this slug already exists.", false);
+      return;
+    }
+    if (!confirm(`Restore page “${item.title || item.slug}”?`)) return;
+    try {
+      const pagesIndex = state.docs.get("pages-index");
+      pagesIndex.data.slugs = [...(pagesIndex.data.slugs || []), item.slug];
+      const pageDoc = {
+        id: `page:${item.slug}`,
+        kind: "custom-page",
+        slug: item.slug,
+        repoPath: `content/pages/${item.slug}.json`,
+        data: JSON.parse(JSON.stringify(item.data)),
+      };
+      await commitDoc(pageDoc, `CMS: restore page ${item.slug}`);
+      await state.github.putFile(`${item.slug}.html`, CUSTOM_PAGE_HTML(item.slug), `CMS: restore page html ${item.slug}`);
+      await commitDoc(pagesIndex, `CMS: restore page slug ${item.slug}`);
+      if (syncCustomPageNavigation(pageDoc)) {
+        const settings = state.docs.get("site-settings");
+        if (settings) await commitDoc(settings, `CMS: restore nav ${item.slug}`);
+      }
+      bin.items.splice(idx, 1);
+      await commitRecycleBin(`CMS: remove ${item.slug} from recycle bin`);
+      toast("Page restored.");
+      state.section = "content";
+      state.selected = `page:${item.slug}`;
+      await loadContent();
+    } catch (e) {
+      toast(e.message, false);
+    }
+    return;
+  }
+  if (item.type !== "project") {
     toast("Unsupported recycle item.", false);
     return;
   }
@@ -729,6 +1011,46 @@ async function purgeFromRecycleBin(itemId) {
   } catch (e) {
     toast(e.message, false);
   }
+}
+
+function createCustomPage() {
+  const title = prompt("Page title");
+  if (!title) return;
+  let slug = prompt(
+    "URL slug (e.g. game)",
+    title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+  );
+  if (!slug) return;
+  if (RESERVED_PAGE_SLUGS.has(slug) || state.docs.has(`page:${slug}`) || state.docs.has(`project:${slug}`)) {
+    toast("That slug is taken or reserved.", false);
+    return;
+  }
+  const showNav = confirm("Add this page to the main navigation menu?");
+  const data = {
+    status: "draft",
+    slug,
+    title,
+    subtitle: "",
+    heroImage: "",
+    paragraphs: ["Edit this page in the CMS."],
+    navLabel: title,
+    showInNav: showNav,
+  };
+  state.docs.set(`page:${slug}`, {
+    id: `page:${slug}`,
+    kind: "custom-page",
+    slug,
+    repoPath: `content/pages/${slug}.json`,
+    data,
+  });
+  const index = state.docs.get("pages-index");
+  index.data.slugs = [...(index.data.slugs || []), slug];
+  state.selected = `page:${slug}`;
+  state.dirty = true;
+  state.expandedCustomPages = true;
+  state.tab = "content";
+  render();
+  toast("Page created as Draft. Save, then Publish, to show it on the live site.", true);
 }
 
 function createProject() {
@@ -810,8 +1132,9 @@ async function main() {
     const url = previewUrl(getSelectedDoc());
     if (url) window.open(url, "_blank");
   });
-  el.btnDelete.addEventListener("click", deleteSelectedProject);
+  el.btnDelete.addEventListener("click", deleteSelectedContent);
   el.btnNewProject.addEventListener("click", createProject);
+  el.btnNewPage?.addEventListener("click", createCustomPage);
   el.btnLogin?.addEventListener("click", () => {
     try {
       state.github.login();

@@ -320,6 +320,23 @@
     }
   }
 
+  async function renderCustomPage(slug) {
+    const data = await fetchJson(CONTENT + "pages/" + slug + ".json");
+    const root = document.querySelector("[data-custom-page-root]");
+    if (!root) return;
+    if (data.status !== "published") {
+      root.innerHTML = '<p class="lead">This page is not published.</p>';
+      return;
+    }
+    document.title = (data.title || slug) + " – Saroj Shrestha";
+    const hero = data.heroImage
+      ? `<div class="thumb" style="max-width:560px;margin-bottom:1.5rem"><img src="${absUrl(data.heroImage)}" alt="" loading="lazy" /></div>`
+      : "";
+    const body = (data.paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join("");
+    root.innerHTML = `<div class="page-title"><h2>${escapeHtml(data.title || slug)}</h2>${data.subtitle ? `<p>${escapeHtml(data.subtitle)}</p>` : ""}</div>
+      <section class="section">${hero}${body || "<p class=\"lead\">No content yet.</p>"}</section>`;
+  }
+
   async function renderProjectDetail(slug) {
     const project = await fetchJson(CONTENT + "projects/" + slug + ".json");
     if (project.status !== "published") {
@@ -397,6 +414,10 @@
       if (page === "project-detail") {
         const slug = window.__PROJECT_SLUG__;
         if (slug) await renderProjectDetail(slug);
+      }
+      if (page === "custom-page") {
+        const slug = window.__PAGE_SLUG__;
+        if (slug) await renderCustomPage(slug);
       }
 
       if (window.rehydratePortfolioIcons) window.rehydratePortfolioIcons();

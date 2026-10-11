@@ -5,6 +5,7 @@
     { "id": "home", "type": "home", "path": "content/home.json", "treeLabel": "Home" },
     { "id": "about", "type": "about", "path": "content/about.json", "treeLabel": "About" },
     { "id": "projects-folder", "type": "folder", "treeLabel": "Projects", "children": "projects" },
+    { "id": "pages-folder", "type": "folder", "treeLabel": "Pages", "children": "pages" },
     { "id": "experience", "type": "experience", "path": "content/experience.json", "treeLabel": "Experience" },
     { "id": "education", "type": "education", "path": "content/education.json", "treeLabel": "Education" },
     { "id": "skills", "type": "skills", "path": "content/skills.json", "treeLabel": "Skills" },

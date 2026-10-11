@@ -88,3 +88,6 @@ In `/cms/`: **New project** → fill fields → **Save**. This commits:
 - Project order: `content/projects/index.json` → `slugs`
 - **Public site:** only projects with `status: "published"` appear on `/projects`. New projects start as **Draft** — use **Save** then **Publish** in the CMS (GitHub sign-in required).
 - **Recycle bin:** deleted projects are stored in `content/recycle-bin/index.json` (restore or purge from the 🗑 section in the CMS).
+- **Custom pages:** **New page** in the CMS → `content/pages/{slug}.json` + `{slug}.html` at repo root. Optional **Show in nav** updates `site-settings.json` navigation.
+- **Images:** use **Choose…** on image fields (Home, Projects, custom pages) to pick from the media library; upload new files under **Media** (🖼).
+- **List pages** (Experience, Education, Skills, Services, Certifications) use visual repeaters instead of raw JSON.
