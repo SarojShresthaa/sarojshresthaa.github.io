@@ -10,6 +10,7 @@
     "bock-grid",
     "crud",
     "demo-hub",
-    "weather"
+    "weather",
+    "ptest"
   ]
 }
