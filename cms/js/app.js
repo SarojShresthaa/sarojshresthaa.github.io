@@ -326,7 +326,18 @@ function renderEditorForm(doc) {
   if (doc.id === "contact") {
     return `<h2>Contact</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Subtitle", "subtitle", d.subtitle)}${field("Lead", "lead", d.lead, "textarea")}`;
   }
-  return `<h2>${escapeHtml(doc.id)}</h2><p>Edit status below or adjust the raw JSON directly.</p>
+  if (doc.id === "projects-index") {
+    const slugList = (d.slugs || []).join("\n");
+    return `<h2>Projects page</h2>
+      <p class="hint">This controls the <code>/projects</code> page heading and section labels. Individual projects are edited under <strong>Projects</strong> in the tree (or <strong>New project</strong>).</p>
+      ${field("Status", "status", d.status, "select-status")}
+      ${field("Page title", "title", d.title)}
+      ${field("Page subtitle", "subtitle", d.subtitle, "textarea")}
+      ${field("Main work section heading", "mainWorkHeading", d.mainWorkHeading)}
+      ${field("Small projects section heading", "smallProjectsHeading", d.smallProjectsHeading)}
+      <div class="bo-field"><label>Project slugs (read-only)</label><textarea readonly tabindex="-1" style="font-family:monospace;min-height:120px;background:#f4f6f8">${escapeHtml(slugList || "(none yet)")}</textarea><p class="hint">Slugs update automatically when you save or delete projects. Reorder by editing <code>content/projects/index.json</code> only if needed.</p></div>`;
+  }
+  return `<h2>${escapeHtml(doc.id)}</h2><p>No visual editor for this type yet — use the fields below or raw JSON.</p>
     ${field("Status", "status", d.status, "select-status")}<div class="bo-field"><label>Raw JSON</label><textarea id="raw-json" style="min-height:320px;font-family:monospace">${escapeHtml(JSON.stringify(d, null, 2))}</textarea></div>`;
 }
 
