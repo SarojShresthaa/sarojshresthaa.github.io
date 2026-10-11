@@ -1,0 +1,15 @@
+# Optional: Render Blueprint — sync this repo in Dashboard → Blueprints
+# Or copy env var names from here into your Web Service → Environment (Production).
+services:
+  - type: web
+    name: luffy-cms-oauth
+    runtime: node
+    rootDir: oauth-proxy
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: OAUTH_GITHUB_CLIENT_ID
+        value: Ov23lii35wclPrYpEXGo
+      - key: OAUTH_GITHUB_CLIENT_SECRET
+        sync: false

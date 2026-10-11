@@ -12,12 +12,18 @@ Deploy this folder as a **Node** Web Service on Render (not Docker).
 | Build command | `npm install` |
 | Start command | `npm start` |
 
-## Environment variables
+## Environment variables (Production)
+
+In Render → your service → **Environment** → ensure **Production** is selected (not only Preview).
 
 | Key | Value |
 |-----|--------|
-| `OAUTH_GITHUB_CLIENT_ID` | Your GitHub OAuth app Client ID |
-| `OAUTH_GITHUB_CLIENT_SECRET` | Your GitHub OAuth app client secret |
+| `OAUTH_GITHUB_CLIENT_ID` | `Ov23lii35wclPrYpEXGo` |
+| `OAUTH_GITHUB_CLIENT_SECRET` | GitHub OAuth app client secret (full string) |
+
+After editing, click **Save, rebuild, and deploy**. Logs must show `OAUTH_GITHUB_CLIENT_ID set: true`.
+
+Repo root `render.yaml` can set the Client ID automatically when using Render Blueprint sync.
 
 ## GitHub OAuth app
 
