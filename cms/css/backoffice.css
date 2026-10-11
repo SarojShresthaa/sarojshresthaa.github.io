@@ -36,6 +36,10 @@ body {
   min-height: 0;
 }
 
+.bo-app[hidden] {
+  display: none !important;
+}
+
 .bo-rail {
   background: var(--bo-rail);
   color: #c5cde0;
@@ -339,7 +343,9 @@ body {
 }
 
 .bo-gate {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
   display: grid;
   place-items: center;
   padding: 24px;
