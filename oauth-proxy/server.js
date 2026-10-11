@@ -10,9 +10,10 @@ const CLIENT_SECRET = process.env.OAUTH_GITHUB_CLIENT_SECRET || process.env.GITH
 const PORT = Number(process.env.PORT) || 3000;
 
 if (!CLIENT_ID || !CLIENT_SECRET) {
-  console.error(
-    "Missing OAuth credentials. Set OAUTH_GITHUB_CLIENT_ID and OAUTH_GITHUB_CLIENT_SECRET (or GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET) on Render."
-  );
+  console.error("Missing OAuth credentials on Render Environment tab:");
+  console.error("  OAUTH_GITHUB_CLIENT_ID set:", Boolean(process.env.OAUTH_GITHUB_CLIENT_ID || process.env.GITHUB_CLIENT_ID));
+  console.error("  OAUTH_GITHUB_CLIENT_SECRET set:", Boolean(process.env.OAUTH_GITHUB_CLIENT_SECRET || process.env.GITHUB_CLIENT_SECRET));
+  console.error('Keys must be exactly OAUTH_GITHUB_CLIENT_ID and OAUTH_GITHUB_CLIENT_SECRET (not your Client ID in the KEY field).');
   process.exit(1);
 }
 
