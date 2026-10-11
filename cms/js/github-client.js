@@ -57,19 +57,29 @@ export class GitHubClient {
     }
   }
 
-  async putFile(repoPath, contentText, message, knownSha) {
-    const sha = knownSha ?? (await this.getFileSha(repoPath));
-    const body = {
-      message,
-      content: btoa(unescape(encodeURIComponent(contentText))),
-      branch: this.config.branch,
+  async putFile(repoPath, contentText, message) {
+    const write = async () => {
+      const sha = await this.getFileSha(repoPath);
+      const body = {
+        message,
+        content: btoa(unescape(encodeURIComponent(contentText))),
+        branch: this.config.branch,
+      };
+      if (sha) body.sha = sha;
+      return this.api(`/repos/${this.config.repo}/contents/${repoPath}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
     };
-    if (sha) body.sha = sha;
-    return this.api(`/repos/${this.config.repo}/contents/${repoPath}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    try {
+      return await write();
+    } catch (err) {
+      if (String(err.message).includes("409")) {
+        return await write();
+      }
+      throw err;
+    }
   }
 
   async putBinaryFile(repoPath, base64Content, message) {

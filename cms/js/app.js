@@ -382,8 +382,7 @@ function wireRail() {
 async function commitDoc(doc, message) {
   const text = JSON.stringify(doc.data, null, 2) + "\n";
   const repoPath = doc.repoPath;
-  const sha = state.shas.get(repoPath);
-  const res = await state.github.putFile(repoPath, text, message, sha);
+  const res = await state.github.putFile(repoPath, text, message);
   if (res?.content?.sha) state.shas.set(repoPath, res.content.sha);
 }
 
@@ -410,7 +409,12 @@ async function saveSelected() {
     state.dirty = false;
     toast("Saved to GitHub. Site will update after GitHub Pages deploys.");
   } catch (e) {
-    toast(e.message, false);
+    const msg = String(e.message);
+    if (msg.includes("409")) {
+      toast("Save conflict — reload /cms/ and try Save again (file changed on GitHub).", false);
+    } else {
+      toast(msg, false);
+    }
   } finally {
     render();
   }
