@@ -25,6 +25,7 @@ const PROJECT_PAGE_TEMPLATE = (slug) => `<!DOCTYPE html>
 const state = {
   section: "content",
   selected: null,
+  selectedRecycleId: null,
   tab: "content",
   docs: new Map(),
   media: null,
@@ -81,9 +82,28 @@ async function loadContent() {
     ["certifications", "/content/certifications.json"],
     ["services", "/content/services.json"],
     ["projects-index", "/content/projects/index.json"],
+    ["recycle-bin", "/content/recycle-bin/index.json"],
   ];
   for (const [id, path] of paths) {
-    state.docs.set(id, { id, path: path.replace(/^\//, ""), repoPath: path.replace(/^\//, ""), data: await fetchJson(path), kind: id === "projects-index" ? "projects-index" : "page" });
+    let data;
+    if (id === "recycle-bin") {
+      try {
+        data = await fetchJson(path);
+      } catch {
+        data = { status: "published", title: "Recycle bin", items: [] };
+      }
+    } else {
+      data = await fetchJson(path);
+    }
+    const kind =
+      id === "projects-index" ? "projects-index" : id === "recycle-bin" ? "recycle-bin" : "page";
+    state.docs.set(id, {
+      id,
+      path: path.replace(/^\//, ""),
+      repoPath: path.replace(/^\//, ""),
+      data,
+      kind,
+    });
   }
   const index = state.docs.get("projects-index").data;
   for (const slug of index.slugs || []) {
@@ -135,6 +155,28 @@ function validateDoc(doc) {
 }
 
 function renderTree() {
+  if (state.section === "recycle") {
+    const bin = state.docs.get("recycle-bin")?.data;
+    const items = bin?.items || [];
+    let html = `<div class="bo-tree-head">Recycle bin</div><div class="bo-tree-scroll">`;
+    if (!items.length) {
+      html += `<div class="bo-tree-item">Empty</div>`;
+    } else {
+      for (const item of items) {
+        const active = state.selectedRecycleId === item.id ? " active" : "";
+        html += `<div class="bo-tree-item${active}" data-recycle-id="${escapeHtml(item.id)}">${escapeHtml(item.title || item.slug || item.id)}</div>`;
+      }
+    }
+    html += `</div>`;
+    el.tree.innerHTML = html;
+    el.tree.querySelectorAll("[data-recycle-id]").forEach((node) => {
+      node.addEventListener("click", () => {
+        state.selectedRecycleId = node.dataset.recycleId;
+        render();
+      });
+    });
+    return;
+  }
   if (state.section === "media") {
     el.tree.innerHTML = `<div class="bo-tree-head">Media</div><div class="bo-tree-scroll"><div class="bo-tree-item active">Portfolio images</div></div>`;
     return;
@@ -271,7 +313,11 @@ function renderEditorForm(doc) {
     return `<h2>About</h2>${field("Status", "status", d.status, "select-status")}${field("Page heading", "heading", d.heading)}${field("Biography (paragraph 1)", "biography.0", d.biography?.[0], "textarea")}${field("Biography (paragraph 2)", "biography.1", d.biography?.[1], "textarea")}${field("Biography (paragraph 3)", "biography.2", d.biography?.[2], "textarea")}`;
   }
   if (doc.kind === "project") {
-    return `<h2>Project</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Slug", "slug", d.slug, "text", "Used in /projects/slug")}${field("Category", "category", d.category, "text", "main-work or small-projects")}${field("Description", "description", d.description, "textarea")}${field("Long description", "longDescription", d.longDescription, "textarea")}${field("Thumbnail path", "thumbnail", d.thumbnail)}${field("Technologies (comma-separated)", "_technologies", (d.technologies || []).join(", "))}${field("GitHub URL", "githubUrl", d.githubUrl)}${field("Demo URL", "demoUrl", d.demoUrl)}${field("Featured", "featured", d.featured, "checkbox")}`;
+    const visHint =
+      d.status === "draft"
+        ? `<p class="hint"><strong>Public site:</strong> Draft projects are hidden on <code>/projects</code>. Sign in with GitHub, then <strong>Save</strong> and <strong>Publish</strong> (or set Status to Published and Save). Wait ~1–2 min for GitHub Pages after save.</p>`
+        : `<p class="hint"><strong>Public site:</strong> Published projects appear on <code>/projects</code> after Save and GitHub Pages deploy.</p>`;
+    return `${visHint}<h2>Project</h2>${field("Status", "status", d.status, "select-status")}${field("Title", "title", d.title)}${field("Slug", "slug", d.slug, "text", "Used in /projects/slug")}${field("Category", "category", d.category, "text", "main-work or small-projects")}${field("Description", "description", d.description, "textarea")}${field("Long description", "longDescription", d.longDescription, "textarea")}${field("Thumbnail path", "thumbnail", d.thumbnail)}${field("Technologies (comma-separated)", "_technologies", (d.technologies || []).join(", "))}${field("GitHub URL", "githubUrl", d.githubUrl)}${field("Demo URL", "demoUrl", d.demoUrl)}${field("Featured", "featured", d.featured, "checkbox")}`;
   }
   if (doc.id === "site-settings") {
     return `<h2>Site settings</h2><p class="hint">${escapeHtml(d.cmsNotice || "")}</p>
@@ -284,14 +330,100 @@ function renderEditorForm(doc) {
     ${field("Status", "status", d.status, "select-status")}<div class="bo-field"><label>Raw JSON</label><textarea id="raw-json" style="min-height:320px;font-family:monospace">${escapeHtml(JSON.stringify(d, null, 2))}</textarea></div>`;
 }
 
+function renderInfoPanel(doc) {
+  const preview = previewUrl(doc);
+  const onSite =
+    doc.data?.status === "published"
+      ? "Visible on the public site after GitHub Pages finishes deploying."
+      : "Hidden on the public site while status is Draft.";
+  return `<div class="bo-info"><h2>Info</h2>
+    <dl class="bo-info-dl">
+      <dt>Document</dt><dd>${escapeHtml(doc.id)}</dd>
+      <dt>Kind</dt><dd>${escapeHtml(doc.kind || "page")}</dd>
+      <dt>Repository path</dt><dd><code>${escapeHtml(doc.repoPath || "—")}</code></dd>
+      <dt>Status</dt><dd>${escapeHtml(doc.data?.status || "—")}</dd>
+      ${doc.slug ? `<dt>Slug</dt><dd><code>${escapeHtml(doc.slug)}</code></dd>` : ""}
+      <dt>Public site</dt><dd>${onSite}</dd>
+      <dt>Preview URL</dt><dd>${preview ? `<a href="${escapeHtml(preview)}" target="_blank" rel="noreferrer">${escapeHtml(preview)}</a>` : "—"}</dd>
+      <dt>Unsaved changes</dt><dd>${state.dirty ? "Yes" : "No"}</dd>
+    </dl></div>`;
+}
+
+function renderMediaInfoPanel() {
+  const count = state.media?.items?.length ?? 0;
+  return `<div class="bo-info"><h2>Info</h2>
+    <dl class="bo-info-dl">
+      <dt>Section</dt><dd>Media library</dd>
+      <dt>Index file</dt><dd><code>content/media/index.json</code></dd>
+      <dt>Items</dt><dd>${count}</dd>
+      <dt>Upload</dt><dd>Requires GitHub sign-in; files go to <code>/img</code>.</dd>
+    </dl></div>`;
+}
+
+function renderRecyclePanel() {
+  const bin = state.docs.get("recycle-bin")?.data;
+  const items = bin?.items || [];
+  el.breadcrumb.textContent = "Recycle bin";
+  el.statusPill.textContent = "";
+  if (!items.length) {
+    el.editor.innerHTML = `<div class="bo-editor"><h2>Recycle bin</h2><p class="hint">Deleted projects are stored here. You can restore them or remove them permanently.</p><p class="bo-empty">Nothing in the recycle bin.</p></div>`;
+    return;
+  }
+  const selected = items.find((i) => i.id === state.selectedRecycleId) || items[0];
+  state.selectedRecycleId = selected?.id ?? null;
+  const list = items
+    .map((item) => {
+      return `<li class="bo-recycle-item">
+        <div>
+          <strong>${escapeHtml(item.title || item.slug)}</strong>
+          <div class="bo-recycle-meta">${escapeHtml(item.type || "project")} · ${escapeHtml(item.slug || "")} · deleted ${escapeHtml(item.deletedAt?.slice(0, 10) || "?")}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button type="button" class="bo-btn" data-restore="${escapeHtml(item.id)}">Restore</button>
+          <button type="button" class="bo-btn danger" data-purge="${escapeHtml(item.id)}">Delete forever</button>
+        </div>
+      </li>`;
+    })
+    .join("");
+  el.editor.innerHTML = `<div class="bo-editor"><h2>Recycle bin</h2><p class="hint">Restore puts the project back in Content. Delete forever removes the backup from Git.</p>
+    <ul class="bo-recycle-list">${list}</ul>
+    ${selected ? `<div class="bo-field" style="margin-top:20px"><label>Stored JSON preview</label><textarea readonly style="min-height:160px;font-family:monospace;font-size:12px">${escapeHtml(JSON.stringify(selected.data, null, 2))}</textarea></div>` : ""}
+  </div>`;
+  el.editor.querySelectorAll("[data-restore]").forEach((btn) => {
+    btn.addEventListener("click", () => restoreFromRecycleBin(btn.dataset.restore));
+  });
+  el.editor.querySelectorAll("[data-purge]").forEach((btn) => {
+    btn.addEventListener("click", () => purgeFromRecycleBin(btn.dataset.purge));
+  });
+}
+
+function syncTabUi() {
+  const tabsWrap = document.getElementById("bo-tabs");
+  if (!tabsWrap) return;
+  const showTabs = state.section === "content" || state.section === "settings" || state.section === "media";
+  tabsWrap.style.display = showTabs ? "" : "none";
+  tabsWrap.querySelectorAll("[data-tab]").forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.tab === state.tab);
+  });
+}
+
 function renderEditor() {
+  syncTabUi();
   if (state.loading) {
     el.editor.innerHTML = `<div class="bo-empty">Loading content…</div>`;
+    return;
+  }
+  if (state.section === "recycle") {
+    renderRecyclePanel();
     return;
   }
   if (state.section === "media") {
     el.breadcrumb.textContent = "Media / Portfolio";
     el.statusPill.textContent = "";
+    if (state.tab === "info") {
+      el.editor.innerHTML = `<div class="bo-editor">${renderMediaInfoPanel()}</div>`;
+      return;
+    }
     el.editor.innerHTML = `<form class="bo-editor" id="bo-form">${renderEditorForm(null)}</form>`;
     wireMediaUpload();
     return;
@@ -303,6 +435,10 @@ function renderEditor() {
   }
   el.breadcrumb.textContent = `Content / ${doc.id}`;
   updateStatusPill(doc.data.status);
+  if (state.tab === "info") {
+    el.editor.innerHTML = `<div class="bo-editor">${renderInfoPanel(doc)}</div>`;
+    return;
+  }
   el.editor.innerHTML = `<form class="bo-editor" id="bo-form">${renderEditorForm(doc)}</form>`;
   const form = document.getElementById("bo-form");
   bindEditor(form, doc);
@@ -364,9 +500,18 @@ function fileToBase64(file) {
 function render() {
   renderTree();
   renderEditor();
+  const editingDoc = state.section !== "recycle" && getSelectedDoc();
+  const toolbarOn = state.section !== "recycle";
+  el.btnSave.style.display = toolbarOn ? "" : "none";
+  el.btnPublish.style.display = toolbarOn ? "" : "none";
+  el.btnPreview.style.display = toolbarOn ? "" : "none";
+  el.btnNewProject.style.display = state.section === "content" ? "" : "none";
   el.btnSave.disabled = !state.dirty || !state.github?.isAuthenticated();
-  el.btnPublish.disabled = !state.github?.isAuthenticated() || !getSelectedDoc();
-  el.btnDelete.style.display = getSelectedDoc()?.kind === "project" ? "" : "none";
+  el.btnPublish.disabled = !state.github?.isAuthenticated() || !editingDoc;
+  el.btnDelete.style.display = editingDoc?.kind === "project" ? "" : "none";
+  if (el.btnDelete && editingDoc?.kind === "project") {
+    el.btnDelete.textContent = "Move to recycle bin";
+  }
 }
 
 function wireRail() {
@@ -375,7 +520,20 @@ function wireRail() {
       state.section = btn.dataset.section;
       if (state.section === "settings") state.selected = "site-settings";
       if (state.section === "media") state.selected = null;
+      if (state.section === "recycle") {
+        state.selected = null;
+        state.selectedRecycleId = null;
+      }
       document.querySelectorAll("[data-section]").forEach((b) => b.classList.toggle("active", b === btn));
+      render();
+    });
+  });
+}
+
+function wireTabs() {
+  document.querySelectorAll("[data-tab]").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      state.tab = tab.dataset.tab;
       render();
     });
   });
@@ -409,7 +567,12 @@ async function saveSelected() {
       if (index) await commitDoc(index, `CMS: sync project index (${doc.slug})`);
     }
     state.dirty = false;
-    toast("Saved to GitHub. Site will update after GitHub Pages deploys.");
+    const saved = getSelectedDoc();
+    if (saved?.kind === "project" && saved.data.status === "draft") {
+      toast("Saved. Project is still Draft — click Publish to show it on /projects.");
+    } else {
+      toast("Saved to GitHub. Site will update after GitHub Pages deploys.");
+    }
   } catch (e) {
     const msg = String(e.message);
     if (msg.includes("409")) {
@@ -431,27 +594,126 @@ async function publishSelected() {
   await saveSelected();
 }
 
+function getRecycleBinData() {
+  return state.docs.get("recycle-bin")?.data;
+}
+
+async function commitRecycleBin(message) {
+  const doc = state.docs.get("recycle-bin");
+  if (!doc) return;
+  await commitDoc(doc, message);
+}
+
 async function deleteSelectedProject() {
   const doc = getSelectedDoc();
   if (!doc || doc.kind !== "project") return;
-  if (!confirm(`Delete project “${doc.data.title}”? This removes JSON and the project page from the repo.`)) return;
+  if (
+    !confirm(
+      `Move “${doc.data.title}” to the recycle bin? It will disappear from the public site; you can restore it from the Recycle bin section.`
+    )
+  )
+    return;
   if (!state.github?.isAuthenticated()) {
     toast("Sign in with GitHub to delete.", false);
     return;
   }
   try {
-    await state.github.deleteFile(doc.repoPath, `CMS: delete project ${doc.slug}`);
-    try {
-      await state.github.deleteFile(`projects/${doc.slug}/index.html`, `CMS: delete project page ${doc.slug}`);
-    } catch {
-      /* page may not exist yet */
-    }
+    const bin = getRecycleBinData();
+    if (!bin.items) bin.items = [];
+    bin.items.unshift({
+      id: `${Date.now()}-${doc.slug}`,
+      deletedAt: new Date().toISOString(),
+      type: "project",
+      slug: doc.slug,
+      title: doc.data.title,
+      data: JSON.parse(JSON.stringify(doc.data)),
+    });
+    await commitRecycleBin(`CMS: recycle project ${doc.slug}`);
+
     const index = state.docs.get("projects-index");
     index.data.slugs = (index.data.slugs || []).filter((s) => s !== doc.slug);
     await commitDoc(index, `CMS: remove slug ${doc.slug}`);
-    toast("Project deleted.");
+
+    try {
+      await state.github.deleteFile(doc.repoPath, `CMS: remove project json ${doc.slug}`);
+    } catch {
+      /* never saved to GitHub */
+    }
+    try {
+      await state.github.deleteFile(`projects/${doc.slug}/index.html`, `CMS: remove project page ${doc.slug}`);
+    } catch {
+      /* page may not exist */
+    }
+
+    toast("Project moved to recycle bin.");
     state.selected = "projects-index";
     state.dirty = false;
+    await loadContent();
+  } catch (e) {
+    toast(e.message, false);
+  }
+}
+
+async function restoreFromRecycleBin(itemId) {
+  if (!state.github?.isAuthenticated()) {
+    toast("Sign in with GitHub to restore.", false);
+    return;
+  }
+  const bin = getRecycleBinData();
+  const idx = (bin?.items || []).findIndex((i) => i.id === itemId);
+  if (idx < 0) return;
+  const item = bin.items[idx];
+  if (item.type !== "project" || !item.slug || !item.data) {
+    toast("Unsupported recycle item.", false);
+    return;
+  }
+  if (state.docs.has(`project:${item.slug}`)) {
+    toast("A project with this slug already exists.", false);
+    return;
+  }
+  if (!confirm(`Restore project “${item.title || item.slug}”?`)) return;
+  try {
+    const index = state.docs.get("projects-index");
+    index.data.slugs = [...(index.data.slugs || []), item.slug];
+    const projectDoc = {
+      id: `project:${item.slug}`,
+      kind: "project",
+      slug: item.slug,
+      repoPath: `content/projects/${item.slug}.json`,
+      data: JSON.parse(JSON.stringify(item.data)),
+    };
+    await commitDoc(projectDoc, `CMS: restore project ${item.slug}`);
+    await state.github.putFile(
+      `projects/${item.slug}/index.html`,
+      PROJECT_PAGE_TEMPLATE(item.slug),
+      `CMS: restore project page ${item.slug}`
+    );
+    await commitDoc(index, `CMS: restore slug ${item.slug}`);
+    bin.items.splice(idx, 1);
+    await commitRecycleBin(`CMS: remove ${item.slug} from recycle bin`);
+    toast("Project restored.");
+    state.section = "content";
+    state.selected = `project:${item.slug}`;
+    await loadContent();
+  } catch (e) {
+    toast(e.message, false);
+  }
+}
+
+async function purgeFromRecycleBin(itemId) {
+  if (!state.github?.isAuthenticated()) {
+    toast("Sign in with GitHub.", false);
+    return;
+  }
+  const bin = getRecycleBinData();
+  const item = (bin?.items || []).find((i) => i.id === itemId);
+  if (!item) return;
+  if (!confirm(`Permanently delete backup for “${item.title || item.slug}”? This cannot be undone.`)) return;
+  try {
+    bin.items = bin.items.filter((i) => i.id !== itemId);
+    await commitRecycleBin(`CMS: purge recycle item ${itemId}`);
+    toast("Removed from recycle bin.");
+    state.selectedRecycleId = null;
     await loadContent();
   } catch (e) {
     toast(e.message, false);
@@ -487,8 +749,12 @@ function createProject() {
   state.selected = `project:${slug}`;
   state.dirty = true;
   state.expandedProjects = true;
+  state.tab = "content";
   render();
-  toast("Project created locally. Save to commit to GitHub.");
+  toast(
+    "Project created as Draft. Sign in with GitHub, Save, then Publish to show it on /projects.",
+    true
+  );
 }
 
 function updateAuthUi() {
@@ -522,6 +788,7 @@ async function main() {
     !String(cfg.cmsAccess.passwordSha256).includes("YOUR_");
   if (!gateOn && el.btnCmsLock) el.btnCmsLock.style.display = "none";
   wireRail();
+  wireTabs();
   el.btnCmsLock?.addEventListener("click", () => {
     clearCmsSession();
     location.reload();

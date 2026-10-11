@@ -86,3 +86,5 @@ In `/cms/`: **New project** → fill fields → **Save**. This commits:
 - Navigation: `content/site-settings.json` → `navigation`
 - Featured home projects: `content/home.json` → `featuredProjectSlugs`
 - Project order: `content/projects/index.json` → `slugs`
+- **Public site:** only projects with `status: "published"` appear on `/projects`. New projects start as **Draft** — use **Save** then **Publish** in the CMS (GitHub sign-in required).
+- **Recycle bin:** deleted projects are stored in `content/recycle-bin/index.json` (restore or purge from the 🗑 section in the CMS).
