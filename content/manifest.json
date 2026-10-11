@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "documents": [
+    { "id": "site-settings", "type": "settings", "path": "content/site-settings.json", "treeLabel": "Site Settings" },
+    { "id": "home", "type": "home", "path": "content/home.json", "treeLabel": "Home" },
+    { "id": "about", "type": "about", "path": "content/about.json", "treeLabel": "About" },
+    { "id": "projects-folder", "type": "folder", "treeLabel": "Projects", "children": "projects" },
+    { "id": "experience", "type": "experience", "path": "content/experience.json", "treeLabel": "Experience" },
+    { "id": "education", "type": "education", "path": "content/education.json", "treeLabel": "Education" },
+    { "id": "skills", "type": "skills", "path": "content/skills.json", "treeLabel": "Skills" },
+    { "id": "certifications", "type": "certifications", "path": "content/certifications.json", "treeLabel": "Certifications" },
+    { "id": "services", "type": "services", "path": "content/services.json", "treeLabel": "Services" },
+    { "id": "contact", "type": "contact", "path": "content/contact.json", "treeLabel": "Contact" }
+  ]
+}

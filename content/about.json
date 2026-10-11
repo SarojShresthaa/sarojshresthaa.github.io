@@ -1,0 +1,36 @@
+{
+  "status": "published",
+  "eyebrow": "about",
+  "heading": "Umbraco & .NET developer in Kathmandu",
+  "profileImage": "/img/saroj.png",
+  "profileImageAlt": "Saroj Shrestha",
+  "biography": [
+    "I'm Saroj Shrestha. I build websites with Umbraco and .NET — mostly from Kathmandu, and since 2023 with ZAAKS!",
+    "I care about the backoffice feeling obvious for editors: clear document types, sensible Block Lists, and Razor that doesn't fight you every time content changes. When something repeats in the wild, I turn it into a package on GitHub — like Block Field Visibility for Block List fields.",
+    "Reach out on the contact page if you want to connect — GitHub or LinkedIn is fine."
+  ],
+  "workSection": {
+    "kicker": "Experience",
+    "heading": "Umbraco & .NET at ZAAKS!",
+    "intro": "Since 2023 I build Umbraco sites and backoffices in Kathmandu — document types, Block Lists, Razor, and .NET integrations. I also maintain open-source packages on GitHub when they solve a real editor or dev problem.",
+    "tags": [
+      "Umbraco CMS",
+      "Block Lists",
+      "Document types",
+      "ASP.NET Core",
+      "C#",
+      "Razor",
+      "Azure",
+      "Examine",
+      "Custom packages",
+      "Editor-friendly sites",
+      "Open source"
+    ]
+  },
+  "lifeSection": {
+    "kicker": "Away from the desk",
+    "heading": "Movies, gym, riding & hiking",
+    "intro": "I like a clear split between work and everything else. Evenings for films, steady gym time in Kathmandu, rides when the road calls, and hikes in the hills when I can get away for a day.",
+    "tags": ["Movies", "Gym", "Riding", "Hiking"]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "slug": "bock-grid",
+  "title": "Bock-Grid",
+  "category": "main-work",
+  "description": "A C# / .NET thing I used to poke at grid and block-style layouts.",
+  "longDescription": "Experimental .NET project exploring grid and block-style layouts.",
+  "thumbnail": "/img/project-04.png",
+  "thumbnailAlt": "Bock-Grid .NET project",
+  "gallery": [],
+  "technologies": ["C#", ".NET"],
+  "githubUrl": "https://github.com/SarojShresthaa/Bock-Grid",
+  "demoUrl": "",
+  "featured": false
+}

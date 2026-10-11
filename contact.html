@@ -4,108 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact – Saroj Shrestha</title>
-  <meta name="description" content="Message Saroj Shrestha on GitHub or LinkedIn about Umbraco, .NET, or project ideas." />
-  <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
   <script>
     (function () {
       var saved = localStorage.getItem("theme");
-      var theme = saved;
-      if (!theme && window.matchMedia) {
-        theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-      }
-      document.documentElement.setAttribute("data-theme", theme || "dark");
+      var theme = saved || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.documentElement.setAttribute("data-theme", theme);
     })();
   </script>
 </head>
-<body>
+<body data-page="contact">
   <header class="header">
     <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <span class="logo-mark" aria-hidden="true"></span>
-        saroj.dev
-      </a>
+      <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span><span data-site-name>saroj.dev</span></a>
       <div class="menu-cont">
-        <button class="menu-btn" type="button" aria-label="Open menu">
-          <span></span>
-          <span></span>
-        </button>
-        <ul class="menubar">
-          <li><a class="nav-link" href="index.html">home</a></li>
-          <li><a class="nav-link" href="projects.html">projects</a></li>
-          <li><a class="nav-link" href="about-me.html">about</a></li>
-          <li><a class="nav-link active" href="contact.html">contact</a></li>
-          <li>
+        <button class="menu-btn" type="button" aria-label="Open menu"><span></span><span></span></button>
+        <ul class="menubar" data-portfolio-nav-root>
+          <li data-portfolio-nav-insert>
             <button class="soc theme-btn" type="button" aria-label="Toggle light and dark mode">
-              <svg class="icon-lamp-off" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/>
-              </svg>
-              <svg class="icon-lamp-on" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/>
-              </svg>
+              <svg class="icon-lamp-off" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/></svg>
+              <svg class="icon-lamp-on" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/></svg>
             </button>
           </li>
-          <div class="social-rail animate-bounce-slower">
-            <span class="social-line"></span>
-            <a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a>
-            <a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a>
-          </div>
+          <div class="social-rail animate-bounce-slower" data-social-rail></div>
         </ul>
       </div>
     </div>
   </header>
-
   <main class="container page">
-    <div class="page-title">
-      <h2>contact</h2>
-      <p>GitHub and LinkedIn — that's it</p>
-    </div>
-
+    <div class="page-title" data-contact-header></div>
     <section class="contact-page-row">
-      <p class="lead">No form here — message me on GitHub or LinkedIn. Describe the site or the problem in a few sentences; that's usually enough for a useful reply.</p>
-      <div class="contact-boxes">
-        <div class="contact-box">
-          <h4>Message me here</h4>
-          <a class="contact-row" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer"><span class="soc" data-icon="github" aria-hidden="true"></span> github.com/SarojShresthaa</a>
-          <a class="contact-row" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer"><span class="soc" data-icon="linkedin" aria-hidden="true"></span> Saroj Shrestha</a>
-        </div>
-      </div>
+      <p class="lead" data-contact-lead></p>
+      <div class="contact-boxes"><div class="contact-box" data-contact-box></div></div>
     </section>
-
     <section class="section">
       <h2 class="section-heading">all-media</h2>
-      <div class="media-list">
-        <a href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer"><span class="soc" data-icon="github" aria-hidden="true"></span> @SarojShresthaa</a>
-        <a href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer"><span class="soc" data-icon="linkedin" aria-hidden="true"></span> Saroj Shrestha</a>
-      </div>
+      <div class="media-list" data-contact-media></div>
     </section>
   </main>
-
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <div class="footer-top">
-          <a class="logo" href="index.html">
-            <span class="logo-mark" aria-hidden="true"></span>
-            saroj.dev
-          </a>
-        </div>
-        <p>Umbraco &amp; .NET Developer at ZAAKS! · Kathmandu</p>
+        <div class="footer-top"><a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span><span data-site-name>saroj.dev</span></a></div>
+        <p data-footer-blurb></p>
       </div>
-      <div class="footer-media">
-        <h3>Media</h3>
-        <ul class="media-links">
-          <li><a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a></li>
-          <li><a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a></li>
-        </ul>
-      </div>
+      <div class="footer-media"><h3>Media</h3><ul class="media-links" data-footer-social></ul></div>
     </div>
-    <p class="copyright">© 2026 Saroj Shrestha</p>
+    <p class="copyright" data-copyright></p>
   </footer>
-
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/portfolio.js"></script>
 </body>
 </html>

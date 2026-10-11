@@ -1,0 +1,36 @@
+{
+  "status": "published",
+  "hero": {
+    "heading": "Saroj Shrestha",
+    "headingAccent": "Umbraco & .NET Developer",
+    "subtitle": "I work with Umbraco at ZAAKS! in Kathmandu. If you're looking at it and need a hand, I can help.",
+    "profileImage": "/img/saroj.png",
+    "profileImageAlt": "Saroj Shrestha",
+    "statusText": "Currently at ZAAKS! · Kathmandu",
+    "cta": { "label": "Say hi", "href": "/contact" }
+  },
+  "quote": {
+    "text": "The best Umbraco build is the one editors run without calling me.",
+    "author": "Saroj"
+  },
+  "aboutSnippet": {
+    "heading": "about-me",
+    "paragraphs": [
+      "I'm Saroj — Umbraco and .NET developer at ZAAKS! in Kathmandu, building sites and backoffices that are straightforward for the people who edit content every day.",
+      "More about me on the about page."
+    ],
+    "image": "/img/about-coding.jpg",
+    "imageAlt": "Illustration of Saroj sitting at a desk, coding on a laptop",
+    "cta": { "label": "Read more ->", "href": "/about" }
+  },
+  "featuredProjectSlugs": ["block-field-visibility", "open-source-github"],
+  "skillsSection": {
+    "heading": "skills",
+    "kicker": "what I use",
+    "intro": "Umbraco, .NET, and the backoffice work I do at ZAAKS! — document types, Block Lists, custom packages, and editor workflows that keep teams shipping without a dev in the loop."
+  },
+  "contactSection": {
+    "heading": "contact",
+    "lead": "Fastest route: GitHub or LinkedIn below. A short note about your Umbraco situation is enough to start."
+  }
+}

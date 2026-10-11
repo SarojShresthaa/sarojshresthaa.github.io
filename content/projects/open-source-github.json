@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "slug": "open-source-github",
+  "title": "saroj.dev on GitHub",
+  "category": "main-work",
+  "description": "My public profile and portfolio repos for Umbraco and .NET work.",
+  "longDescription": "Open-source Umbraco and .NET work, practice repos, and this portfolio — all on GitHub.",
+  "thumbnail": "/img/project-05.png",
+  "thumbnailAlt": "saroj.dev portfolio",
+  "gallery": [],
+  "technologies": ["Umbraco", "HTML", "CSS"],
+  "githubUrl": "https://github.com/SarojShresthaa/sarojshresthaa.github.io",
+  "demoUrl": "https://sarojshrestha.me/",
+  "featured": true
+}

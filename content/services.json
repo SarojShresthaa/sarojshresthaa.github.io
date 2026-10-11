@@ -1,0 +1,25 @@
+{
+  "status": "published",
+  "title": "services",
+  "subtitle": "How I can help",
+  "items": [
+    {
+      "id": "umbraco-builds",
+      "name": "Umbraco builds",
+      "description": "Document types, Block Lists, and backoffice setups that editors can run day to day.",
+      "icon": "document"
+    },
+    {
+      "id": "dotnet-integration",
+      "name": ".NET integration",
+      "description": "Razor, APIs, and Azure-friendly .NET work around your Umbraco solution.",
+      "icon": "code"
+    },
+    {
+      "id": "packages",
+      "name": "Custom packages",
+      "description": "Reusable Umbraco packages when the same editor or developer pain keeps showing up.",
+      "icon": "package"
+    }
+  ]
+}

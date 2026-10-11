@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Saroj Shrestha – Umbraco & .NET Developer</title>
-  <meta name="description" content="Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu. If you're working with Umbraco and need help, I can help." />
-  <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
+  <meta name="description" content="Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu." />
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="/css/style.css" />
   <script>
     (function () {
       var saved = localStorage.getItem("theme");
@@ -21,24 +21,20 @@
     })();
   </script>
 </head>
-<body>
+<body data-page="home">
   <header class="header">
     <div class="container header-inner">
-      <a class="logo" href="index.html">
+      <a class="logo" href="/">
         <span class="logo-mark" aria-hidden="true"></span>
-        saroj.dev
+        <span data-site-name>saroj.dev</span>
       </a>
       <div class="menu-cont">
         <button class="menu-btn" type="button" aria-label="Open menu">
           <span></span>
           <span></span>
         </button>
-        <ul class="menubar">
-          <li><a class="nav-link active" href="index.html">home</a></li>
-          <li><a class="nav-link" href="projects.html">projects</a></li>
-          <li><a class="nav-link" href="about-me.html">about</a></li>
-          <li><a class="nav-link" href="contact.html">contact</a></li>
-          <li>
+        <ul class="menubar" data-portfolio-nav-root>
+          <li data-portfolio-nav-insert>
             <button class="soc theme-btn" type="button" aria-label="Toggle light and dark mode">
               <svg class="icon-lamp-off" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/>
@@ -48,172 +44,38 @@
               </svg>
             </button>
           </li>
-          <div class="social-rail animate-bounce-slower">
-            <span class="social-line"></span>
-            <a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a>
-            <a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a>
-          </div>
+          <div class="social-rail animate-bounce-slower" data-social-rail></div>
         </ul>
       </div>
     </div>
   </header>
 
   <main class="container page">
-    <section class="hero">
-     <div class="hero-copy">
-        <h1>Saroj Shrestha<br><span class="accent">Umbraco &amp; .NET Developer</span></h1>
-        <p class="hero-sub">I work with Umbraco at ZAAKS! in Kathmandu. If you're looking at it and need a hand, I can help.</p>
-        <a class="primary-btn" href="contact.html">Say hi</a>
-      </div>
-      <div class="hero-art">
-        <div class="hero-frame">
-          <img class="logo-outline animate-show-ltr" src="img/logo-outline.svg" alt="" />
-          <img class="hero-photo" src="img/saroj.png" alt="Saroj Shrestha" />
-          <img class="dots animate-show-rtl" src="img/dots.svg" alt="" />
-        </div>
-        <p class="status">
-          <span class="status-dot" aria-hidden="true"></span>
-          <span>Currently at <strong>ZAAKS!</strong> · Kathmandu</span>
-        </p>
-      </div>
-    </section>
-
-    <div class="quote-wrap">
-      <p class="quote">The best Umbraco build is the one editors run without calling me.</p>
-      <span class="quote-author">- Saroj</span>
-      <span class="deco-square sm quote-sq animate-bounce-slow"></span>
-    </div>
-
+    <section class="hero" data-home-hero></section>
+    <div class="quote-wrap" data-home-quote></div>
     <section class="section about-snippet">
-      <div class="about-snippet-inner">
-        <div class="about-copy">
-          <h2 class="section-heading after">about-me</h2>
-          <p>I'm Saroj — Umbraco and .NET developer at <strong>ZAAKS!</strong> in Kathmandu, building sites and backoffices that are straightforward for the people who edit content every day.</p>
-          <p>More about me on the about page.</p>
-          <a class="primary-btn" href="about-me.html">Read more -&gt;</a>
-        </div>
-        <figure class="about-snippet-art">
-          <img src="img/about-coding.jpg" alt="Illustration of Saroj sitting at a desk, coding on a laptop" width="480" height="360" loading="lazy" />
-        </figure>
-      </div>
+      <div class="about-snippet-inner" data-home-about></div>
     </section>
-
     <section class="section">
       <div class="section-head">
         <h2 class="section-heading after">projects</h2>
-        <a class="view-all" href="projects.html">See all →</a>
+        <a class="view-all" href="/projects">See all →</a>
       </div>
-      <div class="projects-grid">
-        <article class="project-card">
-          <div class="thumb"><img src="img/project-02.png" alt="Block Field Visibility package" /></div>
-          <ul class="tools">
-            <li>Umbraco</li>
-            <li>JavaScript</li>
-            <li>C#</li>
-          </ul>
-          <div class="body">
-            <h3>Block Field Visibility</h3>
-            <p>Umbraco package that hides or shows Block List fields in the backoffice so editors only see what they need.</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://github.com/SarojShresthaa/Our.Umbraco.BlockFieldVisibility" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
-          </div>
-        </article>
-        <article class="project-card">
-          <div class="thumb"><img src="img/project-05.png" alt="saroj.dev on GitHub" /></div>
-          <ul class="tools">
-            <li>Umbraco</li>
-            <li>HTML</li>
-            <li>CSS</li>
-          </ul>
-          <div class="body">
-            <h3>Open source on GitHub</h3>
-            <p>My public Umbraco and .NET work — packages, practice repos, and this portfolio.</p>
-            <div class="btns">
-              <a class="primary-btn" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer">GitHub</a>
-            </div>
-          </div>
-        </article>
-      </div>
+      <div class="projects-grid" data-home-projects></div>
     </section>
-
     <section class="section">
       <div class="section-head">
         <h2 class="section-heading after">skills</h2>
       </div>
-      <div class="skills-layout">
-        <div class="skills-art">
-          <div class="skills-art-copy">
-            <p class="skills-art-kicker">what I use</p>
-            <p class="skills-art-text">Umbraco, .NET, and the backoffice work I do at ZAAKS! — document types, Block Lists, custom packages, and editor workflows that keep teams shipping without a dev in the loop.</p>
-          </div>
-          <img class="logo-a" src="img/logo-outline.svg" alt="" />
-        </div>
-        <div class="skills-cols">
-          <div class="skills-col">
-            <div class="card">
-              <h4>CMS</h4>
-              <ul>
-                <li>Umbraco CMS</li>
-                <li>Block Lists</li>
-                <li>Document Types</li>
-              </ul>
-            </div>
-          </div>
-          <div class="skills-col">
-            <div class="card">
-              <h4>Backend</h4>
-              <ul>
-                <li>.NET Core</li>
-                <li>C#</li>
-                <li>Razor</li>
-                <li>Azure</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h4>Frontend</h4>
-              <ul>
-                <li>HTML</li>
-                <li>CSS</li>
-                <li>JavaScript</li>
-              </ul>
-            </div>
-          </div>
-          <div class="skills-col">
-            <div class="card">
-              <h4>Focus</h4>
-              <ul>
-                <li>Custom packages</li>
-                <li>AI features</li>
-                <li>Editor-friendly sites</li>
-                <li>Open source</li>
-              </ul>
-            </div>
-            <div class="card">
-              <h4>Tools</h4>
-              <ul>
-                <li>Git</li>
-                <li>GitHub</li>
-                <li>Visual Studio</li>
-                <li>VS Code</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div data-home-skills></div>
     </section>
-
     <section class="section">
       <div class="section-head">
         <h2 class="section-heading after">contact</h2>
       </div>
       <div class="contact-grid">
-        <p class="lead">Fastest route: GitHub or LinkedIn below. A short note about your Umbraco situation is enough to start.</p>
-        <div class="contact-box">
-          <h4>Message me here</h4>
-          <a class="contact-row" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer"><span class="soc" data-icon="github" aria-hidden="true"></span> github.com/SarojShresthaa</a>
-          <a class="contact-row" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer"><span class="soc" data-icon="linkedin" aria-hidden="true"></span> Saroj Shrestha</a>
-        </div>
+        <p class="lead" data-home-contact-lead></p>
+        <div class="contact-box" data-home-contact-box></div>
       </div>
     </section>
   </main>
@@ -222,24 +84,22 @@
     <div class="container footer-inner">
       <div class="footer-brand">
         <div class="footer-top">
-          <a class="logo" href="index.html">
+          <a class="logo" href="/">
             <span class="logo-mark" aria-hidden="true"></span>
-            saroj.dev
+            <span data-site-name>saroj.dev</span>
           </a>
         </div>
-        <p>Umbraco &amp; .NET Developer at ZAAKS! · Kathmandu</p>
+        <p data-footer-blurb></p>
       </div>
       <div class="footer-media">
         <h3>Media</h3>
-        <ul class="media-links">
-          <li><a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a></li>
-          <li><a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a></li>
-        </ul>
+        <ul class="media-links" data-footer-social></ul>
       </div>
     </div>
-    <p class="copyright">© 2026 Saroj Shrestha</p>
+    <p class="copyright" data-copyright></p>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/portfolio.js"></script>
 </body>
 </html>

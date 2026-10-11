@@ -1,0 +1,13 @@
+{
+  "folders": [
+    { "id": "portfolio", "name": "Portfolio", "path": "/img" }
+  ],
+  "items": [
+    { "id": "saroj", "name": "saroj.png", "path": "/img/saroj.png", "folder": "portfolio" },
+    { "id": "about-coding", "name": "about-coding.jpg", "path": "/img/about-coding.jpg", "folder": "portfolio" },
+    { "id": "project-02", "name": "project-02.png", "path": "/img/project-02.png", "folder": "portfolio" },
+    { "id": "project-04", "name": "project-04.png", "path": "/img/project-04.png", "folder": "portfolio" },
+    { "id": "project-05", "name": "project-05.png", "path": "/img/project-05.png", "folder": "portfolio" },
+    { "id": "favicon", "name": "favicon.svg", "path": "/img/favicon.svg", "folder": "portfolio" }
+  ]
+}

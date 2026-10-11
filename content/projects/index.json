@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "title": "projects",
+  "subtitle": "Real Umbraco, .NET, and community work from Usome, ZAAKS!, and GitHub",
+  "mainWorkHeading": "main-work",
+  "smallProjectsHeading": "small-projects",
+  "slugs": [
+    "block-field-visibility",
+    "open-source-github",
+    "bock-grid",
+    "crud",
+    "demo-hub",
+    "weather"
+  ]
+}

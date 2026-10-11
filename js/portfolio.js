@@ -1,0 +1,409 @@
+(function () {
+  const CONTENT = "/content/";
+
+  function absUrl(path) {
+    if (!path) return "";
+    if (path.startsWith("http") || path.startsWith("/")) return path;
+    return "/" + path.replace(/^\.\//, "");
+  }
+
+  async function fetchJson(url) {
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) throw new Error("Failed to load " + url);
+    return res.json();
+  }
+
+  async function loadSiteSettings() {
+    const data = await fetchJson(CONTENT + "site-settings.json");
+    if (data.status === "draft") throw new Error("Site settings unpublished");
+    return data;
+  }
+
+  async function loadProjects() {
+    const index = await fetchJson(CONTENT + "projects/index.json");
+    const slugs = index.slugs || [];
+    const projects = await Promise.all(
+      slugs.map((slug) => fetchJson(CONTENT + "projects/" + slug + ".json"))
+    );
+    return {
+      index,
+      projects: projects.filter((p) => p.status === "published"),
+    };
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function renderProjectCard(project, options) {
+    const thumb = project.thumbnail
+      ? `<div class="thumb"><img src="${absUrl(project.thumbnail)}" alt="${escapeHtml(project.thumbnailAlt || project.title)}" /></div>`
+      : "";
+    const toolsClass = project.thumbnail ? "tools" : "tools no-top";
+    const tech = (project.technologies || [])
+      .map((t) => `<li>${escapeHtml(t)}</li>`)
+      .join("");
+    const detailHref = absUrl("/projects/" + project.slug);
+    const buttons = [];
+    if (project.slug) {
+      buttons.push(`<a class="gray-btn" href="${detailHref}">Details</a>`);
+    }
+    if (project.githubUrl) {
+      buttons.push(
+        `<a class="${options?.primary ? "primary-btn" : "gray-btn"}" href="${escapeHtml(project.githubUrl)}" target="_blank" rel="noreferrer">GitHub</a>`
+      );
+    }
+    if (project.demoUrl) {
+      buttons.push(
+        `<a class="gray-btn" href="${escapeHtml(project.demoUrl)}" target="_blank" rel="noreferrer">Live demo</a>`
+      );
+    }
+    return `<article class="project-card">
+      ${thumb}
+      <ul class="${toolsClass}">${tech}</ul>
+      <div class="body">
+        <h3><a href="${detailHref}">${escapeHtml(project.title)}</a></h3>
+        <p>${escapeHtml(project.description)}</p>
+        <div class="btns">${buttons.join("")}</div>
+      </div>
+    </article>`;
+  }
+
+  function applyNavigation(settings, activeHref) {
+    const root = document.querySelector("[data-portfolio-nav-root]");
+    const insertBefore = document.querySelector("[data-portfolio-nav-insert]");
+    if (!root || !insertBefore || !settings.navigation) return;
+    root.querySelectorAll("[data-dynamic-nav]").forEach((n) => n.remove());
+    const normalized = activeHref === "/about-me" ? "/about" : activeHref;
+    settings.navigation.forEach((item) => {
+      const li = document.createElement("li");
+      li.setAttribute("data-dynamic-nav", "1");
+      const a = document.createElement("a");
+      const active = normalized === item.href ? " active" : "";
+      a.className = "nav-link" + active;
+      a.href = item.href;
+      a.textContent = item.label;
+      li.appendChild(a);
+      root.insertBefore(li, insertBefore);
+    });
+  }
+
+  function applySiteChrome(settings) {
+    document.querySelectorAll("[data-site-name]").forEach((el) => {
+      el.textContent = settings.siteName || "saroj.dev";
+    });
+    document.querySelectorAll("[data-footer-blurb]").forEach((el) => {
+      el.textContent = settings.footer?.blurb || "";
+    });
+    document.querySelectorAll("[data-copyright]").forEach((el) => {
+      el.textContent = settings.footer?.copyright || "";
+    });
+    if (settings.favicon) {
+      const icon = document.querySelector('link[rel="icon"]');
+      if (icon) icon.href = absUrl(settings.favicon);
+    }
+    const socialRail = document.querySelector("[data-social-rail]");
+    if (socialRail && settings.social) {
+      socialRail.innerHTML =
+        '<span class="social-line"></span>' +
+        settings.social
+          .map(
+            (s) =>
+              `<a class="soc" data-icon="${escapeHtml(s.id)}" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(s.label)}"></a>`
+          )
+          .join("");
+    }
+    const footerMedia = document.querySelector("[data-footer-social]");
+    if (footerMedia && settings.social) {
+      footerMedia.innerHTML = settings.social
+        .map(
+          (s) =>
+            `<li><a class="soc" data-icon="${escapeHtml(s.id)}" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(s.label)}"></a></li>`
+        )
+        .join("");
+    }
+  }
+
+  async function renderHome(settings) {
+    const home = await fetchJson(CONTENT + "home.json");
+    if (home.status !== "published") return;
+    const { projects } = await loadProjects();
+    const hero = document.querySelector("[data-home-hero]");
+    if (hero) {
+      hero.innerHTML = `<div class="hero-copy">
+        <h1>${escapeHtml(home.hero.heading)}<br><span class="accent">${escapeHtml(home.hero.headingAccent)}</span></h1>
+        <p class="hero-sub">${escapeHtml(home.hero.subtitle)}</p>
+        <a class="primary-btn" href="${escapeHtml(home.hero.cta.href)}">${escapeHtml(home.hero.cta.label)}</a>
+      </div>
+      <div class="hero-art">
+        <div class="hero-frame">
+          <img class="logo-outline animate-show-ltr" src="${absUrl("img/logo-outline.svg")}" alt="" />
+          <img class="hero-photo" src="${absUrl(home.hero.profileImage)}" alt="${escapeHtml(home.hero.profileImageAlt)}" />
+          <img class="dots animate-show-rtl" src="${absUrl("img/dots.svg")}" alt="" />
+        </div>
+        <p class="status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>${home.hero.statusText.replace("ZAAKS!", "<strong>ZAAKS!</strong>")}</span>
+        </p>
+      </div>`;
+    }
+    const quote = document.querySelector("[data-home-quote]");
+    if (quote) {
+      quote.innerHTML = `<p class="quote">${escapeHtml(home.quote.text)}</p>
+        <span class="quote-author">- ${escapeHtml(home.quote.author)}</span>
+        <span class="deco-square sm quote-sq animate-bounce-slow"></span>`;
+    }
+    const about = document.querySelector("[data-home-about]");
+    if (about) {
+      about.innerHTML = `<div class="about-copy">
+          <h2 class="section-heading after">${escapeHtml(home.aboutSnippet.heading)}</h2>
+          ${home.aboutSnippet.paragraphs.map((p) => `<p>${p.replace("ZAAKS!", "<strong>ZAAKS!</strong>")}</p>`).join("")}
+          <a class="primary-btn" href="${escapeHtml(home.aboutSnippet.cta.href)}">${escapeHtml(home.aboutSnippet.cta.label)}</a>
+        </div>
+        <figure class="about-snippet-art">
+          <img src="${absUrl(home.aboutSnippet.image)}" alt="${escapeHtml(home.aboutSnippet.imageAlt)}" width="480" height="360" loading="lazy" />
+        </figure>`;
+    }
+    const grid = document.querySelector("[data-home-projects]");
+    if (grid) {
+      const featured = home.featuredProjectSlugs
+        .map((slug) => projects.find((p) => p.slug === slug))
+        .filter(Boolean);
+      grid.innerHTML = featured.map((p) => renderProjectCard(p, { primary: true })).join("");
+    }
+    const skills = await fetchJson(CONTENT + "skills.json");
+    const skillsRoot = document.querySelector("[data-home-skills]");
+    if (skillsRoot && skills.status === "published") {
+      skillsRoot.innerHTML = renderSkillsLayout(skills);
+    }
+    const contactLead = document.querySelector("[data-home-contact-lead]");
+    if (contactLead) contactLead.textContent = home.contactSection.lead;
+    const contactBox = document.querySelector("[data-home-contact-box]");
+    if (contactBox && settings.social) {
+      contactBox.innerHTML =
+        "<h4>Message me here</h4>" +
+        settings.social
+          .map(
+            (s) =>
+              `<a class="contact-row" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display || s.url)}</a>`
+          )
+          .join("");
+    }
+  }
+
+  function renderSkillsLayout(skills) {
+    const cols = skills.columns || [];
+    const chunk = (arr, n) => {
+      const out = [];
+      for (let i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
+      return out;
+    };
+    const grouped = chunk(cols, 2);
+    return `<div class="skills-layout">
+      <div class="skills-art">
+        <div class="skills-art-copy">
+          <p class="skills-art-kicker">${escapeHtml(skills.kicker)}</p>
+          <p class="skills-art-text">${escapeHtml(skills.intro)}</p>
+        </div>
+        <img class="logo-a" src="${absUrl("img/logo-outline.svg")}" alt="" />
+      </div>
+      <div class="skills-cols">
+        ${grouped
+          .map(
+            (group) => `<div class="skills-col">${group
+              .map(
+                (col) => `<div class="card"><h4>${escapeHtml(col.title)}</h4><ul>${col.items
+                  .map((i) => `<li>${escapeHtml(i)}</li>`)
+                  .join("")}</ul></div>`
+              )
+              .join("")}</div>`
+          )
+          .join("")}
+      </div>
+    </div>`;
+  }
+
+  async function renderProjectsPage() {
+    const { index, projects } = await loadProjects();
+    const title = document.querySelector("[data-projects-header]");
+    if (title) {
+      title.innerHTML = `<h2>${escapeHtml(index.title)}</h2><p>${escapeHtml(index.subtitle)}</p>`;
+    }
+    const main = document.querySelector("[data-projects-main]");
+    const small = document.querySelector("[data-projects-small]");
+    if (main) {
+      main.innerHTML = projects
+        .filter((p) => p.category === "main-work")
+        .map((p) => renderProjectCard(p, { primary: true }))
+        .join("");
+    }
+    if (small) {
+      small.innerHTML = projects
+        .filter((p) => p.category === "small-projects")
+        .map((p) => renderProjectCard(p, { primary: false }))
+        .join("");
+    }
+  }
+
+  async function renderAboutPage() {
+    const about = await fetchJson(CONTENT + "about.json");
+    if (about.status !== "published") return;
+    const root = document.querySelector("[data-about-root]");
+    if (!root) return;
+    root.innerHTML = `<section class="about-hero about-page">
+      <p class="about-eyebrow">${escapeHtml(about.eyebrow)}</p>
+      <h1 class="about-lead">${escapeHtml(about.heading)}</h1>
+      <div class="about-body">${about.biography.map((p) => `<p>${escapeHtml(p)}</p>`).join("")}</div>
+    </section>
+    <section class="section about-work">
+      <p class="about-work-kicker">${escapeHtml(about.workSection.kicker)}</p>
+      <h2 class="section-heading">${escapeHtml(about.workSection.heading)}</h2>
+      <p class="help-intro">${escapeHtml(about.workSection.intro)}</p>
+      <ul class="about-tags">${about.workSection.tags.map((t) => `<li class="about-tag">${escapeHtml(t)}</li>`).join("")}</ul>
+    </section>
+    <section class="section about-life">
+      <p class="about-work-kicker">${escapeHtml(about.lifeSection.kicker)}</p>
+      <h2 class="section-heading">${escapeHtml(about.lifeSection.heading)}</h2>
+      <p class="help-intro">${escapeHtml(about.lifeSection.intro)}</p>
+      <ul class="about-tags">${about.lifeSection.tags.map((t) => `<li class="about-tag">${escapeHtml(t)}</li>`).join("")}</ul>
+    </section>`;
+  }
+
+  async function renderContactPage(settings) {
+    const contact = await fetchJson(CONTENT + "contact.json");
+    const header = document.querySelector("[data-contact-header]");
+    if (header) {
+      header.innerHTML = `<h2>${escapeHtml(contact.title)}</h2><p>${escapeHtml(contact.subtitle)}</p>`;
+    }
+    const lead = document.querySelector("[data-contact-lead]");
+    if (lead) lead.textContent = contact.lead;
+    const box = document.querySelector("[data-contact-box]");
+    if (box && settings.social) {
+      box.innerHTML =
+        `<h4>${escapeHtml(contact.messageBoxHeading)}</h4>` +
+        settings.social
+          .map(
+            (s) =>
+              `<a class="contact-row" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display)}</a>`
+          )
+          .join("");
+    }
+    const media = document.querySelector("[data-contact-media]");
+    if (media && settings.social) {
+      media.innerHTML = settings.social
+        .map(
+          (s) =>
+            `<a href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display)}</a>`
+        )
+        .join("");
+    }
+  }
+
+  async function renderListPage(file, rootSelector, renderItem) {
+    const data = await fetchJson(CONTENT + file);
+    const root = document.querySelector(rootSelector);
+    if (!root || data.status !== "published") return;
+    const header = root.querySelector("[data-list-header]");
+    if (header) {
+      header.innerHTML = `<h2>${escapeHtml(data.title)}</h2><p>${escapeHtml(data.subtitle)}</p>`;
+    }
+    const list = root.querySelector("[data-list-body]");
+    if (list) {
+      const items = data.items || [];
+      list.innerHTML = items.length
+        ? items.map(renderItem).join("")
+        : `<p class="lead">Nothing published here yet. Add items in the portfolio CMS.</p>`;
+    }
+  }
+
+  async function renderProjectDetail(slug) {
+    const project = await fetchJson(CONTENT + "projects/" + slug + ".json");
+    if (project.status !== "published") {
+      document.querySelector("[data-project-detail]").innerHTML =
+        "<p class=\"lead\">This project is not published.</p>";
+      return;
+    }
+    document.title = project.title + " – Saroj Shrestha";
+    const root = document.querySelector("[data-project-detail]");
+    if (!root) return;
+    const gallery = (project.gallery || [])
+      .map((g) => `<img src="${absUrl(g)}" alt="" loading="lazy" />`)
+      .join("");
+    root.innerHTML = `<div class="page-title">
+        <h2>${escapeHtml(project.title)}</h2>
+        <p>${escapeHtml(project.description)}</p>
+      </div>
+      <section class="section">
+        ${project.thumbnail ? `<div class="thumb" style="max-width:480px;margin-bottom:1.5rem"><img src="${absUrl(project.thumbnail)}" alt="${escapeHtml(project.thumbnailAlt || project.title)}" /></div>` : ""}
+        <p class="lead">${escapeHtml(project.longDescription || project.description)}</p>
+        <ul class="about-tags">${(project.technologies || []).map((t) => `<li class="about-tag">${escapeHtml(t)}</li>`).join("")}</ul>
+        ${gallery ? `<div class="media-list" style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem">${gallery}</div>` : ""}
+        <div class="btns" style="margin-top:1.5rem">
+          ${project.githubUrl ? `<a class="primary-btn" href="${escapeHtml(project.githubUrl)}" target="_blank" rel="noreferrer">GitHub</a>` : ""}
+          ${project.demoUrl ? `<a class="gray-btn" href="${escapeHtml(project.demoUrl)}" target="_blank" rel="noreferrer">Live demo</a>` : ""}
+          <a class="gray-btn" href="${absUrl("/projects")}">All projects</a>
+        </div>
+      </section>`;
+  }
+
+  async function init() {
+    const page = document.body.dataset.page;
+    if (!page) return;
+    try {
+      const settings = await loadSiteSettings();
+      applySiteChrome(settings);
+      const path = location.pathname.replace(/\/$/, "") || "/";
+      applyNavigation(settings, path === "/about-me" ? "/about" : path);
+
+      if (page === "home") await renderHome(settings);
+      if (page === "projects") await renderProjectsPage();
+      if (page === "about") await renderAboutPage();
+      if (page === "contact") await renderContactPage(settings);
+      if (page === "experience") {
+        await renderListPage("experience.json", "[data-experience-root]", (item) => `<article class="card" style="margin-bottom:1rem">
+          <h3>${escapeHtml(item.role)} · ${escapeHtml(item.organization)}</h3>
+          <p><em>${escapeHtml(item.startDate)} – ${escapeHtml(item.endDate)}</em>${item.location ? " · " + escapeHtml(item.location) : ""}</p>
+          <p>${escapeHtml(item.description)}</p>
+          ${item.achievements?.length ? `<ul>${item.achievements.map((a) => `<li>${escapeHtml(a)}</li>`).join("")}</ul>` : ""}
+        </article>`);
+      }
+      if (page === "education") {
+        await renderListPage("education.json", "[data-education-root]", (item) => `<article class="card" style="margin-bottom:1rem">
+          <h3>${escapeHtml(item.qualification)}</h3>
+          <p><strong>${escapeHtml(item.institution)}</strong></p>
+          <p>${escapeHtml(item.description)}</p>
+        </article>`);
+      }
+      if (page === "skills") {
+        const skills = await fetchJson(CONTENT + "skills.json");
+        const root = document.querySelector("[data-skills-root]");
+        if (root && skills.status === "published") {
+          const header = root.querySelector("[data-list-header]");
+          if (header) header.innerHTML = `<h2>${escapeHtml(skills.title)}</h2><p>${escapeHtml(skills.subtitle)}</p>`;
+          const body = root.querySelector("[data-skills-body]");
+          if (body) body.innerHTML = renderSkillsLayout(skills);
+        }
+      }
+      if (page === "certifications") {
+        await renderListPage("certifications.json", "[data-certifications-root]", (item) => `<article class="card"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.issuer || "")} ${escapeHtml(item.date || "")}</p></article>`);
+      }
+      if (page === "services") {
+        await renderListPage("services.json", "[data-services-root]", (item) => `<article class="card" style="margin-bottom:1rem"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p></article>`);
+      }
+      if (page === "project-detail") {
+        const slug = window.__PROJECT_SLUG__;
+        if (slug) await renderProjectDetail(slug);
+      }
+
+      if (window.rehydratePortfolioIcons) window.rehydratePortfolioIcons();
+    } catch (err) {
+      console.warn("Portfolio content render:", err);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();

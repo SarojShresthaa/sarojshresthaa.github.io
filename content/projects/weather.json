@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "slug": "weather",
+  "title": "Weather",
+  "category": "small-projects",
+  "description": "JavaScript weather app practice — small UI and API work on GitHub.",
+  "longDescription": "A JavaScript weather app for UI and API practice.",
+  "thumbnail": "",
+  "thumbnailAlt": "",
+  "gallery": [],
+  "technologies": ["JavaScript", "HTML"],
+  "githubUrl": "https://github.com/SarojShresthaa/Weather-",
+  "demoUrl": "",
+  "featured": false
+}

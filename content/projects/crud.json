@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "slug": "crud",
+  "title": "CRUD",
+  "category": "small-projects",
+  "description": "Plain C# CRUD. Practice, nothing more. Create, read, update, delete.",
+  "longDescription": "A small C# CRUD exercise for practice.",
+  "thumbnail": "",
+  "thumbnailAlt": "",
+  "gallery": [],
+  "technologies": ["C#", ".NET"],
+  "githubUrl": "https://github.com/SarojShresthaa/CRUD",
+  "demoUrl": "",
+  "featured": false
+}

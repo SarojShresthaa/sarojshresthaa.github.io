@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "slug": "block-field-visibility",
+  "title": "Block Field Visibility",
+  "category": "main-work",
+  "description": "Umbraco package that hides or shows Block List fields in the backoffice so editors only see what they need.",
+  "longDescription": "An Umbraco package focused on Block List field visibility — helping editors see only the fields relevant to their workflow.",
+  "thumbnail": "/img/project-02.png",
+  "thumbnailAlt": "Block Field Visibility package",
+  "gallery": [],
+  "technologies": ["Umbraco", "JavaScript", "C#"],
+  "githubUrl": "https://github.com/SarojShresthaa/Our.Umbraco.BlockFieldVisibility",
+  "demoUrl": "",
+  "featured": true
+}

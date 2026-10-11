@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "slug": "demo-hub",
+  "title": "demo-hub",
+  "category": "small-projects",
+  "description": "A pile of HTML/CSS experiments I didn't want sitting in random folders.",
+  "longDescription": "Collection of front-end experiments and demos.",
+  "thumbnail": "",
+  "thumbnailAlt": "",
+  "gallery": [],
+  "technologies": ["HTML", "CSS"],
+  "githubUrl": "https://github.com/SarojShresthaa/demo-hub",
+  "demoUrl": "",
+  "featured": false
+}

@@ -1,0 +1,21 @@
+{
+  "status": "published",
+  "title": "experience",
+  "subtitle": "Umbraco & .NET roles",
+  "items": [
+    {
+      "id": "zaaks",
+      "organization": "ZAAKS!",
+      "role": "Umbraco & .NET Developer",
+      "location": "Kathmandu, Nepal",
+      "startDate": "2023",
+      "endDate": "Present",
+      "description": "Building Umbraco sites and backoffices — document types, Block Lists, Razor views, and .NET integrations for editor-friendly delivery.",
+      "achievements": [
+        "Backoffice workflows tailored for content teams",
+        "Custom packages and reusable Umbraco patterns",
+        "Collaboration on production Umbraco deployments"
+      ]
+    }
+  ]
+}

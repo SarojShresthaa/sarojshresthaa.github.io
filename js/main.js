@@ -28,10 +28,15 @@ const ICONS = {
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>',
 };
 
-document.querySelectorAll("[data-icon]").forEach((el) => {
-  const svg = ICONS[el.dataset.icon];
-  if (svg && !el.querySelector("svg")) el.insertAdjacentHTML("afterbegin", svg);
-});
+function hydrateIcons(root) {
+  (root || document).querySelectorAll("[data-icon]").forEach((el) => {
+    const svg = ICONS[el.dataset.icon];
+    if (svg && !el.querySelector("svg")) el.insertAdjacentHTML("afterbegin", svg);
+  });
+}
+
+hydrateIcons();
+window.rehydratePortfolioIcons = () => hydrateIcons(document);
 
 function getSystemTheme() {
   if (window.matchMedia("(prefers-color-scheme: light)").matches) return "light";

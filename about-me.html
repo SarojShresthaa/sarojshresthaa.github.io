@@ -4,126 +4,48 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About – Saroj Shrestha</title>
-  <meta name="description" content="About Saroj Shrestha — Umbraco and .NET developer at ZAAKS! in Kathmandu. Background and experience." />
-  <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="canonical" href="/about" />
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
   <script>
     (function () {
       var saved = localStorage.getItem("theme");
-      var theme = saved;
-      if (!theme && window.matchMedia) {
-        theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-      }
-      document.documentElement.setAttribute("data-theme", theme || "dark");
+      var theme = saved || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.documentElement.setAttribute("data-theme", theme);
     })();
   </script>
 </head>
-<body>
+<body data-page="about">
   <header class="header">
     <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <span class="logo-mark" aria-hidden="true"></span>
-        saroj.dev
-      </a>
+      <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span><span data-site-name>saroj.dev</span></a>
       <div class="menu-cont">
-        <button class="menu-btn" type="button" aria-label="Open menu">
-          <span></span>
-          <span></span>
-        </button>
-        <ul class="menubar">
-          <li><a class="nav-link" href="index.html">home</a></li>
-          <li><a class="nav-link" href="projects.html">projects</a></li>
-          <li><a class="nav-link active" href="about-me.html">about</a></li>
-          <li><a class="nav-link" href="contact.html">contact</a></li>
-          <li>
+        <button class="menu-btn" type="button" aria-label="Open menu"><span></span><span></span></button>
+        <ul class="menubar" data-portfolio-nav-root>
+          <li data-portfolio-nav-insert>
             <button class="soc theme-btn" type="button" aria-label="Toggle light and dark mode">
-              <svg class="icon-lamp-off" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/>
-              </svg>
-              <svg class="icon-lamp-on" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/>
-              </svg>
+              <svg class="icon-lamp-off" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/></svg>
+              <svg class="icon-lamp-on" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1Zm3-19a7 7 0 0 0-4 12.6V17h8v-2.4A7 7 0 0 0 12 2Z"/></svg>
             </button>
           </li>
-          <div class="social-rail animate-bounce-slower">
-            <span class="social-line"></span>
-            <a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a>
-            <a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a>
-          </div>
+          <div class="social-rail animate-bounce-slower" data-social-rail></div>
         </ul>
       </div>
     </div>
   </header>
-
-  <main class="container page">
-    <section class="about-hero about-page">
-      <p class="about-eyebrow">about</p>
-      <h1 class="about-lead">Umbraco &amp; .NET developer in Kathmandu</h1>
-      <div class="about-body">
-        <p>I'm <strong>Saroj Shrestha</strong>. I build websites with <strong>Umbraco</strong> and .NET — mostly from Kathmandu, and since 2023 with <strong>ZAAKS!</strong></p>
-        <p>I care about the backoffice feeling obvious for editors: clear document types, sensible Block Lists, and Razor that doesn't fight you every time content changes. When something repeats in the wild, I turn it into a package on GitHub — like Block Field Visibility for Block List fields.</p>
-        <p>Reach out on the contact page if you want to connect — GitHub or LinkedIn is fine.</p>
-      </div>
-    </section>
-
-    <section class="section about-work">
-      <p class="about-work-kicker">Experience</p>
-      <h2 class="section-heading">Umbraco &amp; .NET at ZAAKS!</h2>
-      <p class="help-intro">Since 2023 I build Umbraco sites and backoffices in Kathmandu — document types, Block Lists, Razor, and .NET integrations. I also maintain open-source packages on GitHub when they solve a real editor or dev problem.</p>
-      <ul class="about-tags" aria-label="Technologies and focus areas">
-        <li class="about-tag">Umbraco CMS</li>
-        <li class="about-tag">Block Lists</li>
-        <li class="about-tag">Document types</li>
-        <li class="about-tag">ASP.NET Core</li>
-        <li class="about-tag">C#</li>
-        <li class="about-tag">Razor</li>
-        <li class="about-tag">Azure</li>
-        <li class="about-tag">Examine</li>
-        <li class="about-tag">Custom packages</li>
-        <li class="about-tag">Editor-friendly sites</li>
-        <li class="about-tag">Open source</li>
-      </ul>
-    </section>
-
-    <section class="section about-life">
-      <p class="about-work-kicker">Away from the desk</p>
-      <h2 class="section-heading">Movies, gym, riding &amp; hiking</h2>
-      <p class="help-intro">I like a clear split between work and everything else. Evenings for films, steady gym time in Kathmandu, rides when the road calls, and hikes in the hills when I can get away for a day.</p>
-      <ul class="about-tags" aria-label="Personal interests">
-        <li class="about-tag">Movies</li>
-        <li class="about-tag">Gym</li>
-        <li class="about-tag">Riding</li>
-        <li class="about-tag">Hiking</li>
-      </ul>
-    </section>
-
-  </main>
-
+  <main class="container page" data-about-root></main>
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <div class="footer-top">
-          <a class="logo" href="index.html">
-            <span class="logo-mark" aria-hidden="true"></span>
-            saroj.dev
-          </a>
-        </div>
-        <p>Umbraco &amp; .NET Developer at ZAAKS! · Kathmandu</p>
+        <div class="footer-top"><a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span><span data-site-name>saroj.dev</span></a></div>
+        <p data-footer-blurb></p>
       </div>
-      <div class="footer-media">
-        <h3>Media</h3>
-        <ul class="media-links">
-          <li><a class="soc" data-icon="github" href="https://github.com/SarojShresthaa" target="_blank" rel="noreferrer" aria-label="GitHub"></a></li>
-          <li><a class="soc" data-icon="linkedin" href="https://www.linkedin.com/in/saroj-shrestha-220681275" target="_blank" rel="noreferrer" aria-label="LinkedIn"></a></li>
-        </ul>
-      </div>
+      <div class="footer-media"><h3>Media</h3><ul class="media-links" data-footer-social></ul></div>
     </div>
-    <p class="copyright">© 2026 Saroj Shrestha</p>
+    <p class="copyright" data-copyright></p>
   </footer>
-
-  <script src="js/main.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/portfolio.js"></script>
 </body>
 </html>

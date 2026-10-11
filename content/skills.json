@@ -1,0 +1,29 @@
+{
+  "status": "published",
+  "title": "skills",
+  "subtitle": "Technologies and focus areas",
+  "kicker": "what I use",
+  "intro": "Umbraco, .NET, and the backoffice work I do at ZAAKS! — document types, Block Lists, custom packages, and editor workflows that keep teams shipping without a dev in the loop.",
+  "columns": [
+    {
+      "title": "CMS",
+      "items": ["Umbraco CMS", "Block Lists", "Document Types"]
+    },
+    {
+      "title": "Backend",
+      "items": [".NET Core", "C#", "Razor", "Azure"]
+    },
+    {
+      "title": "Frontend",
+      "items": ["HTML", "CSS", "JavaScript"]
+    },
+    {
+      "title": "Focus",
+      "items": ["Custom packages", "AI features", "Editor-friendly sites", "Open source"]
+    },
+    {
+      "title": "Tools",
+      "items": ["Git", "GitHub", "Visual Studio", "VS Code"]
+    }
+  ]
+}

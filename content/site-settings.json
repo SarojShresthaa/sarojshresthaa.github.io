@@ -1,0 +1,37 @@
+{
+  "status": "published",
+  "siteName": "saroj.dev",
+  "tagline": "Umbraco & .NET Developer at ZAAKS! · Kathmandu",
+  "logo": "/img/favicon.svg",
+  "favicon": "/img/favicon.svg",
+  "seo": {
+    "defaultTitle": "Saroj Shrestha – Umbraco & .NET Developer",
+    "defaultDescription": "Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu."
+  },
+  "navigation": [
+    { "label": "home", "href": "/" },
+    { "label": "projects", "href": "/projects" },
+    { "label": "about", "href": "/about" },
+    { "label": "experience", "href": "/experience" },
+    { "label": "contact", "href": "/contact" }
+  ],
+  "footer": {
+    "copyright": "© 2026 Saroj Shrestha",
+    "blurb": "Umbraco & .NET Developer at ZAAKS! · Kathmandu"
+  },
+  "social": [
+    {
+      "id": "github",
+      "label": "GitHub",
+      "url": "https://github.com/SarojShresthaa",
+      "display": "github.com/SarojShresthaa"
+    },
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/saroj-shrestha-220681275",
+      "display": "Saroj Shrestha"
+    }
+  ],
+  "cmsNotice": "Custom Umbraco 17-inspired portfolio CMS — not the official Umbraco product."
+}

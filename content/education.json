@@ -1,0 +1,15 @@
+{
+  "status": "published",
+  "title": "education",
+  "subtitle": "Formal learning",
+  "items": [
+    {
+      "id": "self-driven",
+      "institution": "Continuous learning",
+      "qualification": "Umbraco, .NET, and web development",
+      "startDate": "",
+      "endDate": "",
+      "description": "Ongoing professional development through production work, open-source contributions, and Umbraco community resources."
+    }
+  ]
+}

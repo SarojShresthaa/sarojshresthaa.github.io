@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GitHub sign-in</title>
+</head>
+<body>
+  <p>Completing GitHub sign-in…</p>
+  <script>
+    (function () {
+      var hash = window.location.hash.replace(/^#/, "");
+      var params = new URLSearchParams(hash);
+      var token = params.get("access_token") || params.get("token");
+      if (token) {
+        sessionStorage.setItem("portfolio_cms_github_token", token);
+        window.location.replace("/cms/");
+      } else {
+        document.body.innerHTML = "<p>Sign-in failed or was cancelled. Close this window and try again from the CMS.</p>";
+      }
+    })();
+  </script>
+</body>
+</html>
