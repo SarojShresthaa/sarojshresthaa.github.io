@@ -1,5 +1,7 @@
 {
   "status": "published",
   "title": "Custom pages",
-  "slugs": []
+  "slugs": [
+    "hello"
+  ]
 }
