@@ -4,14 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Portfolio CMS (Umbraco 17–inspired)</title>
-  <link rel="stylesheet" href="/cms/css/backoffice.css?v=9" />
+  <meta name="theme-color" content="#0c1020" />
+  <title>Portfolio CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/cms/css/backoffice.css?v=10" />
 </head>
 <body>
   <div class="bo-gate" id="bo-login-gate" hidden>
     <form class="bo-gate-card" id="bo-gate-form">
+      <div class="bo-gate-mark" aria-hidden="true"></div>
       <h1>Portfolio CMS</h1>
-      <p class="bo-gate-sub">Sign in to open the backoffice. This is separate from GitHub (used when you save).</p>
+      <p class="bo-gate-sub">Sign in to open the backoffice. GitHub sign-in is used separately when you save.</p>
       <div class="bo-field">
         <label for="bo-gate-user">Username</label>
         <input id="bo-gate-user" name="username" autocomplete="username" required />
@@ -26,45 +31,77 @@
   </div>
   <div class="bo-app" id="bo-app" hidden>
     <nav class="bo-rail" aria-label="Sections">
-      <button type="button" class="bo-rail-btn active" data-section="content" title="Content">📄</button>
-      <button type="button" class="bo-rail-btn" data-section="media" title="Media">🖼</button>
-      <button type="button" class="bo-rail-btn" data-section="recycle" title="Recycle bin">🗑</button>
-      <button type="button" class="bo-rail-btn" data-section="settings" title="Settings">⚙</button>
-      <a class="bo-rail-btn" href="/" title="View site" style="text-decoration:none;margin-top:auto">↗</a>
+      <div class="bo-rail-logo" aria-hidden="true">P</div>
+      <button type="button" class="bo-rail-btn active" data-section="content" title="Content section">
+        <span class="bo-rail-icon" aria-hidden="true"></span>
+        <span class="bo-rail-label">Content</span>
+      </button>
+      <button type="button" class="bo-rail-btn" data-section="media" title="Media">
+        <span class="bo-rail-icon bo-rail-icon--media" aria-hidden="true"></span>
+        <span class="bo-rail-label">Media</span>
+      </button>
+      <button type="button" class="bo-rail-btn" data-section="recycle" title="Recycle bin">
+        <span class="bo-rail-icon bo-rail-icon--recycle" aria-hidden="true"></span>
+        <span class="bo-rail-label">Bin</span>
+      </button>
+      <button type="button" class="bo-rail-btn" data-section="settings" title="Settings">
+        <span class="bo-rail-icon bo-rail-icon--settings" aria-hidden="true"></span>
+        <span class="bo-rail-label">Settings</span>
+      </button>
+      <a class="bo-rail-btn bo-rail-btn--link" href="/" title="View live site">
+        <span class="bo-rail-icon bo-rail-icon--external" aria-hidden="true"></span>
+        <span class="bo-rail-label">Site</span>
+      </a>
     </nav>
     <aside class="bo-tree-panel" id="bo-tree" aria-label="Content tree"></aside>
     <div class="bo-tree-backdrop" id="bo-tree-backdrop" hidden aria-hidden="true"></div>
     <div class="bo-main">
       <header class="bo-topbar">
         <div class="bo-topbar-start">
-          <button type="button" class="bo-btn bo-mobile-tree-btn" id="btn-toggle-tree" aria-expanded="false" aria-controls="bo-tree">Content tree</button>
-          <div class="bo-brand"><strong>Portfolio CMS</strong><span class="bo-brand-meta"> · Umbraco 17–inspired · not official Umbraco</span></div>
+          <button type="button" class="bo-btn bo-btn-ghost bo-mobile-tree-btn" id="btn-toggle-tree" aria-expanded="false" aria-controls="bo-tree">
+            <span class="bo-icon-menu" aria-hidden="true"></span>
+            Tree
+          </button>
+          <div class="bo-brand">
+            <span class="bo-brand-title">Portfolio CMS</span>
+            <span class="bo-brand-meta">Content studio</span>
+          </div>
         </div>
         <div class="bo-toolbar-wrap">
-        <div class="bo-toolbar">
-          <span class="bo-status-pill" id="bo-status-pill"></span>
-          <span id="bo-auth-label" style="font-size:12px;color:var(--bo-muted)"></span>
-          <button type="button" class="bo-btn" id="btn-cms-lock" title="Lock CMS (username/password)">Lock</button>
-          <button type="button" class="bo-btn" id="btn-login">Sign in with GitHub</button>
-          <button type="button" class="bo-btn" id="btn-logout" style="display:none">GitHub sign out</button>
-          <button type="button" class="bo-btn" id="btn-new-page">New page</button>
-          <button type="button" class="bo-btn" id="btn-new-project">New project</button>
-          <button type="button" class="bo-btn" id="btn-preview">Preview</button>
-          <button type="button" class="bo-btn" id="btn-save" disabled>Save</button>
-          <button type="button" class="bo-btn primary" id="btn-publish" disabled>Publish</button>
-          <button type="button" class="bo-btn danger" id="btn-delete" style="display:none">Delete</button>
-        </div>
+          <div class="bo-toolbar">
+            <div class="bo-toolbar-group bo-toolbar-status">
+              <span class="bo-status-pill" id="bo-status-pill"></span>
+              <span class="bo-auth-label" id="bo-auth-label"></span>
+            </div>
+            <div class="bo-toolbar-group" aria-label="Session">
+              <button type="button" class="bo-btn bo-btn-ghost bo-btn-icon" id="btn-cms-lock" title="Lock CMS">Lock</button>
+              <button type="button" class="bo-btn bo-btn-ghost" id="btn-login">GitHub</button>
+              <button type="button" class="bo-btn bo-btn-ghost" id="btn-logout" style="display:none">Sign out</button>
+            </div>
+            <div class="bo-toolbar-group" aria-label="Create">
+              <button type="button" class="bo-btn" id="btn-new-page">New page</button>
+              <button type="button" class="bo-btn" id="btn-new-project">New project</button>
+              <button type="button" class="bo-btn bo-btn-ghost" id="btn-preview">Preview</button>
+            </div>
+            <div class="bo-toolbar-group bo-toolbar-actions" aria-label="Publish">
+              <button type="button" class="bo-btn" id="btn-save" disabled>Save</button>
+              <button type="button" class="bo-btn primary" id="btn-publish" disabled>Publish</button>
+              <button type="button" class="bo-btn danger bo-btn-ghost" id="btn-delete" style="display:none">Delete</button>
+            </div>
+          </div>
         </div>
       </header>
-      <div class="bo-breadcrumb" id="bo-breadcrumb">Content</div>
-      <div class="bo-tabs" role="tablist" id="bo-tabs">
-        <button type="button" class="bo-tab active" role="tab" data-tab="content" id="tab-content">Content</button>
-        <button type="button" class="bo-tab" role="tab" data-tab="info" id="tab-info">Info</button>
+      <div class="bo-context">
+        <div class="bo-breadcrumb" id="bo-breadcrumb">Content</div>
+        <div class="bo-tabs" role="tablist" id="bo-tabs">
+          <button type="button" class="bo-tab active" role="tab" data-tab="content" id="tab-content">Content</button>
+          <button type="button" class="bo-tab" role="tab" data-tab="info" id="tab-info">Info</button>
+        </div>
       </div>
       <div class="bo-editor-wrap" id="bo-editor"></div>
     </div>
   </div>
 
-  <script type="module" src="/cms/js/app.js?v=9"></script>
+  <script type="module" src="/cms/js/app.js?v=10"></script>
 </body>
 </html>
