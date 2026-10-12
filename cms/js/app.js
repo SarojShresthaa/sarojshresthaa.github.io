@@ -811,6 +811,13 @@ function fileToBase64(file) {
 
 function render() {
   renderTree();
+  const app = document.getElementById("bo-app");
+  if (app) {
+    app.classList.toggle(
+      "bo-app--no-tree",
+      state.section === "settings" || state.section === "recycle" || state.section === "media"
+    );
+  }
   renderEditor();
   const editingDoc = state.section !== "recycle" && getSelectedDoc();
   const toolbarOn = state.section !== "recycle";
