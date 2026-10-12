@@ -190,7 +190,16 @@ export function renderAboutForm(d, field, imageField, escapeHtml) {
     ${field("Tags (one per line)", "lifeSection._tags", (d.lifeSection?.tags || []).join("\n"), "textarea")}`;
 }
 
-export function renderSiteSettingsForm(d, field, imageField, escapeHtml) {
+export const SITE_SETTINGS_TABS = [
+  { id: "general", label: "General" },
+  { id: "cms", label: "CMS & login" },
+  { id: "seo", label: "SEO" },
+  { id: "social", label: "Social" },
+  { id: "nav", label: "Navigation" },
+  { id: "info", label: "Info" },
+];
+
+export function renderSiteSettingsForm(d, field, imageField, escapeHtml, settingsTab = "general") {
   const social = (d.social || [])
     .map(
       (s, i) =>
@@ -204,30 +213,46 @@ export function renderSiteSettingsForm(d, field, imageField, escapeHtml) {
         )
     )
     .join("");
-  return `<h2>Site settings</h2>
-    <p class="hint">${escapeHtml(d.cmsNotice || "Global site name, SEO, footer, social links, and navigation.")}</p>
-    ${field("Site name", "siteName", d.siteName)}
-    ${field("Tagline", "tagline", d.tagline)}
-    ${imageField("Logo / icon path", "logo", d.logo, "Usually same as favicon")}
-    ${imageField("Favicon", "favicon", d.favicon)}
-    ${field("Footer blurb", "footer.blurb", d.footer?.blurb, "textarea")}
-    ${field("Copyright", "footer.copyright", d.footer?.copyright)}
-    <h3 class="bo-form-section">CMS branding</h3>
-    <p class="hint">Left rail logo and login screen. Use <strong>Choose…</strong> for images, or a letter (e.g. P) when no image.</p>
-    ${field("Rail logo letter", "cmsBranding.logoText", d.cmsBranding?.logoText ?? "P", "text", "1–2 characters if no image")}
-    ${imageField("Rail logo image", "cmsBranding.logoImage", d.cmsBranding?.logoImage, "Overrides letter when set")}
-    ${field("Use same logo on login screen", "cmsBranding.useSameLogoForLogin", d.cmsBranding?.useSameLogoForLogin !== false, "checkbox")}
-    ${field("Login logo letter", "cmsBranding.loginLogoText", d.cmsBranding?.loginLogoText, "text", "Only if not using same logo")}
-    ${imageField("Login logo image", "cmsBranding.loginLogoImage", d.cmsBranding?.loginLogoImage, "Only if not using same logo")}
-    ${field("Login title", "cmsBranding.loginTitle", d.cmsBranding?.loginTitle ?? "Portfolio CMS")}
-    ${field("Login subtitle", "cmsBranding.loginSubtitle", d.cmsBranding?.loginSubtitle, "textarea")}
-    <h3 class="bo-form-section">SEO defaults</h3>
-    ${field("Default title", "seo.defaultTitle", d.seo?.defaultTitle)}
-    ${field("Default description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}
-    <h3 class="bo-form-section">Social links</h3>
-    <div class="bo-repeater" data-repeater="social">${social || `<p class="hint">No social links.</p>`}</div>
-    <button type="button" class="bo-btn" data-add-repeater="social">Add social link</button>
-    ${renderNavigationForm(d, field)}`;
+
+  if (settingsTab === "general") {
+    return `<h2>General</h2>
+      <p class="hint">${escapeHtml(d.cmsNotice || "Site-wide name, logo, and footer shown on the public portfolio.")}</p>
+      ${field("Status", "status", d.status, "select-status")}
+      ${field("Site name", "siteName", d.siteName)}
+      ${field("Tagline", "tagline", d.tagline)}
+      ${imageField("Logo / icon path", "logo", d.logo, "Public site header")}
+      ${imageField("Favicon", "favicon", d.favicon)}
+      ${field("Footer blurb", "footer.blurb", d.footer?.blurb, "textarea")}
+      ${field("Copyright", "footer.copyright", d.footer?.copyright)}`;
+  }
+  if (settingsTab === "cms") {
+    return `<h2>CMS & login</h2>
+      <p class="hint">Left rail logo and login screen. Use <strong>Choose…</strong> for images, or a letter when no image.</p>
+      ${field("Rail logo letter", "cmsBranding.logoText", d.cmsBranding?.logoText ?? "P", "text", "1–2 characters if no image")}
+      ${imageField("Rail logo image", "cmsBranding.logoImage", d.cmsBranding?.logoImage, "Overrides letter when set")}
+      ${field("Use same logo on login screen", "cmsBranding.useSameLogoForLogin", d.cmsBranding?.useSameLogoForLogin !== false, "checkbox")}
+      ${field("Login logo letter", "cmsBranding.loginLogoText", d.cmsBranding?.loginLogoText, "text", "Only if not using same logo")}
+      ${imageField("Login logo image", "cmsBranding.loginLogoImage", d.cmsBranding?.loginLogoImage, "Only if not using same logo")}
+      ${field("Login title", "cmsBranding.loginTitle", d.cmsBranding?.loginTitle ?? "Portfolio CMS")}
+      ${field("Login subtitle", "cmsBranding.loginSubtitle", d.cmsBranding?.loginSubtitle, "textarea")}`;
+  }
+  if (settingsTab === "seo") {
+    return `<h2>SEO defaults</h2>
+      <p class="hint">Default meta title and description for the public site (pages can override).</p>
+      ${field("Default title", "seo.defaultTitle", d.seo?.defaultTitle)}
+      ${field("Default description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}`;
+  }
+  if (settingsTab === "social") {
+    return `<h2>Social links</h2>
+      <p class="hint">Used in the header rail, footer, and contact areas on the live site.</p>
+      <div class="bo-repeater" data-repeater="social">${social || `<p class="hint">No social links.</p>`}</div>
+      <button type="button" class="bo-btn" data-add-repeater="social">Add social link</button>`;
+  }
+  if (settingsTab === "nav") {
+    return `<h2>Navigation</h2>
+      ${renderNavigationForm(d, field)}`;
+  }
+  return `<h2>Site settings</h2><p class="hint">Choose a tab above.</p>`;
 }
 
 export function renderContactForm(d, field) {

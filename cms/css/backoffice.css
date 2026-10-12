@@ -389,9 +389,15 @@ body {
   margin: 0;
   background: transparent;
   border: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  scrollbar-width: thin;
 }
 
 .bo-tab {
+  flex-shrink: 0;
   border: none;
   background: none;
   padding: 12px 16px;

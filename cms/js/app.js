@@ -12,6 +12,7 @@ import {
   renderContactForm,
   renderProjectForm,
   renderProjectsIndexForm,
+  SITE_SETTINGS_TABS,
   REPEATER_DEFAULTS,
   RESERVED_PAGE_SLUGS,
 } from "./content-forms.js";
@@ -308,8 +309,10 @@ function renderTree() {
   el.tree.querySelectorAll("[data-id]").forEach((node) => {
     node.addEventListener("click", () => {
       if (state.dirty && !confirm("Discard unsaved changes?")) return;
+      const prevSelected = state.selected;
       state.selected = node.dataset.id;
       state.section = idSection(node.dataset.id);
+      if (node.dataset.id === "site-settings" && prevSelected !== "site-settings") state.tab = "general";
       closeMobileTree();
       render();
     });
@@ -595,7 +598,11 @@ function renderEditorForm(doc) {
     return `${visHint}<h2>Project</h2>${renderProjectForm(d, field, imageField)}`;
   }
   if (doc.kind === "custom-page") return renderCustomPageForm(d, field, imageField);
-  if (doc.id === "site-settings") return renderSiteSettingsForm(d, field, imageField, escapeHtml);
+  if (doc.id === "site-settings") {
+    const tab = SITE_SETTINGS_TABS.some((t) => t.id === state.tab) ? state.tab : "general";
+    if (tab === "info") return null;
+    return renderSiteSettingsForm(d, field, imageField, escapeHtml, tab);
+  }
   if (doc.id === "skills") return renderSkillsForm(d, field, imageField, escapeHtml);
   const listForm = renderListPageForm(doc, field, escapeHtml);
   if (listForm) return listForm;
@@ -678,14 +685,41 @@ function renderRecyclePanel() {
   });
 }
 
+const DEFAULT_DOC_TABS = [
+  { id: "content", label: "Content" },
+  { id: "info", label: "Info" },
+];
+
+function normalizeTabForDoc(doc) {
+  if (doc?.id === "site-settings") {
+    if (!SITE_SETTINGS_TABS.some((t) => t.id === state.tab)) state.tab = "general";
+  } else if (state.section === "media") {
+    if (state.tab !== "content" && state.tab !== "info") state.tab = "content";
+  } else if (doc) {
+    if (state.tab !== "content" && state.tab !== "info") state.tab = "content";
+  }
+}
+
 function syncTabUi() {
   const tabsWrap = document.getElementById("bo-tabs");
   if (!tabsWrap) return;
+  const doc = getSelectedDoc();
   const showTabs = state.section === "content" || state.section === "settings" || state.section === "media";
   tabsWrap.style.display = showTabs ? "" : "none";
-  tabsWrap.querySelectorAll("[data-tab]").forEach((tab) => {
-    tab.classList.toggle("active", tab.dataset.tab === state.tab);
-  });
+  if (!showTabs) return;
+
+  normalizeTabForDoc(doc);
+  const tabs =
+    doc?.id === "site-settings" || state.section === "settings"
+      ? SITE_SETTINGS_TABS
+      : DEFAULT_DOC_TABS;
+
+  tabsWrap.innerHTML = tabs
+    .map(
+      (t) =>
+        `<button type="button" class="bo-tab${state.tab === t.id ? " active" : ""}" role="tab" data-tab="${t.id}">${t.label}</button>`
+    )
+    .join("");
 }
 
 function renderEditor() {
@@ -714,13 +748,26 @@ function renderEditor() {
     el.editor.innerHTML = `<div class="bo-empty">Select a content node from the tree.</div>`;
     return;
   }
-  el.breadcrumb.textContent = `Content / ${doc.id}`;
+  const crumbSection =
+    state.section === "settings" || doc.id === "site-settings" ? "Settings" : "Content";
+  const tabLabel =
+    doc.id === "site-settings"
+      ? SITE_SETTINGS_TABS.find((t) => t.id === state.tab)?.label
+      : state.tab === "info"
+        ? "Info"
+        : "Content";
+  el.breadcrumb.textContent = `${crumbSection} / ${doc.id}${tabLabel ? " / " + tabLabel : ""}`;
   updateStatusPill(doc.data.status);
   if (state.tab === "info") {
     el.editor.innerHTML = `<div class="bo-editor">${renderInfoPanel(doc)}</div>`;
     return;
   }
-  el.editor.innerHTML = `<form class="bo-editor" id="bo-form">${renderEditorForm(doc)}</form>`;
+  const formHtml = renderEditorForm(doc);
+  if (formHtml === null) {
+    el.editor.innerHTML = `<div class="bo-editor">${renderInfoPanel(doc)}</div>`;
+    return;
+  }
+  el.editor.innerHTML = `<form class="bo-editor" id="bo-form">${formHtml}</form>`;
   wireEditorForm(document.getElementById("bo-form"), doc);
 }
 
@@ -783,7 +830,10 @@ function wireRail() {
   document.querySelectorAll("[data-section]").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.section = btn.dataset.section;
-      if (state.section === "settings") state.selected = "site-settings";
+      if (state.section === "settings") {
+        state.selected = "site-settings";
+        state.tab = "general";
+      }
       if (state.section === "media") state.selected = null;
       if (state.section === "recycle") {
         state.selected = null;
@@ -798,11 +848,14 @@ function wireRail() {
 }
 
 function wireTabs() {
-  document.querySelectorAll("[data-tab]").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      state.tab = tab.dataset.tab;
-      render();
-    });
+  const tabsWrap = document.getElementById("bo-tabs");
+  if (!tabsWrap || tabsWrap.dataset.wired) return;
+  tabsWrap.dataset.wired = "1";
+  tabsWrap.addEventListener("click", (e) => {
+    const tab = e.target.closest("[data-tab]");
+    if (!tab) return;
+    state.tab = tab.dataset.tab;
+    render();
   });
 }
 
