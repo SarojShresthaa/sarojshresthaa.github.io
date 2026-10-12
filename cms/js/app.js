@@ -244,6 +244,7 @@ function renderTree() {
     el.tree.querySelectorAll("[data-recycle-id]").forEach((node) => {
       node.addEventListener("click", () => {
         state.selectedRecycleId = node.dataset.recycleId;
+        closeMobileTree();
         render();
       });
     });
@@ -308,6 +309,7 @@ function renderTree() {
       if (state.dirty && !confirm("Discard unsaved changes?")) return;
       state.selected = node.dataset.id;
       state.section = idSection(node.dataset.id);
+      closeMobileTree();
       render();
     });
   });
@@ -332,6 +334,44 @@ function renderTree() {
 function idSection(id) {
   if (id === "site-settings") return "settings";
   return "content";
+}
+
+function isMobileTreeLayout() {
+  return window.matchMedia("(max-width: 960px)").matches;
+}
+
+function closeMobileTree() {
+  el.tree?.classList.remove("is-open");
+  const backdrop = document.getElementById("bo-tree-backdrop");
+  backdrop?.classList.remove("is-visible");
+  backdrop?.setAttribute("hidden", "");
+  document.getElementById("btn-toggle-tree")?.setAttribute("aria-expanded", "false");
+}
+
+function openMobileTree() {
+  if (!isMobileTreeLayout()) return;
+  el.tree?.classList.add("is-open");
+  const backdrop = document.getElementById("bo-tree-backdrop");
+  backdrop?.classList.add("is-visible");
+  backdrop?.removeAttribute("hidden");
+  document.getElementById("btn-toggle-tree")?.setAttribute("aria-expanded", "true");
+}
+
+function wireMobileTree() {
+  const btn = document.getElementById("btn-toggle-tree");
+  const backdrop = document.getElementById("bo-tree-backdrop");
+  btn?.addEventListener("click", () => {
+    if (el.tree?.classList.contains("is-open")) closeMobileTree();
+    else openMobileTree();
+  });
+  backdrop?.addEventListener("click", closeMobileTree);
+  window.addEventListener(
+    "resize",
+    () => {
+      if (!isMobileTreeLayout()) closeMobileTree();
+    },
+    { passive: true }
+  );
 }
 
 function escapeHtml(s) {
@@ -738,6 +778,8 @@ function wireRail() {
         state.selectedRecycleId = null;
       }
       document.querySelectorAll("[data-section]").forEach((b) => b.classList.toggle("active", b === btn));
+      if (isMobileTreeLayout() && state.section !== "content") openMobileTree();
+      else if (state.section === "content") closeMobileTree();
       render();
     });
   });
@@ -1114,6 +1156,7 @@ async function main() {
   if (!gateOn && el.btnCmsLock) el.btnCmsLock.style.display = "none";
   wireRail();
   wireTabs();
+  wireMobileTree();
   el.btnCmsLock?.addEventListener("click", () => {
     clearCmsSession();
     location.reload();

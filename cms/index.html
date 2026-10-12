@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Portfolio CMS (Umbraco 17–inspired)</title>
-  <link rel="stylesheet" href="/cms/css/backoffice.css?v=8" />
+  <link rel="stylesheet" href="/cms/css/backoffice.css?v=9" />
 </head>
 <body>
   <div class="bo-gate" id="bo-login-gate" hidden>
@@ -32,10 +32,15 @@
       <button type="button" class="bo-rail-btn" data-section="settings" title="Settings">⚙</button>
       <a class="bo-rail-btn" href="/" title="View site" style="text-decoration:none;margin-top:auto">↗</a>
     </nav>
-    <aside class="bo-tree-panel" id="bo-tree"></aside>
+    <aside class="bo-tree-panel" id="bo-tree" aria-label="Content tree"></aside>
+    <div class="bo-tree-backdrop" id="bo-tree-backdrop" hidden aria-hidden="true"></div>
     <div class="bo-main">
       <header class="bo-topbar">
-        <div class="bo-brand"><strong>Portfolio CMS</strong> · Umbraco 17–inspired · not official Umbraco</div>
+        <div class="bo-topbar-start">
+          <button type="button" class="bo-btn bo-mobile-tree-btn" id="btn-toggle-tree" aria-expanded="false" aria-controls="bo-tree">Content tree</button>
+          <div class="bo-brand"><strong>Portfolio CMS</strong><span class="bo-brand-meta"> · Umbraco 17–inspired · not official Umbraco</span></div>
+        </div>
+        <div class="bo-toolbar-wrap">
         <div class="bo-toolbar">
           <span class="bo-status-pill" id="bo-status-pill"></span>
           <span id="bo-auth-label" style="font-size:12px;color:var(--bo-muted)"></span>
@@ -49,6 +54,7 @@
           <button type="button" class="bo-btn primary" id="btn-publish" disabled>Publish</button>
           <button type="button" class="bo-btn danger" id="btn-delete" style="display:none">Delete</button>
         </div>
+        </div>
       </header>
       <div class="bo-breadcrumb" id="bo-breadcrumb">Content</div>
       <div class="bo-tabs" role="tablist" id="bo-tabs">
@@ -59,6 +65,6 @@
     </div>
   </div>
 
-  <script type="module" src="/cms/js/app.js?v=8"></script>
+  <script type="module" src="/cms/js/app.js?v=9"></script>
 </body>
 </html>
