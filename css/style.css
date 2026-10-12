@@ -1684,7 +1684,28 @@ select {
 
 @media (max-width: 640px) {
   .container {
-    width: 90%;
+    width: calc(100% - 2rem);
+    max-width: none;
+  }
+
+  .page {
+    padding-bottom: 32px;
+  }
+
+  .section {
+    margin: 3rem 0;
+  }
+
+  .section-head {
+    margin-bottom: 1.75rem;
+  }
+
+  .quote-wrap {
+    margin: 1.25rem auto 2.5rem;
+  }
+
+  .quote {
+    padding: 20px 16px;
   }
 
   .header-inner {
@@ -1736,10 +1757,21 @@ select {
   }
 
   .page-title {
-    padding-top: 3rem;
+    padding-top: 2.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .section-head {
     flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 960px) {
+  .section {
+    margin: 3.5rem 0;
+  }
+
+  .quote-wrap {
+    margin: 1.5rem auto 3rem;
   }
 }
