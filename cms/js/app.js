@@ -354,6 +354,7 @@ function closeMobileTree() {
 
 function openMobileTree() {
   if (!isMobileTreeLayout()) return;
+  if (state.section !== "content") return;
   el.tree?.classList.add("is-open");
   const backdrop = document.getElementById("bo-tree-backdrop");
   backdrop?.classList.add("is-visible");
@@ -818,6 +819,11 @@ function render() {
       state.section === "settings" || state.section === "recycle" || state.section === "media"
     );
   }
+  const treeBtn = document.getElementById("btn-toggle-tree");
+  if (treeBtn) {
+    treeBtn.style.display = isMobileTreeLayout() && state.section === "content" ? "" : "none";
+  }
+  if (state.section !== "content") closeMobileTree();
   renderEditor();
   const editingDoc = state.section !== "recycle" && getSelectedDoc();
   const toolbarOn = state.section !== "recycle";
@@ -847,8 +853,7 @@ function wireRail() {
         state.selectedRecycleId = null;
       }
       document.querySelectorAll("[data-section]").forEach((b) => b.classList.toggle("active", b === btn));
-      if (isMobileTreeLayout() && state.section !== "content") openMobileTree();
-      else if (state.section === "content") closeMobileTree();
+      if (isMobileTreeLayout()) closeMobileTree();
       render();
     });
   });
