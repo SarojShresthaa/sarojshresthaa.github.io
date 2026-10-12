@@ -51,10 +51,10 @@
   "cmsNotice": "Custom Umbraco 17-inspired portfolio CMS — not the official Umbraco product.",
   "cmsBranding": {
     "logoText": "P",
-    "logoImage": "",
+    "logoImage": "/img/favicon.svg",
     "useSameLogoForLogin": true,
     "loginLogoText": "",
-    "loginLogoImage": "",
+    "loginLogoImage": "/img/favicon.svg",
     "loginTitle": "Portfolio CMS",
     "loginSubtitle": "Sign in to open the backoffice. GitHub sign-in is used separately when you save."
   }
