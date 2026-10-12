@@ -9,14 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/cms/css/backoffice.css?v=11" />
+  <link rel="stylesheet" href="/cms/css/backoffice.css?v=12" />
 </head>
 <body>
   <div class="bo-gate" id="bo-login-gate" hidden>
     <form class="bo-gate-card" id="bo-gate-form">
-      <div class="bo-gate-mark" aria-hidden="true"></div>
-      <h1>Portfolio CMS</h1>
-      <p class="bo-gate-sub">Sign in to open the backoffice. GitHub sign-in is used separately when you save.</p>
+      <div class="bo-gate-mark" id="bo-gate-mark" aria-hidden="true">P</div>
+      <h1 id="bo-gate-title">Portfolio CMS</h1>
+      <p class="bo-gate-sub" id="bo-gate-sub">Sign in to open the backoffice. GitHub sign-in is used separately when you save.</p>
       <div class="bo-field">
         <label for="bo-gate-user">Username</label>
         <input id="bo-gate-user" name="username" autocomplete="username" required />
@@ -31,7 +31,7 @@
   </div>
   <div class="bo-app" id="bo-app" hidden>
     <nav class="bo-rail" aria-label="Sections">
-      <div class="bo-rail-logo" aria-hidden="true">P</div>
+      <div class="bo-rail-logo" id="bo-rail-logo" aria-hidden="true">P</div>
       <button type="button" class="bo-rail-btn active" data-section="content" title="Content">
         <svg class="bo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
         <span class="bo-rail-label">Content</span>
@@ -101,6 +101,6 @@
     </div>
   </div>
 
-  <script type="module" src="/cms/js/app.js?v=11"></script>
+  <script type="module" src="/cms/js/app.js?v=12"></script>
 </body>
 </html>

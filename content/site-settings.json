@@ -48,5 +48,14 @@
       "display": "Saroj Shrestha"
     }
   ],
-  "cmsNotice": "Custom Umbraco 17-inspired portfolio CMS — not the official Umbraco product."
+  "cmsNotice": "Custom Umbraco 17-inspired portfolio CMS — not the official Umbraco product.",
+  "cmsBranding": {
+    "logoText": "P",
+    "logoImage": "",
+    "useSameLogoForLogin": true,
+    "loginLogoText": "",
+    "loginLogoImage": "",
+    "loginTitle": "Portfolio CMS",
+    "loginSubtitle": "Sign in to open the backoffice. GitHub sign-in is used separately when you save."
+  }
 }

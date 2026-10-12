@@ -78,7 +78,8 @@ body {
   border-right: 1px solid #000;
 }
 
-.bo-rail-logo {
+.bo-rail-logo,
+.bo-gate-mark {
   width: 40px;
   height: 40px;
   margin: 0 auto 12px;
@@ -90,6 +91,25 @@ body {
   display: grid;
   place-items: center;
   box-shadow: 0 4px 14px var(--bo-accent-glow);
+  overflow: hidden;
+}
+
+.bo-gate-mark {
+  margin: 0 auto 20px;
+}
+
+.bo-rail-logo.has-image,
+.bo-gate-mark.has-image {
+  background: #1e293b;
+  padding: 0;
+}
+
+.bo-rail-logo.has-image img,
+.bo-gate-mark.has-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .bo-rail-btn {
@@ -690,9 +710,6 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  margin-bottom: 20px;
-  background: linear-gradient(135deg, #6366f1, #4338ca);
-  box-shadow: 0 8px 24px var(--bo-accent-glow);
 }
 
 .bo-gate-card {

@@ -1,5 +1,6 @@
 import { GitHubClient, loadCmsConfig, isOAuthConfigured } from "./github-client.js";
 import { ensureCmsAccess, clearCmsSession } from "./auth-gate.js";
+import { applyCmsBranding, fetchAndApplyCmsBranding } from "./cms-branding.js";
 import { imageFieldHtml, wireImagePickers } from "./media-picker.js";
 import {
   renderListPageForm,
@@ -528,6 +529,17 @@ function wireEditorForm(form, doc) {
     doc.data.lifeSection.tags = e.target.value.split("\n").map((s) => s.trim()).filter(Boolean);
     state.dirty = true;
   });
+  if (doc.id === "site-settings") {
+    const refreshBrand = () => {
+      if (!doc.data.cmsBranding) doc.data.cmsBranding = {};
+      applyCmsBranding(doc.data);
+    };
+    form.querySelectorAll("[data-key]").forEach((input) => {
+      input.addEventListener("input", refreshBrand);
+      input.addEventListener("change", refreshBrand);
+    });
+    refreshBrand();
+  }
 }
 
 function bindEditor(form, doc) {
@@ -831,7 +843,7 @@ async function saveSelected() {
       }
     }
     if (doc.id === "site-settings") {
-      /* navigation edited in settings form */
+      applyCmsBranding(doc.data);
     }
     state.dirty = false;
     const saved = getSelectedDoc();
@@ -1148,6 +1160,7 @@ async function initAuth() {
 }
 
 async function main() {
+  await fetchAndApplyCmsBranding();
   await ensureCmsAccess();
   const cfg = await loadCmsConfig();
   const gateOn =
@@ -1185,6 +1198,7 @@ async function main() {
 
   await initAuth();
   await loadContent();
+  applyCmsBranding(state.docs.get("site-settings")?.data);
 }
 
 main().catch((err) => {

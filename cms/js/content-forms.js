@@ -212,6 +212,15 @@ export function renderSiteSettingsForm(d, field, imageField, escapeHtml) {
     ${imageField("Favicon", "favicon", d.favicon)}
     ${field("Footer blurb", "footer.blurb", d.footer?.blurb, "textarea")}
     ${field("Copyright", "footer.copyright", d.footer?.copyright)}
+    <h3 class="bo-form-section">CMS branding</h3>
+    <p class="hint">Left rail logo and login screen. Use <strong>Choose…</strong> for images, or a letter (e.g. P) when no image.</p>
+    ${field("Rail logo letter", "cmsBranding.logoText", d.cmsBranding?.logoText ?? "P", "text", "1–2 characters if no image")}
+    ${imageField("Rail logo image", "cmsBranding.logoImage", d.cmsBranding?.logoImage, "Overrides letter when set")}
+    ${field("Use same logo on login screen", "cmsBranding.useSameLogoForLogin", d.cmsBranding?.useSameLogoForLogin !== false, "checkbox")}
+    ${field("Login logo letter", "cmsBranding.loginLogoText", d.cmsBranding?.loginLogoText, "text", "Only if not using same logo")}
+    ${imageField("Login logo image", "cmsBranding.loginLogoImage", d.cmsBranding?.loginLogoImage, "Only if not using same logo")}
+    ${field("Login title", "cmsBranding.loginTitle", d.cmsBranding?.loginTitle ?? "Portfolio CMS")}
+    ${field("Login subtitle", "cmsBranding.loginSubtitle", d.cmsBranding?.loginSubtitle, "textarea")}
     <h3 class="bo-form-section">SEO defaults</h3>
     ${field("Default title", "seo.defaultTitle", d.seo?.defaultTitle)}
     ${field("Default description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}
