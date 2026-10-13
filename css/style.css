@@ -56,6 +56,77 @@ body {
   transition: background 0.25s ease, color 0.25s ease;
 }
 
+/* Hide empty shells until portfolio.js fills content from JSON */
+html.portfolio-loading .header,
+html.portfolio-loading .page,
+html.portfolio-loading .footer,
+html.portfolio-loading .social-rail {
+  visibility: hidden;
+}
+
+html.portfolio-loading #portfolio-load-screen {
+  display: flex;
+}
+
+#portfolio-load-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: var(--bg);
+  color: var(--gray);
+}
+
+.portfolio-load-spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--gray) 35%, transparent);
+  border-top-color: var(--primary);
+  animation: portfolio-spin 0.7s linear infinite;
+}
+
+.portfolio-load-label {
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+}
+
+html.portfolio-ready .page,
+html.portfolio-ready .footer {
+  animation: portfolio-fade-in 0.35s ease both;
+}
+
+@keyframes portfolio-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes portfolio-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-load-spinner {
+    animation: none;
+    border-top-color: var(--primary);
+  }
+
+  html.portfolio-ready .page,
+  html.portfolio-ready .footer {
+    animation: none;
+  }
+}
+
 .page,
 .footer {
   position: relative;

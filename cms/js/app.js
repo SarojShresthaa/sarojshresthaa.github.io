@@ -1,5 +1,6 @@
 import { GitHubClient, loadCmsConfig, isOAuthConfigured } from "./github-client.js";
 import { ensureCmsAccess, clearCmsSession } from "./auth-gate.js";
+import { hideBootLoader } from "./boot-loader.js";
 import { applyCmsBranding, fetchAndApplyCmsBranding } from "./cms-branding.js";
 import { imageFieldHtml, wireImagePickers } from "./media-picker.js";
 import {
@@ -726,7 +727,7 @@ function syncTabUi() {
 function renderEditor() {
   syncTabUi();
   if (state.loading) {
-    el.editor.innerHTML = `<div class="bo-empty">Loading content…</div>`;
+    el.editor.innerHTML = `<div class="bo-empty bo-empty--loading"><div class="bo-boot-spinner bo-boot-spinner--sm" aria-hidden="true"></div><p>Loading content…</p></div>`;
     return;
   }
   if (state.section === "recycle") {
@@ -1264,10 +1265,12 @@ async function main() {
   await initAuth();
   await loadContent();
   applyCmsBranding(state.docs.get("site-settings")?.data);
+  hideBootLoader();
 }
 
 main().catch((err) => {
   console.error("CMS failed to start:", err);
+  hideBootLoader();
   const box = document.getElementById("bo-editor");
   if (box) {
     box.innerHTML = `<div class="bo-empty"><p><strong>CMS failed to load.</strong></p><p>${err.message}</p><p>Hard-refresh (Ctrl+F5) or check the browser console.</p></div>`;

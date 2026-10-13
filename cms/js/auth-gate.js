@@ -1,4 +1,5 @@
 import { loadCmsConfig } from "./github-client.js";
+import { hideBootLoader, showBootLoader } from "./boot-loader.js";
 
 const SESSION_KEY = "portfolio_cms_gate";
 
@@ -56,6 +57,7 @@ function showApp() {
 function showGate() {
   document.getElementById("bo-app")?.setAttribute("hidden", "hidden");
   document.getElementById("bo-login-gate")?.removeAttribute("hidden");
+  hideBootLoader();
 }
 
 function wireLoginScreen(access, onSuccess) {
@@ -101,6 +103,7 @@ function wireLoginScreen(access, onSuccess) {
     }
     setSession(access);
     showApp();
+    showBootLoader();
     onSuccess();
   });
 }

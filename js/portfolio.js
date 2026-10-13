@@ -402,9 +402,18 @@
       </section>`;
   }
 
+  function portfolioReady() {
+    document.documentElement.classList.remove("portfolio-loading");
+    document.documentElement.classList.add("portfolio-ready");
+    document.getElementById("portfolio-load-screen")?.remove();
+  }
+
   async function init() {
     const page = document.body.dataset.page;
-    if (!page) return;
+    if (!page) {
+      portfolioReady();
+      return;
+    }
     try {
       const settings = await loadSiteSettings();
       applySiteChrome(settings);
@@ -458,6 +467,8 @@
       if (window.rehydratePortfolioIcons) window.rehydratePortfolioIcons();
     } catch (err) {
       console.warn("Portfolio content render:", err);
+    } finally {
+      portfolioReady();
     }
   }
 

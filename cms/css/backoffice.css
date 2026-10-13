@@ -757,6 +757,76 @@ body {
   color: var(--bo-muted);
 }
 
+/* —— Boot loader —— */
+.bo-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(ellipse at 50% 30%, #eef2ff 0%, #f0f2f7 50%, #e8ecf2 100%);
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.bo-boot[hidden] {
+  display: none !important;
+}
+
+.bo-boot--out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.bo-boot-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.bo-boot-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid #e2e8f0;
+  border-top-color: var(--bo-accent);
+  animation: bo-spin 0.75s linear infinite;
+}
+
+.bo-boot-spinner--sm {
+  width: 28px;
+  height: 28px;
+  border-width: 2.5px;
+}
+
+.bo-boot-label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bo-muted);
+  letter-spacing: 0.02em;
+}
+
+.bo-empty--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 24px;
+}
+
+.bo-empty--loading p {
+  margin: 0;
+}
+
+@keyframes bo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* —— Login gate —— */
 .bo-gate {
   position: fixed;
