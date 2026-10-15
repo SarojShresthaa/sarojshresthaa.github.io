@@ -239,6 +239,7 @@ export function renderSiteSettingsForm(d, field, imageField, escapeHtml, setting
   if (settingsTab === "seo") {
     return `<h2>SEO defaults</h2>
       <p class="hint">Default meta title and description for the public site (pages can override).</p>
+      ${field("Site URL (canonical domain)", "seo.siteUrl", d.seo?.siteUrl ?? "https://sarojshrestha.me", "text", "Must match GitHub Pages custom domain, no trailing slash")}
       ${field("Default title", "seo.defaultTitle", d.seo?.defaultTitle)}
       ${field("Default description", "seo.defaultDescription", d.seo?.defaultDescription, "textarea")}`;
   }

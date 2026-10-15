@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+Disallow: /cms/
+Disallow: /admin/
+Disallow: /oauth-proxy/
+Disallow: /portfolio/
+Disallow: /old desgin/
+
+Sitemap: https://sarojshrestha.me/sitemap.xml

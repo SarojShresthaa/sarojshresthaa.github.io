@@ -92,18 +92,12 @@
     });
   }
 
-  function applyPageMeta(title, description, settings) {
-    const site = settings?.siteName || "saroj.dev";
-    if (title) document.title = title.includes("–") ? title : title + " – " + site;
-    if (description) {
-      let meta = document.querySelector('meta[name="description"]');
-      if (!meta) {
-        meta = document.createElement("meta");
-        meta.name = "description";
-        document.head.appendChild(meta);
-      }
-      meta.content = description;
-    }
+  function applySeo(opts) {
+    if (typeof applyPortfolioSeo === "function") applyPortfolioSeo(opts);
+  }
+
+  function pagePathFromFile(file) {
+    return "/" + file.replace(/\.json$/i, "");
   }
 
   function applySiteChrome(settings) {
@@ -145,7 +139,14 @@
   async function renderHome(settings) {
     const home = await fetchJson(CONTENT + "home.json");
     if (home.status !== "published") return;
-    applyPageMeta(settings.seo?.defaultTitle, settings.seo?.defaultDescription, settings);
+    applySeo({
+      settings,
+      title: settings.seo?.defaultTitle,
+      description: settings.seo?.defaultDescription || settings.tagline,
+      path: "/",
+      image: home.hero?.profileImage || "/img/saroj.png",
+      jsonLd: window.PortfolioSeo?.buildWebsitePersonGraph(settings),
+    });
     const { projects } = await loadProjects();
     const projHead = document.querySelector("[data-home-projects-heading]");
     if (projHead) projHead.textContent = home.projectsSection?.heading || "projects";
@@ -167,9 +168,9 @@
       </div>
       <div class="hero-art">
         <div class="hero-frame">
-          <img class="logo-outline animate-show-ltr" src="${absUrl("img/logo-outline.svg")}" alt="" />
-          <img class="hero-photo" src="${absUrl(home.hero.profileImage)}" alt="${escapeHtml(home.hero.profileImageAlt)}" />
-          <img class="dots animate-show-rtl" src="${absUrl("img/dots.svg")}" alt="" />
+          <img class="logo-outline animate-show-ltr" src="${absUrl("img/logo-outline.svg")}" alt="" decoding="async" />
+          <img class="hero-photo" src="${absUrl(home.hero.profileImage)}" alt="${escapeHtml(home.hero.profileImageAlt)}" width="457" height="386" fetchpriority="high" decoding="async" />
+          <img class="dots animate-show-rtl" src="${absUrl("img/dots.svg")}" alt="" decoding="async" />
         </div>
         <p class="status">
           <span class="status-dot" aria-hidden="true"></span>
@@ -236,7 +237,7 @@
           <p class="skills-art-kicker">${escapeHtml(skills.kicker)}</p>
           <p class="skills-art-text">${escapeHtml(skills.intro)}</p>
         </div>
-        <img class="logo-a" src="${absUrl("img/logo-outline.svg")}" alt="" />
+        <img class="logo-a" src="${absUrl("img/logo-outline.svg")}" alt="" decoding="async" loading="lazy" />
       </div>
       <div class="skills-cols">
         ${grouped
@@ -254,9 +255,14 @@
     </div>`;
   }
 
-  async function renderProjectsPage() {
+  async function renderProjectsPage(settings) {
     const { index, projects } = await loadProjects();
-    applyPageMeta(index.title, index.subtitle, null);
+    applySeo({
+      settings,
+      title: index.title,
+      description: index.subtitle,
+      path: "/projects",
+    });
     const mainHeading = document.querySelector("[data-projects-main-heading]");
     if (mainHeading) mainHeading.textContent = index.mainWorkHeading || "main-work";
     const smallHeading = document.querySelector("[data-projects-small-heading]");
@@ -281,10 +287,25 @@
     }
   }
 
-  async function renderAboutPage() {
+  async function renderAboutPage(settings) {
     const about = await fetchJson(CONTENT + "about.json");
     if (about.status !== "published") return;
-    applyPageMeta(about.heading, about.biography?.[0], null);
+    const origin = window.PortfolioSeo?.siteOrigin(settings) || "https://sarojshrestha.me";
+    const isAboutMeAlias = /\/about-me(?:\.html)?$/i.test(location.pathname);
+    applySeo({
+      settings,
+      title: about.heading,
+      description: about.biography?.[0],
+      path: "/about",
+      noindex: isAboutMeAlias,
+      image: about.profileImage || "/img/saroj.png",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        url: origin + "/about",
+        mainEntity: { "@id": origin + "/#person" },
+      },
+    });
     const root = document.querySelector("[data-about-root]");
     if (!root) return;
     root.innerHTML = `<section class="about-hero about-page">
@@ -308,7 +329,12 @@
 
   async function renderContactPage(settings) {
     const contact = await fetchJson(CONTENT + "contact.json");
-    applyPageMeta(contact.title, contact.lead, settings);
+    applySeo({
+      settings,
+      title: contact.title,
+      description: contact.lead || contact.subtitle,
+      path: "/contact",
+    });
     const header = document.querySelector("[data-contact-header]");
     if (header) {
       header.innerHTML = `<h2>${escapeHtml(contact.title)}</h2><p>${escapeHtml(contact.subtitle)}</p>`;
@@ -337,11 +363,16 @@
     }
   }
 
-  async function renderListPage(file, rootSelector, renderItem) {
+  async function renderListPage(file, rootSelector, renderItem, settings) {
     const data = await fetchJson(CONTENT + file);
     const root = document.querySelector(rootSelector);
     if (!root || data.status !== "published") return;
-    applyPageMeta(data.title, data.subtitle, null);
+    applySeo({
+      settings,
+      title: data.title,
+      description: data.subtitle,
+      path: pagePathFromFile(file),
+    });
     const header = root.querySelector("[data-list-header]");
     if (header) {
       header.innerHTML = `<h2>${escapeHtml(data.title)}</h2><p>${escapeHtml(data.subtitle)}</p>`;
@@ -355,7 +386,7 @@
     }
   }
 
-  async function renderCustomPage(slug) {
+  async function renderCustomPage(slug, settings) {
     const data = await fetchJson(CONTENT + "pages/" + slug + ".json");
     const root = document.querySelector("[data-custom-page-root]");
     if (!root) return;
@@ -363,27 +394,60 @@
       root.innerHTML = '<p class="lead">This page is not published.</p>';
       return;
     }
-    document.title = (data.title || slug) + " – Saroj Shrestha";
+    const desc = data.subtitle || (data.paragraphs && data.paragraphs[0]) || "";
+    applySeo({
+      settings,
+      title: data.title || slug,
+      description: desc,
+      path: "/" + slug,
+      image: data.heroImage,
+    });
+    const heroAlt = escapeHtml(data.heroImageAlt || data.title || slug);
     const hero = data.heroImage
-      ? `<div class="thumb" style="max-width:560px;margin-bottom:1.5rem"><img src="${absUrl(data.heroImage)}" alt="" loading="lazy" /></div>`
+      ? `<div class="thumb" style="max-width:560px;margin-bottom:1.5rem"><img src="${absUrl(data.heroImage)}" alt="${heroAlt}" loading="lazy" decoding="async" /></div>`
       : "";
     const body = (data.paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join("");
     root.innerHTML = `<div class="page-title"><h2>${escapeHtml(data.title || slug)}</h2>${data.subtitle ? `<p>${escapeHtml(data.subtitle)}</p>` : ""}</div>
       <section class="section">${hero}${body || "<p class=\"lead\">No content yet.</p>"}</section>`;
   }
 
-  async function renderProjectDetail(slug) {
+  async function renderProjectDetail(slug, settings) {
     const project = await fetchJson(CONTENT + "projects/" + slug + ".json");
+    project.slug = slug;
     if (project.status !== "published") {
       document.querySelector("[data-project-detail]").innerHTML =
         "<p class=\"lead\">This project is not published.</p>";
       return;
     }
-    document.title = project.title + " – Saroj Shrestha";
+    const PSeo = window.PortfolioSeo;
+    applySeo({
+      settings,
+      title: project.title,
+      description: project.description || project.longDescription,
+      path: "/projects/" + slug,
+      image: project.thumbnail,
+      type: "article",
+      jsonLd: PSeo
+        ? [
+            PSeo.buildProjectJsonLd(project, settings),
+            PSeo.buildBreadcrumbJsonLd(
+              [
+                { name: "Home", path: "/" },
+                { name: "Projects", path: "/projects" },
+                { name: project.title, path: "/projects/" + slug },
+              ],
+              settings
+            ),
+          ]
+        : null,
+    });
     const root = document.querySelector("[data-project-detail]");
     if (!root) return;
     const gallery = (project.gallery || [])
-      .map((g) => `<img src="${absUrl(g)}" alt="" loading="lazy" />`)
+      .map(
+        (g, i) =>
+          `<img src="${absUrl(g)}" alt="${escapeHtml(project.title + " screenshot " + (i + 1))}" loading="lazy" decoding="async" />`
+      )
       .join("");
     root.innerHTML = `<div class="page-title">
         <h2>${escapeHtml(project.title)}</h2>
@@ -421,8 +485,8 @@
       applyNavigation(settings, path === "/about-me" ? "/about" : path);
 
       if (page === "home") await renderHome(settings);
-      if (page === "projects") await renderProjectsPage();
-      if (page === "about") await renderAboutPage();
+      if (page === "projects") await renderProjectsPage(settings);
+      if (page === "about") await renderAboutPage(settings);
       if (page === "contact") await renderContactPage(settings);
       if (page === "experience") {
         await renderListPage("experience.json", "[data-experience-root]", (item) => `<article class="card" style="margin-bottom:1rem">
@@ -430,19 +494,25 @@
           <p><em>${escapeHtml(item.startDate)} – ${escapeHtml(item.endDate)}</em>${item.location ? " · " + escapeHtml(item.location) : ""}</p>
           <p>${escapeHtml(item.description)}</p>
           ${item.achievements?.length ? `<ul>${item.achievements.map((a) => `<li>${escapeHtml(a)}</li>`).join("")}</ul>` : ""}
-        </article>`);
+        </article>`, settings);
       }
       if (page === "education") {
         await renderListPage("education.json", "[data-education-root]", (item) => `<article class="card" style="margin-bottom:1rem">
           <h3>${escapeHtml(item.qualification)}</h3>
           <p><strong>${escapeHtml(item.institution)}</strong></p>
           <p>${escapeHtml(item.description)}</p>
-        </article>`);
+        </article>`, settings);
       }
       if (page === "skills") {
         const skills = await fetchJson(CONTENT + "skills.json");
         const root = document.querySelector("[data-skills-root]");
         if (root && skills.status === "published") {
+          applySeo({
+            settings,
+            title: skills.title,
+            description: skills.subtitle || skills.intro,
+            path: "/skills",
+          });
           const header = root.querySelector("[data-list-header]");
           if (header) header.innerHTML = `<h2>${escapeHtml(skills.title)}</h2><p>${escapeHtml(skills.subtitle)}</p>`;
           const body = root.querySelector("[data-skills-body]");
@@ -450,18 +520,30 @@
         }
       }
       if (page === "certifications") {
-        await renderListPage("certifications.json", "[data-certifications-root]", (item) => `<article class="card"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.issuer || "")} ${escapeHtml(item.date || "")}</p></article>`);
+        await renderListPage(
+          "certifications.json",
+          "[data-certifications-root]",
+          (item) =>
+            `<article class="card"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.issuer || "")} ${escapeHtml(item.date || "")}</p></article>`,
+          settings
+        );
       }
       if (page === "services") {
-        await renderListPage("services.json", "[data-services-root]", (item) => `<article class="card" style="margin-bottom:1rem"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p></article>`);
+        await renderListPage(
+          "services.json",
+          "[data-services-root]",
+          (item) =>
+            `<article class="card" style="margin-bottom:1rem"><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.description)}</p></article>`,
+          settings
+        );
       }
       if (page === "project-detail") {
         const slug = window.__PROJECT_SLUG__;
-        if (slug) await renderProjectDetail(slug);
+        if (slug) await renderProjectDetail(slug, settings);
       }
       if (page === "custom-page") {
         const slug = window.__PAGE_SLUG__;
-        if (slug) await renderCustomPage(slug);
+        if (slug) await renderCustomPage(slug, settings);
       }
 
       if (window.rehydratePortfolioIcons) window.rehydratePortfolioIcons();

@@ -5,6 +5,7 @@
   "logo": "/img/favicon.svg",
   "favicon": "/img/favicon.svg",
   "seo": {
+    "siteUrl": "https://sarojshrestha.me",
     "defaultTitle": "Saroj Shrestha – Umbraco & .NET Developer",
     "defaultDescription": "Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu."
   },
