@@ -9,7 +9,7 @@ Your **Client ID** is already in `cms/config.public.json`. Finish these steps in
 1. Open [GitHub OAuth Apps](https://github.com/settings/developers) → **saroj cms**.
 2. Click **Generate a new client secret** → copy the secret → store in a password manager (shown once).
 3. **Leave Redirect URI empty for now** — you will add it in Part 3 after Render gives you a URL.
-4. Confirm **Homepage URL** is `https://sarojshrestha.me/`.
+4. Confirm **Homepage URL** is `https://saroj.dev/`.
 
 ---
 
@@ -47,7 +47,7 @@ If you already created a **Docker image** service that crashes, delete it and us
 ## Part 3 — Fix GitHub Redirect URI
 
 1. Back to [saroj cms OAuth app](https://github.com/settings/developers).
-2. **Remove** `https://sarojshrestha.me/` from Redirect URIs if it is still there.
+2. **Remove** `https://saroj.dev/` from Redirect URIs if it is still there.
 3. **Add** (replace with your Render URL):
    ```text
    https://saroj-cms-oauth.onrender.com/callback
@@ -71,7 +71,7 @@ If you already created a **Docker image** service that crashes, delete it and us
 
 ## Part 5 — Sign in and save in the CMS
 
-1. Open `https://sarojshrestha.me/cms/` (hard refresh: Ctrl+F5).
+1. Open `https://saroj.dev/cms/` (hard refresh: Ctrl+F5).
 2. Top bar should say **Not signed in** (not “Sign-in not configured”).
 3. Click **Sign in with GitHub** → approve **saroj cms**.
 4. You should land back on `/cms/` with **Signed in to GitHub**.

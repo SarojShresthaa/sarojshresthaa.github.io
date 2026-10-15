@@ -3,7 +3,7 @@
  * Domain must match CNAME / site-settings seo.siteUrl.
  */
 (function (global) {
-  const DEFAULT_ORIGIN = "https://sarojshrestha.me";
+  const DEFAULT_ORIGIN = "https://saroj.dev";
 
   function siteOrigin(settings) {
     const fromSettings = settings?.seo?.siteUrl?.trim();

@@ -8,4 +8,4 @@ Disallow: /oauth-proxy/
 Disallow: /portfolio/
 Disallow: /old desgin/
 
-Sitemap: https://sarojshrestha.me/sitemap.xml
+Sitemap: https://saroj.dev/sitemap.xml

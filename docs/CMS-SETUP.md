@@ -22,7 +22,7 @@ GitHub Pages serves extensionless URLs for `.html` files (e.g. `/projects` → `
 1. Edit **`cms/config.public.json`** (committed to the repo): set `oauth_proxy_url` and `github_client_id` from your GitHub OAuth app.
 2. Create a **GitHub OAuth App** (callback URL must match your OAuth proxy — see below).
 3. Deploy a small **GitHub OAuth proxy** (e.g. [decap-cms-github-backend](https://github.com/decaporg/decap-cms-github-backend) on Render). Put the **client secret** only on the proxy, never in this repo.
-4. Push to GitHub and open **`https://sarojshrestha.me/cms/`** — use **Sign in with GitHub** in the top toolbar, then **Save** or **Publish**.
+4. Push to GitHub and open **`https://saroj.dev/cms/`** — use **Sign in with GitHub** in the top toolbar, then **Save** or **Publish**.
 
 **Security:** Never commit personal access tokens or OAuth **client secrets**. Only the public Client ID and proxy URL go in `config.public.json`.
 

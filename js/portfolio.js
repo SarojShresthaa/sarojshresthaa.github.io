@@ -290,7 +290,7 @@
   async function renderAboutPage(settings) {
     const about = await fetchJson(CONTENT + "about.json");
     if (about.status !== "published") return;
-    const origin = window.PortfolioSeo?.siteOrigin(settings) || "https://sarojshrestha.me";
+    const origin = window.PortfolioSeo?.siteOrigin(settings) || "https://saroj.dev";
     const isAboutMeAlias = /\/about-me(?:\.html)?$/i.test(location.pathname);
     applySeo({
       settings,

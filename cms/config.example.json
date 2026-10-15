@@ -3,6 +3,6 @@
   "branch": "main",
   "oauth_proxy_url": "https://YOUR_OAUTH_PROXY.example.com",
   "github_client_id": "YOUR_GITHUB_OAUTH_APP_CLIENT_ID",
-  "site_url": "https://sarojshrestha.me",
+  "site_url": "https://saroj.dev",
   "cms_path_prefix": "content"
 }

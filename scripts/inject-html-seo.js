@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const ORIGIN = "https://sarojshrestha.me";
+const ORIGIN = "https://saroj.dev";
 const DEFAULT_IMAGE = ORIGIN + "/img/saroj.png";
 
 const PAGES = {
