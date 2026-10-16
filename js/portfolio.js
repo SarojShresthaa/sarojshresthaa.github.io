@@ -39,6 +39,11 @@
       .replace(/"/g, "&quot;");
   }
 
+  function socialLinkRel(s) {
+    if (s.id === "github" || s.id === "linkedin") return "me noreferrer";
+    return "noreferrer";
+  }
+
   function renderProjectCard(project, options) {
     const thumb = project.thumbnail
       ? `<div class="thumb"><img src="${absUrl(project.thumbnail)}" alt="${escapeHtml(project.thumbnailAlt || project.title)}" /></div>`
@@ -121,7 +126,7 @@
         settings.social
           .map(
             (s) =>
-              `<a class="soc" data-icon="${escapeHtml(s.id)}" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(s.label)}"></a>`
+              `<a class="soc" data-icon="${escapeHtml(s.id)}" href="${escapeHtml(s.url)}" target="_blank" rel="${socialLinkRel(s)}" aria-label="${escapeHtml(s.label)} — Saroj Shrestha"></a>`
           )
           .join("");
     }
@@ -130,7 +135,7 @@
       footerMedia.innerHTML = settings.social
         .map(
           (s) =>
-            `<li><a class="soc" data-icon="${escapeHtml(s.id)}" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(s.label)}"></a></li>`
+            `<li><a class="soc" data-icon="${escapeHtml(s.id)}" href="${escapeHtml(s.url)}" target="_blank" rel="${socialLinkRel(s)}" aria-label="${escapeHtml(s.label)} — Saroj Shrestha"></a></li>`
         )
         .join("");
     }
@@ -188,7 +193,12 @@
     if (about) {
       about.innerHTML = `<div class="about-copy">
           <h2 class="section-heading after">${escapeHtml(home.aboutSnippet.heading)}</h2>
-          ${home.aboutSnippet.paragraphs.map((p) => `<p>${p.replace("ZAAKS!", "<strong>ZAAKS!</strong>")}</p>`).join("")}
+          ${home.aboutSnippet.paragraphs
+            .map(
+              (p) =>
+                `<p>${escapeHtml(p).replace(/ZAAKS!/g, "<strong>ZAAKS!</strong>")}</p>`
+            )
+            .join("")}
           <a class="primary-btn" href="${escapeHtml(home.aboutSnippet.cta.href)}">${escapeHtml(home.aboutSnippet.cta.label)}</a>
         </div>
         <figure class="about-snippet-art">
@@ -217,7 +227,7 @@
         settings.social
           .map(
             (s) =>
-              `<a class="contact-row" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display || s.url)}</a>`
+              `<a class="contact-row" href="${escapeHtml(s.url)}" target="_blank" rel="${socialLinkRel(s)}"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display || s.url)}</a>`
           )
           .join("");
     }
@@ -294,17 +304,12 @@
     const isAboutMeAlias = /\/about-me(?:\.html)?$/i.test(location.pathname);
     applySeo({
       settings,
-      title: about.heading,
+      title: "About Saroj Shrestha",
       description: about.biography?.[0],
       path: "/about",
       noindex: isAboutMeAlias,
       image: about.profileImage || "/img/saroj.png",
-      jsonLd: {
-        "@context": "https://schema.org",
-        "@type": "ProfilePage",
-        url: origin + "/about",
-        mainEntity: { "@id": origin + "/#person" },
-      },
+      jsonLd: window.PortfolioSeo?.buildAboutProfileGraph(settings),
     });
     const root = document.querySelector("[data-about-root]");
     if (!root) return;
@@ -348,7 +353,7 @@
         settings.social
           .map(
             (s) =>
-              `<a class="contact-row" href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display)}</a>`
+              `<a class="contact-row" href="${escapeHtml(s.url)}" target="_blank" rel="${socialLinkRel(s)}"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display)}</a>`
           )
           .join("");
     }
@@ -357,7 +362,7 @@
       media.innerHTML = settings.social
         .map(
           (s) =>
-            `<a href="${escapeHtml(s.url)}" target="_blank" rel="noreferrer"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display)}</a>`
+            `<a href="${escapeHtml(s.url)}" target="_blank" rel="${socialLinkRel(s)}"><span class="soc" data-icon="${escapeHtml(s.id)}" aria-hidden="true"></span> ${escapeHtml(s.display)}</a>`
         )
         .join("");
     }

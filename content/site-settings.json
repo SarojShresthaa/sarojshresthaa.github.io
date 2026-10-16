@@ -6,8 +6,10 @@
   "favicon": "/img/favicon.svg",
   "seo": {
     "siteUrl": "https://saroj.dev",
-    "defaultTitle": "Saroj Shrestha – Umbraco & .NET Developer",
-    "defaultDescription": "Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu."
+    "defaultTitle": "Saroj Shrestha – Portfolio | Umbraco & .NET Developer",
+    "defaultDescription": "Portfolio of Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu. Projects, experience, and contact — also on GitHub and LinkedIn.",
+    "personImage": "/img/saroj.png",
+    "ogImageAlt": "Saroj Shrestha — Umbraco and .NET developer"
   },
   "navigation": [
     {

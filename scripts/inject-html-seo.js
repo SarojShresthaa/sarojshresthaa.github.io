@@ -4,62 +4,82 @@
  */
 const fs = require("fs");
 const path = require("path");
+const {
+  readSiteSettings,
+  buildWebsitePersonGraph,
+  siteOrigin,
+  absoluteUrl,
+} = require("./seo-person-graph");
 
 const ROOT = path.join(__dirname, "..");
-const ORIGIN = "https://saroj.dev";
-const DEFAULT_IMAGE = ORIGIN + "/img/saroj.png";
+const settings = readSiteSettings(ROOT);
+const ORIGIN = siteOrigin(settings);
+const DEFAULT_IMAGE = absoluteUrl(ORIGIN, settings.seo?.personImage || "/img/saroj.png");
+const OG_IMAGE_ALT = settings.seo?.ogImageAlt || "Saroj Shrestha";
+
+const HOME_TITLE =
+  settings.seo?.defaultTitle || "Saroj Shrestha – Portfolio | Umbraco & .NET Developer";
+const HOME_DESC =
+  settings.seo?.defaultDescription ||
+  "Portfolio of Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu.";
 
 const PAGES = {
   "index.html": {
     path: "/",
-    title: "Saroj Shrestha – Umbraco & .NET Developer",
-    description: "Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu.",
+    title: HOME_TITLE,
+    description: HOME_DESC,
+    homeGraph: true,
   },
   "projects.html": {
     path: "/projects",
     title: "Projects – Saroj Shrestha",
-    description: "Real Umbraco, .NET, and community work from Usome, ZAAKS!, and GitHub.",
+    description:
+      "Projects by Saroj Shrestha — Umbraco, .NET, and open-source work from ZAAKS! and GitHub.",
   },
   "about.html": {
     path: "/about",
-    title: "About – Saroj Shrestha",
-    description: "About Saroj Shrestha — Umbraco and .NET developer in Kathmandu.",
+    title: "About Saroj Shrestha",
+    description:
+      "About Saroj Shrestha — Umbraco and .NET developer in Kathmandu at ZAAKS!. Connect on GitHub and LinkedIn.",
   },
   "about-me.html": {
     path: "/about",
-    title: "About – Saroj Shrestha",
-    description: "About Saroj Shrestha — Umbraco and .NET developer in Kathmandu.",
+    title: "About Saroj Shrestha",
+    description:
+      "About Saroj Shrestha — Umbraco and .NET developer in Kathmandu at ZAAKS!. Connect on GitHub and LinkedIn.",
     noindex: true,
   },
   "contact.html": {
     path: "/contact",
-    title: "Contact – Saroj Shrestha",
-    description: "Contact Saroj Shrestha on GitHub or LinkedIn.",
+    title: "Contact Saroj Shrestha",
+    description:
+      "Contact Saroj Shrestha on GitHub (github.com/SarojShresthaa) or LinkedIn.",
   },
   "experience.html": {
     path: "/experience",
     title: "Experience – Saroj Shrestha",
-    description: "Umbraco & .NET roles and experience.",
+    description: "Work experience of Saroj Shrestha — Umbraco and .NET roles.",
   },
   "education.html": {
     path: "/education",
     title: "Education – Saroj Shrestha",
-    description: "Education background.",
+    description: "Education background of Saroj Shrestha.",
   },
   "skills.html": {
     path: "/skills",
     title: "Skills – Saroj Shrestha",
-    description: "Technologies and focus areas — Umbraco, .NET, and backoffice development.",
+    description:
+      "Skills of Saroj Shrestha — Umbraco, .NET, and backoffice development.",
   },
   "certifications.html": {
     path: "/certifications",
     title: "Certifications – Saroj Shrestha",
-    description: "Professional certifications.",
+    description: "Professional certifications of Saroj Shrestha.",
   },
   "services.html": {
     path: "/services",
     title: "Services – Saroj Shrestha",
-    description: "Development services.",
+    description: "Development services offered by Saroj Shrestha.",
   },
 };
 
@@ -67,9 +87,21 @@ function escAttr(s) {
   return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 }
 
+function relMeLinks() {
+  return (settings.social || [])
+    .filter((s) => s.url)
+    .map((s) => `  <link rel="me" href="${escAttr(s.url)}" />`)
+    .join("\n");
+}
+
 function metaBlock(meta) {
   const url = ORIGIN + (meta.path === "/" ? "/" : meta.path);
   const robots = meta.noindex ? "noindex, follow" : "index, follow, max-image-preview:large";
+  let extra = "";
+  if (meta.homeGraph) {
+    const graph = JSON.stringify(buildWebsitePersonGraph(settings));
+    extra = `\n${relMeLinks()}\n  <script type="application/ld+json" id="portfolio-jsonld">${graph}</script>`;
+  }
   return `  <meta name="author" content="Saroj Shrestha" />
   <meta name="robots" content="${robots}" />
   <link rel="canonical" href="${url}" />
@@ -80,10 +112,11 @@ function metaBlock(meta) {
   <meta property="og:description" content="${escAttr(meta.description)}" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${DEFAULT_IMAGE}" />
+  <meta property="og:image:alt" content="${escAttr(OG_IMAGE_ALT)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escAttr(meta.title)}" />
   <meta name="twitter:description" content="${escAttr(meta.description)}" />
-  <meta name="twitter:image" content="${DEFAULT_IMAGE}" />`;
+  <meta name="twitter:image" content="${DEFAULT_IMAGE}" />${extra}`;
 }
 
 function stripOldSeo(html) {
@@ -91,6 +124,8 @@ function stripOldSeo(html) {
     .replace(/  <meta name="author"[^>]*>\n?/g, "")
     .replace(/  <meta name="robots"[^>]*>\n?/g, "")
     .replace(/  <link rel="canonical"[^>]*>\n?/g, "")
+    .replace(/  <link rel="me"[^>]*>\n?/g, "")
+    .replace(/  <script type="application\/ld\+json" id="portfolio-jsonld"[^>]*>[\s\S]*?<\/script>\n?/g, "")
     .replace(/  <meta property="og:[^"]+"[^>]*>\n?/g, "")
     .replace(/  <meta name="twitter:[^"]+"[^>]*>\n?/g, "");
 }
@@ -110,11 +145,12 @@ function patchFile(rel, meta) {
       `<meta name="description" content="${escAttr(meta.description)}" />\n${block}`
     );
   } else {
-    html = html.replace(/<title>([^<]*)<\/title>/, (m, t) => {
-      const title = meta.title || t;
-      return `<title>${title}</title>\n  <meta name="description" content="${escAttr(meta.description)}" />\n${block}`;
+    html = html.replace(/<title>([^<]*)<\/title>/, () => {
+      return `<title>${escAttr(meta.title)}</title>\n  <meta name="description" content="${escAttr(meta.description)}" />\n${block}`;
     });
   }
+
+  html = html.replace(/<title>[^<]*<\/title>/, `<title>${escAttr(meta.title)}</title>`);
 
   if (!html.includes("/js/seo.js")) {
     html = html.replace(

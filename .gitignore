@@ -1,1 +1,4 @@
 cms/config.json
+
+# Local static export (optional; regenerate with scripts/build-clean-html.js)
+clean-html/

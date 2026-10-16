@@ -112,7 +112,11 @@
     upsertMeta("property", "og:site_name", siteName);
     upsertMeta("property", "og:locale", "en_US");
     upsertMeta("property", "og:image", image);
-    upsertMeta("property", "og:image:alt", settings?.seo?.defaultTitle || "Saroj Shrestha portfolio");
+    upsertMeta(
+      "property",
+      "og:image:alt",
+      settings?.seo?.ogImageAlt || settings?.seo?.defaultTitle || "Saroj Shrestha"
+    );
 
     upsertMeta("name", "twitter:card", "summary_large_image");
     upsertMeta("name", "twitter:title", fullTitle);
@@ -139,9 +143,51 @@
     setJsonLd(opts.jsonLd || null);
   }
 
+  function personImageUrl(settings, origin) {
+    const o = origin || siteOrigin(settings);
+    return absoluteUrl(o, settings?.seo?.personImage || "/img/saroj.png");
+  }
+
+  function buildPersonNode(settings, origin) {
+    const o = origin || siteOrigin(settings);
+    const sameAs = (settings.social || []).map((s) => s.url).filter(Boolean);
+    const img = personImageUrl(settings, o);
+    return {
+      "@type": "Person",
+      "@id": o + "/#person",
+      name: "Saroj Shrestha",
+      givenName: "Saroj",
+      familyName: "Shrestha",
+      url: o + "/",
+      jobTitle: "Umbraco & .NET Developer",
+      description: settings.seo?.defaultDescription || settings.tagline || "",
+      worksFor: {
+        "@type": "Organization",
+        name: "ZAAKS!",
+      },
+      homeLocation: {
+        "@type": "Place",
+        name: "Kathmandu",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Kathmandu",
+          addressCountry: "NP",
+        },
+      },
+      sameAs,
+      image: {
+        "@type": "ImageObject",
+        url: img,
+        contentUrl: img,
+        caption: "Saroj Shrestha",
+      },
+    };
+  }
+
   function buildWebsitePersonGraph(settings) {
     const origin = siteOrigin(settings);
-    const sameAs = (settings.social || []).map((s) => s.url).filter(Boolean);
+    const img = personImageUrl(settings, origin);
+    const person = buildPersonNode(settings, origin);
     return {
       "@context": "https://schema.org",
       "@graph": [
@@ -152,19 +198,40 @@
           name: settings.siteName || "saroj.dev",
           description: settings.seo?.defaultDescription || settings.tagline || "",
           inLanguage: "en",
+          publisher: { "@id": origin + "/#person" },
         },
         {
-          "@type": "Person",
-          "@id": origin + "/#person",
-          name: "Saroj Shrestha",
+          "@type": "WebPage",
+          "@id": origin + "/#webpage",
           url: origin + "/",
-          jobTitle: "Umbraco & .NET Developer",
-          worksFor: {
-            "@type": "Organization",
-            name: "ZAAKS!",
+          name: settings.seo?.defaultTitle || "Saroj Shrestha",
+          description: settings.seo?.defaultDescription || "",
+          isPartOf: { "@id": origin + "/#website" },
+          about: { "@id": origin + "/#person" },
+          primaryImageOfPage: {
+            "@type": "ImageObject",
+            url: img,
           },
-          sameAs,
-          image: absoluteUrl(origin, settings.logo || "/img/saroj.png"),
+        },
+        person,
+      ],
+    };
+  }
+
+  function buildAboutProfileGraph(settings) {
+    const origin = siteOrigin(settings);
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        buildPersonNode(settings, origin),
+        {
+          "@type": "ProfilePage",
+          "@id": origin + "/about#webpage",
+          url: origin + "/about",
+          name: "About Saroj Shrestha",
+          description: settings.seo?.defaultDescription || "",
+          isPartOf: { "@id": origin + "/#website" },
+          mainEntity: { "@id": origin + "/#person" },
         },
       ],
     };
@@ -204,7 +271,10 @@
   global.PortfolioSeo = {
     siteOrigin,
     absoluteUrl,
+    personImageUrl,
+    buildPersonNode,
     buildWebsitePersonGraph,
+    buildAboutProfileGraph,
     buildProjectJsonLd,
     buildBreadcrumbJsonLd,
     DEFAULT_ORIGIN,

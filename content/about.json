@@ -1,13 +1,13 @@
 {
   "status": "published",
   "eyebrow": "about",
-  "heading": "Umbraco & .NET developer in Kathmandu",
+  "heading": "Saroj Shrestha — Umbraco & .NET developer in Kathmandu",
   "profileImage": "/img/saroj.png",
   "profileImageAlt": "Saroj Shrestha",
   "biography": [
     "I'm Saroj Shrestha. I build websites with Umbraco and .NET — mostly from Kathmandu, and since 2023 with ZAAKS!",
     "I care about the backoffice feeling obvious for editors: clear document types, sensible Block Lists, and Razor that doesn't fight you every time content changes. When something repeats in the wild, I turn it into a package on GitHub — like Block Field Visibility for Block List fields.",
-    "Reach out on the contact page if you want to connect — GitHub or LinkedIn is fine."
+    "Reach out on the contact page if you want to connect — my GitHub is github.com/SarojShresthaa and my LinkedIn profile is under Saroj Shrestha."
   ],
   "workSection": {
     "kicker": "Experience",
