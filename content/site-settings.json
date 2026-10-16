@@ -6,12 +6,21 @@
   "favicon": "/img/favicon.svg",
   "seo": {
     "siteUrl": "https://saroj.dev",
-    "defaultTitle": "Saroj Shrestha – Portfolio | Umbraco & .NET Developer",
-    "defaultDescription": "Portfolio of Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu. Projects, experience, and contact — also on GitHub and LinkedIn.",
+    "defaultTitle": "Saroj Shrestha – Umbraco & .NET Developer",
+    "defaultDescription": "Saroj Shrestha — Umbraco and .NET developer in Kathmandu, Nepal. Works at ZAAKS!; explore projects, experience, and skills, or connect on GitHub and LinkedIn.",
     "personImage": "/img/saroj.png",
-    "ogImageAlt": "Saroj Shrestha — Umbraco and .NET developer",
+    "ogImageAlt": "Saroj Shrestha — Umbraco and .NET developer in Kathmandu, Nepal",
     "structuredSiteName": "Saroj Shrestha",
-    "structuredSiteAlternateNames": ["saroj.dev", "Saroj Shrestha Portfolio"]
+    "structuredSiteAlternateNames": ["saroj.dev", "Saroj Shrestha Kathmandu"],
+    "geo": {
+      "locality": "Kathmandu",
+      "region": "Bagmati Province",
+      "country": "Nepal",
+      "countryCode": "NP",
+      "icbmRegion": "NP-BA",
+      "latitude": 27.7172,
+      "longitude": 85.324
+    }
   },
   "navigation": [
     {

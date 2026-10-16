@@ -20,10 +20,84 @@ function absoluteUrl(origin, pathOrUrl) {
   return origin + p;
 }
 
+function geoFromSettings(settings) {
+  const g = settings?.seo?.geo || {};
+  return {
+    locality: g.locality || "Kathmandu",
+    region: g.region || "Bagmati Province",
+    country: g.country || "Nepal",
+    countryCode: g.countryCode || "NP",
+    icbmRegion: g.icbmRegion || "NP-BA",
+    latitude: typeof g.latitude === "number" ? g.latitude : 27.7172,
+    longitude: typeof g.longitude === "number" ? g.longitude : 85.324,
+  };
+}
+
+function buildPlaceNode(geo) {
+  return {
+    "@type": "Place",
+    name: `${geo.locality}, ${geo.country}`,
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: geo.latitude,
+      longitude: geo.longitude,
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: geo.locality,
+      addressRegion: geo.region,
+      addressCountry: geo.countryCode,
+    },
+  };
+}
+
+function buildPersonNode(settings, origin) {
+  const o = origin || siteOrigin(settings);
+  const geo = geoFromSettings(settings);
+  const sameAs = (settings.social || []).map((s) => s.url).filter(Boolean);
+  const img = absoluteUrl(o, settings.seo?.personImage || "/img/saroj.png");
+  const place = buildPlaceNode(geo);
+  return {
+    "@type": "Person",
+    "@id": o + "/#person",
+    name: "Saroj Shrestha",
+    givenName: "Saroj",
+    familyName: "Shrestha",
+    url: o + "/",
+    jobTitle: "Umbraco & .NET Developer",
+    description: settings.seo?.defaultDescription || settings.tagline || "",
+    nationality: {
+      "@type": "Country",
+      name: geo.country,
+    },
+    knowsAbout: [
+      "Umbraco CMS",
+      "ASP.NET Core",
+      "C#",
+      "Web development",
+      "Content management systems",
+    ],
+    worksFor: {
+      "@type": "Organization",
+      name: "ZAAKS!",
+      location: place,
+    },
+    workLocation: place,
+    homeLocation: place,
+    sameAs,
+    image: {
+      "@type": "ImageObject",
+      url: img,
+      contentUrl: img,
+      caption: "Saroj Shrestha",
+    },
+  };
+}
+
 function buildWebsitePersonGraph(settings) {
   const origin = siteOrigin(settings);
   const img = absoluteUrl(origin, settings.seo?.personImage || "/img/saroj.png");
-  const sameAs = (settings.social || []).map((s) => s.url).filter(Boolean);
+  const person = buildPersonNode(settings, origin);
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -34,10 +108,9 @@ function buildWebsitePersonGraph(settings) {
         name: settings.seo?.structuredSiteName || "Saroj Shrestha",
         alternateName: settings.seo?.structuredSiteAlternateNames || [
           settings.siteName || "saroj.dev",
-          "Saroj Shrestha Portfolio",
         ],
         description: settings.seo?.defaultDescription || settings.tagline || "",
-        inLanguage: "en",
+        inLanguage: "en-NP",
         publisher: { "@id": origin + "/#person" },
       },
       {
@@ -50,35 +123,28 @@ function buildWebsitePersonGraph(settings) {
         about: { "@id": origin + "/#person" },
         primaryImageOfPage: { "@type": "ImageObject", url: img },
       },
-      {
-        "@type": "Person",
-        "@id": origin + "/#person",
-        name: "Saroj Shrestha",
-        givenName: "Saroj",
-        familyName: "Shrestha",
-        url: origin + "/",
-        jobTitle: "Umbraco & .NET Developer",
-        description: settings.seo?.defaultDescription || settings.tagline || "",
-        worksFor: { "@type": "Organization", name: "ZAAKS!" },
-        homeLocation: {
-          "@type": "Place",
-          name: "Kathmandu",
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: "Kathmandu",
-            addressCountry: "NP",
-          },
-        },
-        sameAs,
-        image: {
-          "@type": "ImageObject",
-          url: img,
-          contentUrl: img,
-          caption: "Saroj Shrestha",
-        },
-      },
+      person,
     ],
   };
 }
 
-module.exports = { readSiteSettings, buildWebsitePersonGraph, siteOrigin, absoluteUrl };
+function geoMetaTags(settings) {
+  const geo = geoFromSettings(settings);
+  const placename = `${geo.locality}, ${geo.country}`;
+  return [
+    `  <meta name="geo.region" content="${geo.icbmRegion}" />`,
+    `  <meta name="geo.placename" content="${placename}" />`,
+    `  <meta name="geo.position" content="${geo.latitude};${geo.longitude}" />`,
+    `  <meta name="ICBM" content="${geo.latitude}, ${geo.longitude}" />`,
+  ].join("\n");
+}
+
+module.exports = {
+  readSiteSettings,
+  buildWebsitePersonGraph,
+  buildPersonNode,
+  geoFromSettings,
+  geoMetaTags,
+  siteOrigin,
+  absoluteUrl,
+};

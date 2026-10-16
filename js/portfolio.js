@@ -101,6 +101,16 @@
     if (typeof applyPortfolioSeo === "function") applyPortfolioSeo(opts);
   }
 
+  function seoCopy() {
+    return typeof SEOPageMeta !== "undefined" ? SEOPageMeta : null;
+  }
+
+  function listPageSeo(file) {
+    const key = file.replace(/\.json$/i, "");
+    const copy = seoCopy();
+    return copy?.pages?.[key] || null;
+  }
+
   function pagePathFromFile(file) {
     return "/" + file.replace(/\.json$/i, "");
   }
@@ -267,10 +277,11 @@
 
   async function renderProjectsPage(settings) {
     const { index, projects } = await loadProjects();
+    const projectsSeo = seoCopy()?.pages?.projects;
     applySeo({
       settings,
-      title: index.title,
-      description: index.subtitle,
+      title: projectsSeo?.title || "Projects | Saroj Shrestha",
+      description: projectsSeo?.description || index.subtitle,
       path: "/projects",
     });
     const mainHeading = document.querySelector("[data-projects-main-heading]");
@@ -302,10 +313,11 @@
     if (about.status !== "published") return;
     const origin = window.PortfolioSeo?.siteOrigin(settings) || "https://saroj.dev";
     const isAboutMeAlias = /\/about-me(?:\.html)?$/i.test(location.pathname);
+    const aboutSeo = seoCopy()?.pages?.about;
     applySeo({
       settings,
-      title: "About Saroj Shrestha",
-      description: about.biography?.[0],
+      title: aboutSeo?.title || "About | Saroj Shrestha",
+      description: aboutSeo?.description || about.biography?.[0],
       path: "/about",
       noindex: isAboutMeAlias,
       image: about.profileImage || "/img/saroj.png",
@@ -334,10 +346,11 @@
 
   async function renderContactPage(settings) {
     const contact = await fetchJson(CONTENT + "contact.json");
+    const contactSeo = seoCopy()?.pages?.contact;
     applySeo({
       settings,
-      title: contact.title,
-      description: contact.lead || contact.subtitle,
+      title: contactSeo?.title || "Contact | Saroj Shrestha",
+      description: contactSeo?.description || contact.lead || contact.subtitle,
       path: "/contact",
     });
     const header = document.querySelector("[data-contact-header]");
@@ -372,10 +385,11 @@
     const data = await fetchJson(CONTENT + file);
     const root = document.querySelector(rootSelector);
     if (!root || data.status !== "published") return;
+    const staticSeo = listPageSeo(file);
     applySeo({
       settings,
-      title: data.title,
-      description: data.subtitle,
+      title: staticSeo?.title || data.title,
+      description: staticSeo?.description || data.subtitle,
       path: pagePathFromFile(file),
     });
     const header = root.querySelector("[data-list-header]");
@@ -425,10 +439,12 @@
       return;
     }
     const PSeo = window.PortfolioSeo;
+    const projectSeo = seoCopy()?.projectMeta?.(project, slug);
     applySeo({
       settings,
-      title: project.title,
-      description: project.description || project.longDescription,
+      title: projectSeo?.title || project.title,
+      description:
+        projectSeo?.description || project.description || project.longDescription,
       path: "/projects/" + slug,
       image: project.thumbnail,
       type: "article",
@@ -512,10 +528,11 @@
         const skills = await fetchJson(CONTENT + "skills.json");
         const root = document.querySelector("[data-skills-root]");
         if (root && skills.status === "published") {
+          const skillsSeo = seoCopy()?.pages?.skills;
           applySeo({
             settings,
-            title: skills.title,
-            description: skills.subtitle || skills.intro,
+            title: skillsSeo?.title || "Skills | Saroj Shrestha",
+            description: skillsSeo?.description || skills.subtitle || skills.intro,
             path: "/skills",
           });
           const header = root.querySelector("[data-list-header]");
