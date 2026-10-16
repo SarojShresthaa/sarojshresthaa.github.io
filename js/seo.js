@@ -133,7 +133,9 @@
       upsertMeta("name", "robots", "index, follow, max-image-preview:large");
     }
 
-    if (settings) upsertGeoMeta(settings);
+    if (settings?.seo?.keywords && normalizePath(opts.path || location.pathname) === "/") {
+      upsertMeta("name", "keywords", settings.seo.keywords);
+    }
 
     if (settings?.social?.length) {
       document.querySelectorAll('link[rel="me"]').forEach((n) => n.remove());
@@ -154,52 +156,10 @@
     return absoluteUrl(o, settings?.seo?.personImage || "/img/saroj.png");
   }
 
-  function geoFromSettings(settings) {
-    const g = settings?.seo?.geo || {};
-    return {
-      locality: g.locality || "Kathmandu",
-      region: g.region || "Bagmati Province",
-      country: g.country || "Nepal",
-      countryCode: g.countryCode || "NP",
-      icbmRegion: g.icbmRegion || "NP-BA",
-      latitude: typeof g.latitude === "number" ? g.latitude : 27.7172,
-      longitude: typeof g.longitude === "number" ? g.longitude : 85.324,
-    };
-  }
-
-  function buildPlaceNode(geo) {
-    return {
-      "@type": "Place",
-      name: `${geo.locality}, ${geo.country}`,
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: geo.latitude,
-        longitude: geo.longitude,
-      },
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: geo.locality,
-        addressRegion: geo.region,
-        addressCountry: geo.countryCode,
-      },
-    };
-  }
-
-  function upsertGeoMeta(settings) {
-    const geo = geoFromSettings(settings);
-    const placename = `${geo.locality}, ${geo.country}`;
-    upsertMeta("name", "geo.region", geo.icbmRegion);
-    upsertMeta("name", "geo.placename", placename);
-    upsertMeta("name", "geo.position", `${geo.latitude};${geo.longitude}`);
-    upsertMeta("name", "ICBM", `${geo.latitude}, ${geo.longitude}`);
-  }
-
   function buildPersonNode(settings, origin) {
     const o = origin || siteOrigin(settings);
-    const geo = geoFromSettings(settings);
     const sameAs = (settings.social || []).map((s) => s.url).filter(Boolean);
     const img = personImageUrl(settings, o);
-    const place = buildPlaceNode(geo);
     return {
       "@type": "Person",
       "@id": o + "/#person",
@@ -209,10 +169,6 @@
       url: o + "/",
       jobTitle: "Umbraco & .NET Developer",
       description: settings.seo?.defaultDescription || settings.tagline || "",
-      nationality: {
-        "@type": "Country",
-        name: geo.country,
-      },
       knowsAbout: [
         "Umbraco CMS",
         "ASP.NET Core",
@@ -223,10 +179,16 @@
       worksFor: {
         "@type": "Organization",
         name: "ZAAKS!",
-        location: place,
       },
-      workLocation: place,
-      homeLocation: place,
+      homeLocation: {
+        "@type": "Place",
+        name: "Kathmandu",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Kathmandu",
+          addressCountry: "NP",
+        },
+      },
       sameAs,
       image: {
         "@type": "ImageObject",
@@ -237,10 +199,49 @@
     };
   }
 
+  function buildHomeFaqNode(settings, origin) {
+    const o = origin || siteOrigin(settings);
+    const desc =
+      settings.seo?.defaultDescription ||
+      "Saroj Shrestha is an Umbraco and .NET developer at ZAAKS! in Kathmandu.";
+    return {
+      "@type": "FAQPage",
+      "@id": o + "/#faq",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Who is Saroj Shrestha?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: desc,
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What does Saroj Shrestha do?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Saroj Shrestha builds Umbraco and .NET websites and backoffices, maintains open-source Umbraco packages, and works with editors on Block Lists and document types.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How can I contact Saroj Shrestha?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Reach Saroj Shrestha on GitHub at github.com/SarojShresthaa or on LinkedIn. His site is saroj.dev.",
+          },
+        },
+      ],
+    };
+  }
+
   function buildWebsitePersonGraph(settings) {
     const origin = siteOrigin(settings);
     const img = personImageUrl(settings, origin);
     const person = buildPersonNode(settings, origin);
+    const pageDesc = settings.seo?.defaultDescription || "";
+    const pageTitle = settings.seo?.defaultTitle || "Saroj Shrestha";
     return {
       "@context": "https://schema.org",
       "@graph": [
@@ -252,24 +253,27 @@
           alternateName: settings.seo?.structuredSiteAlternateNames || [
             settings.siteName || "saroj.dev",
           ],
-          description: settings.seo?.defaultDescription || settings.tagline || "",
-          inLanguage: "en-NP",
+          description: pageDesc || settings.tagline || "",
+          inLanguage: "en",
           publisher: { "@id": origin + "/#person" },
         },
         {
-          "@type": "WebPage",
+          "@type": "ProfilePage",
           "@id": origin + "/#webpage",
           url: origin + "/",
-          name: settings.seo?.defaultTitle || "Saroj Shrestha",
-          description: settings.seo?.defaultDescription || "",
+          name: pageTitle,
+          description: pageDesc,
           isPartOf: { "@id": origin + "/#website" },
           about: { "@id": origin + "/#person" },
+          mainEntity: { "@id": origin + "/#person" },
           primaryImageOfPage: {
             "@type": "ImageObject",
             url: img,
           },
+          inLanguage: "en",
         },
         person,
+        buildHomeFaqNode(settings, origin),
       ],
     };
   }

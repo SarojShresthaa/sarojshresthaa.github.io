@@ -11,16 +11,8 @@
     "personImage": "/img/saroj.png",
     "ogImageAlt": "Saroj Shrestha — Umbraco and .NET developer in Kathmandu, Nepal",
     "structuredSiteName": "Saroj Shrestha",
-    "structuredSiteAlternateNames": ["saroj.dev", "Saroj Shrestha Kathmandu"],
-    "geo": {
-      "locality": "Kathmandu",
-      "region": "Bagmati Province",
-      "country": "Nepal",
-      "countryCode": "NP",
-      "icbmRegion": "NP-BA",
-      "latitude": 27.7172,
-      "longitude": 85.324
-    }
+    "structuredSiteAlternateNames": ["saroj.dev"],
+    "keywords": "Saroj Shrestha, Umbraco developer, .NET developer, ZAAKS, Kathmandu"
   },
   "navigation": [
     {

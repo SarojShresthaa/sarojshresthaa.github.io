@@ -7,7 +7,6 @@ const path = require("path");
 const {
   readSiteSettings,
   buildWebsitePersonGraph,
-  geoMetaTags,
   siteOrigin,
   absoluteUrl,
 } = require("./seo-person-graph");
@@ -79,8 +78,11 @@ function metaBlock(meta) {
     const graph = JSON.stringify(buildWebsitePersonGraph(settings));
     extra = `\n${relMeLinks()}\n  <script type="application/ld+json" id="portfolio-jsonld">${graph}</script>`;
   }
-  return `  <meta name="author" content="Saroj Shrestha" />
-${geoMetaTags(settings)}
+  const keywordsLine =
+    meta.homeGraph && settings.seo?.keywords
+      ? `\n  <meta name="keywords" content="${escAttr(settings.seo.keywords)}" />`
+      : "";
+  return `  <meta name="author" content="Saroj Shrestha" />${keywordsLine}
   <meta name="robots" content="${robots}" />
   <link rel="canonical" href="${url}" />
   <meta property="og:site_name" content="${escAttr(OG_SITE_NAME)}" />
@@ -102,6 +104,7 @@ function stripOldSeo(html) {
     .replace(/  <meta name="author"[^>]*>\n?/g, "")
     .replace(/  <meta name="geo\.[^"]+"[^>]*>\n?/g, "")
     .replace(/  <meta name="ICBM"[^>]*>\n?/g, "")
+    .replace(/  <meta name="keywords"[^>]*>\n?/g, "")
     .replace(/  <meta name="robots"[^>]*>\n?/g, "")
     .replace(/  <link rel="canonical"[^>]*>\n?/g, "")
     .replace(/  <link rel="me"[^>]*>\n?/g, "")
