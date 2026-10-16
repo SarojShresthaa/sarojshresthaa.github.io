@@ -9,7 +9,9 @@
     "defaultTitle": "Saroj Shrestha – Portfolio | Umbraco & .NET Developer",
     "defaultDescription": "Portfolio of Saroj Shrestha, Umbraco and .NET developer at ZAAKS! in Kathmandu. Projects, experience, and contact — also on GitHub and LinkedIn.",
     "personImage": "/img/saroj.png",
-    "ogImageAlt": "Saroj Shrestha — Umbraco and .NET developer"
+    "ogImageAlt": "Saroj Shrestha — Umbraco and .NET developer",
+    "structuredSiteName": "Saroj Shrestha",
+    "structuredSiteAlternateNames": ["saroj.dev", "Saroj Shrestha Portfolio"]
   },
   "navigation": [
     {

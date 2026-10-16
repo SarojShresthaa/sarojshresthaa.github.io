@@ -16,6 +16,12 @@ const settings = readSiteSettings(ROOT);
 const ORIGIN = siteOrigin(settings);
 const DEFAULT_IMAGE = absoluteUrl(ORIGIN, settings.seo?.personImage || "/img/saroj.png");
 const OG_IMAGE_ALT = settings.seo?.ogImageAlt || "Saroj Shrestha";
+const OG_SITE_NAME = settings.seo?.structuredSiteName || "Saroj Shrestha";
+
+const FAVICON_BLOCK = `  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48.png" />
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/img/favicon-48.png" />`;
 
 const HOME_TITLE =
   settings.seo?.defaultTitle || "Saroj Shrestha – Portfolio | Umbraco & .NET Developer";
@@ -105,7 +111,7 @@ function metaBlock(meta) {
   return `  <meta name="author" content="Saroj Shrestha" />
   <meta name="robots" content="${robots}" />
   <link rel="canonical" href="${url}" />
-  <meta property="og:site_name" content="saroj.dev" />
+  <meta property="og:site_name" content="${escAttr(OG_SITE_NAME)}" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="${escAttr(meta.title)}" />
@@ -158,6 +164,19 @@ function patchFile(rel, meta) {
       "<script src=\"/js/seo.js\"></script>\n  <script src=\"/js/portfolio.js\"></script>"
     );
   }
+
+  html = html.replace(
+    /  <link rel="icon"[^>]*>\n?/g,
+    ""
+  );
+  html = html.replace(
+    /  <link rel="apple-touch-icon"[^>]*>\n?/g,
+    ""
+  );
+  html = html.replace(
+    /<link rel="stylesheet" href="\/css\/style.css" \/>/,
+    `${FAVICON_BLOCK}\n  <link rel="stylesheet" href="/css/style.css" />`
+  );
 
   fs.writeFileSync(file, html);
   console.log("Patched", rel);

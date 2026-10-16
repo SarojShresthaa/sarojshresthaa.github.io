@@ -31,7 +31,11 @@ function buildWebsitePersonGraph(settings) {
         "@type": "WebSite",
         "@id": origin + "/#website",
         url: origin + "/",
-        name: settings.siteName || "saroj.dev",
+        name: settings.seo?.structuredSiteName || "Saroj Shrestha",
+        alternateName: settings.seo?.structuredSiteAlternateNames || [
+          settings.siteName || "saroj.dev",
+          "Saroj Shrestha Portfolio",
+        ],
         description: settings.seo?.defaultDescription || settings.tagline || "",
         inLanguage: "en",
         publisher: { "@id": origin + "/#person" },

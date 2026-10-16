@@ -109,7 +109,11 @@
     upsertMeta("property", "og:description", description);
     upsertMeta("property", "og:url", canonical);
     upsertMeta("property", "og:type", ogType);
-    upsertMeta("property", "og:site_name", siteName);
+    upsertMeta(
+      "property",
+      "og:site_name",
+      settings?.seo?.structuredSiteName || siteName
+    );
     upsertMeta("property", "og:locale", "en_US");
     upsertMeta("property", "og:image", image);
     upsertMeta(
@@ -195,7 +199,11 @@
           "@type": "WebSite",
           "@id": origin + "/#website",
           url: origin + "/",
-          name: settings.siteName || "saroj.dev",
+          name: settings.seo?.structuredSiteName || "Saroj Shrestha",
+          alternateName: settings.seo?.structuredSiteAlternateNames || [
+            settings.siteName || "saroj.dev",
+            "Saroj Shrestha Portfolio",
+          ],
           description: settings.seo?.defaultDescription || settings.tagline || "",
           inLanguage: "en",
           publisher: { "@id": origin + "/#person" },

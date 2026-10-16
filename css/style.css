@@ -43,6 +43,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -52,7 +53,7 @@ body {
   font-size: 16px;
   line-height: 1.6;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition: background 0.25s ease, color 0.25s ease;
 }
 
@@ -157,10 +158,11 @@ select {
 }
 
 .container {
-  width: 75%;
+  width: min(75%, 1536px);
   max-width: 1536px;
   margin-left: auto;
   margin-right: auto;
+  padding-inline: 0;
 }
 
 .header {
@@ -189,11 +191,21 @@ select {
   gap: 1rem;
   padding: 2rem 0 0.5rem;
   min-width: 0;
+  width: 100%;
 }
 
 .menu-cont {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.logo span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .logo {
@@ -354,11 +366,12 @@ select {
 }
 
 .hero h1 {
-  font-size: 32px;
+  font-size: clamp(1.5rem, 5vw, 2rem);
   font-weight: 600;
-  line-height: 42px;
+  line-height: 1.25;
   margin-bottom: 0.5rem;
-  max-width: 36rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .hero h1 .accent,
@@ -370,6 +383,8 @@ select {
   font-size: 1rem;
   line-height: 1.5rem;
   color: var(--gray);
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .hero-copy p,
@@ -478,8 +493,9 @@ select {
 }
 
 .status {
-  width: min(130%, 100%);
+  width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
   border: 1px solid var(--border);
   padding: 0.5rem;
   color: var(--gray);
@@ -545,28 +561,32 @@ select {
 }
 
 .quote-wrap {
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
   margin: 32px auto 96px;
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  min-width: 0;
 }
 
 .quote {
-  display: inline-block;
+  display: block;
   text-align: center;
-  width: fit-content;
-  font-size: 24px;
-  line-height: 32px;
+  width: 100%;
+  max-width: 100%;
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  line-height: 1.35;
   font-weight: 500;
-  padding: 32px;
+  padding: clamp(1rem, 4vw, 2rem);
   border: 1px solid var(--border);
   position: relative;
   color: var(--white);
   background: var(--surface);
   box-shadow: var(--shadow-sm);
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 
 .quote::before,
@@ -1052,6 +1072,7 @@ select {
   display: flex;
   gap: 24px;
   width: 100%;
+  min-width: 0;
 }
 
 .skills-art {
@@ -1523,7 +1544,52 @@ select {
 
 @media (max-width: 1024px) {
   .container {
-    width: 90%;
+    width: calc(100% - 2rem);
+    max-width: none;
+  }
+
+  .page,
+  .hero,
+  .hero-copy,
+  .hero-art,
+  .hero-frame,
+  .about-snippet-inner,
+  .contact-grid,
+  .projects-grid,
+  .project-card,
+  .skills-layout,
+  .skills-cols {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .lead,
+  .about-copy p,
+  .about-snippet .about-copy p,
+  .page-title h2,
+  .page-title p {
+    overflow-wrap: anywhere;
+    max-width: 100%;
+  }
+
+  .section-heading.after::after {
+    width: min(6rem, 22vw);
+    transform: translate(calc(100% + 0.5rem), 50%);
+  }
+
+  .deco-square.quote-sq {
+    display: none;
+  }
+
+  .quote-wrap {
+    align-items: center;
+  }
+
+  .quote-author {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
   }
 
   .skills-art {
@@ -1634,30 +1700,33 @@ select {
 
   .menubar {
     position: fixed;
-    left: 0;
-    top: 4.75rem;
-    height: calc(100vh - 4.75rem);
-    height: calc(100dvh - 4.75rem);
+    inset: 4.75rem 0 0 0;
     width: 100%;
-    max-width: 100vw;
+    max-width: 100%;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     padding-top: 3rem;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: max(1.25rem, 10%);
+    padding-right: max(1.25rem, 10%);
+    padding-bottom: 2rem;
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     background: color-mix(in srgb, var(--bg) 88%, transparent);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
     transform: translateX(100%);
     gap: 2rem;
+    overflow-x: hidden;
     overflow-y: auto;
     z-index: 55;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .menu-open .menubar {
     transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .menu-open {
@@ -1710,6 +1779,25 @@ select {
   .contact-box {
     min-width: 0;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .contact-grid {
+    align-items: stretch;
+  }
+
+  .skills-col .card {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .project-card:hover {
+    transform: none;
+  }
+
+  .card:hover {
+    transform: none;
   }
 
   .section-head {
@@ -1755,7 +1843,7 @@ select {
 
 @media (max-width: 640px) {
   .container {
-    width: calc(100% - 2rem);
+    width: calc(100% - 1.5rem);
     max-width: none;
   }
 
@@ -1787,15 +1875,27 @@ select {
     margin-left: 0;
   }
 
-  .hero h1,
+  .hero h1 {
+    font-size: clamp(1.35rem, 6.5vw, 1.65rem);
+  }
+
   .section-heading,
   .quote,
   .quote-author {
-    font-size: 24px;
+    font-size: clamp(1.15rem, 5vw, 1.5rem);
   }
 
   .section-heading.after::after {
-    width: 40%;
+    display: none;
+  }
+
+  .nav-link {
+    font-size: clamp(1.35rem, 5vw, 1.75rem);
+    white-space: normal;
+  }
+
+  .fact {
+    white-space: normal;
   }
 
   .projects-grid,
