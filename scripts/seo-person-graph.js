@@ -14,16 +14,19 @@ function siteOrigin(settings) {
 }
 
 function absoluteUrl(origin, pathOrUrl) {
-  if (!pathOrUrl) return origin + "/img/saroj.png";
+  if (!pathOrUrl) return origin + "/img/favicon.svg";
   if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
   const p = pathOrUrl.startsWith("/") ? pathOrUrl : "/" + pathOrUrl;
   return origin + p;
 }
 
+function shareImagePath(settings) {
+  return settings.seo?.shareImage || settings.logo || "/img/favicon.svg";
+}
+
 function buildPersonNode(settings, origin) {
   const o = origin || siteOrigin(settings);
   const sameAs = (settings.social || []).map((s) => s.url).filter(Boolean);
-  const img = absoluteUrl(o, settings.seo?.personImage || "/img/saroj.png");
   return {
     "@type": "Person",
     "@id": o + "/#person",
@@ -54,12 +57,6 @@ function buildPersonNode(settings, origin) {
       },
     },
     sameAs,
-    image: {
-      "@type": "ImageObject",
-      url: img,
-      contentUrl: img,
-      caption: "Saroj Shrestha",
-    },
   };
 }
 
@@ -102,7 +99,6 @@ function buildHomeFaqNode(settings, origin) {
 
 function buildWebsitePersonGraph(settings) {
   const origin = siteOrigin(settings);
-  const img = absoluteUrl(origin, settings.seo?.personImage || "/img/saroj.png");
   const person = buildPersonNode(settings, origin);
   const pageDesc = settings.seo?.defaultDescription || "";
   const pageTitle = settings.seo?.defaultTitle || "Saroj Shrestha";
@@ -130,7 +126,6 @@ function buildWebsitePersonGraph(settings) {
         isPartOf: { "@id": origin + "/#website" },
         about: { "@id": origin + "/#person" },
         mainEntity: { "@id": origin + "/#person" },
-        primaryImageOfPage: { "@type": "ImageObject", url: img },
         inLanguage: "en",
       },
       person,

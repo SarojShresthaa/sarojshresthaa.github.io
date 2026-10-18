@@ -20,7 +20,7 @@
   }
 
   function absoluteUrl(origin, pathOrUrl) {
-    if (!pathOrUrl) return origin + "/img/saroj.png";
+    if (!pathOrUrl) return origin + "/img/favicon.svg";
     if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
     const p = pathOrUrl.startsWith("/") ? pathOrUrl : "/" + pathOrUrl;
     return origin + p;
@@ -97,7 +97,13 @@
     const description = opts.description || defaultDesc;
     const path = normalizePath(opts.canonicalPath || opts.path || location.pathname);
     const canonical = origin + (path === "/" ? "/" : path);
-    const image = absoluteUrl(origin, opts.image || settings?.logo || "/img/saroj.png");
+    const image = absoluteUrl(
+      origin,
+      opts.image ||
+        settings?.seo?.shareImage ||
+        settings?.logo ||
+        "/img/favicon.svg"
+    );
     const ogType = opts.type || "website";
 
     document.title = fullTitle;
@@ -115,22 +121,14 @@
       settings?.seo?.structuredSiteName || siteName
     );
     upsertMeta("property", "og:locale", "en_US");
-    upsertMeta("property", "og:image", image);
-    upsertMeta(
-      "property",
-      "og:image:alt",
-      settings?.seo?.ogImageAlt || settings?.seo?.defaultTitle || "Saroj Shrestha"
-    );
-
-    upsertMeta("name", "twitter:card", "summary_large_image");
+    upsertMeta("name", "twitter:card", "summary");
     upsertMeta("name", "twitter:title", fullTitle);
     upsertMeta("name", "twitter:description", description);
-    upsertMeta("name", "twitter:image", image);
 
     if (opts.noindex) {
       upsertMeta("name", "robots", "noindex, follow");
     } else {
-      upsertMeta("name", "robots", "index, follow, max-image-preview:large");
+      upsertMeta("name", "robots", "index, follow, max-image-preview:none");
     }
 
     if (settings?.seo?.keywords && normalizePath(opts.path || location.pathname) === "/") {
@@ -162,7 +160,6 @@
     const img = personImageUrl(settings, o);
     return {
       "@type": "Person",
-      "@id": o + "/#person",
       name: "Saroj Shrestha",
       givenName: "Saroj",
       familyName: "Shrestha",
@@ -193,12 +190,6 @@
       image: {
         "@type": "ImageObject",
         url: img,
-        contentUrl: img,
-        caption: "Saroj Shrestha",
-      },
-    };
-  }
-
   function buildHomeFaqNode(settings, origin) {
     const o = origin || siteOrigin(settings);
     const desc =
@@ -238,7 +229,6 @@
 
   function buildWebsitePersonGraph(settings) {
     const origin = siteOrigin(settings);
-    const img = personImageUrl(settings, origin);
     const person = buildPersonNode(settings, origin);
     const pageDesc = settings.seo?.defaultDescription || "";
     const pageTitle = settings.seo?.defaultTitle || "Saroj Shrestha";
@@ -266,10 +256,6 @@
           isPartOf: { "@id": origin + "/#website" },
           about: { "@id": origin + "/#person" },
           mainEntity: { "@id": origin + "/#person" },
-          primaryImageOfPage: {
-            "@type": "ImageObject",
-            url: img,
-          },
           inLanguage: "en",
         },
         person,
@@ -334,7 +320,7 @@
     personImageUrl,
     buildPersonNode,
     buildWebsitePersonGraph,
-    buildAboutProfileGraph,
+    shareImageUrl,
     buildProjectJsonLd,
     buildBreadcrumbJsonLd,
     DEFAULT_ORIGIN,

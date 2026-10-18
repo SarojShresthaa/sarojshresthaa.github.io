@@ -159,7 +159,6 @@
       title: settings.seo?.defaultTitle,
       description: settings.seo?.defaultDescription || settings.tagline,
       path: "/",
-      image: home.hero?.profileImage || "/img/saroj.png",
       jsonLd: window.PortfolioSeo?.buildWebsitePersonGraph(settings),
     });
     const { projects } = await loadProjects();
@@ -320,7 +319,6 @@
       description: aboutSeo?.description || about.biography?.[0],
       path: "/about",
       noindex: isAboutMeAlias,
-      image: about.profileImage || "/img/saroj.png",
       jsonLd: window.PortfolioSeo?.buildAboutProfileGraph(settings),
     });
     const root = document.querySelector("[data-about-root]");

@@ -15,20 +15,17 @@ const SEOPageMeta = require("../js/seo-page-meta");
 const ROOT = path.join(__dirname, "..");
 const settings = readSiteSettings(ROOT);
 const ORIGIN = siteOrigin(settings);
-const DEFAULT_IMAGE = absoluteUrl(ORIGIN, settings.seo?.personImage || "/img/saroj.png");
-const OG_IMAGE_ALT = settings.seo?.ogImageAlt || "Saroj Shrestha";
 const OG_SITE_NAME = settings.seo?.structuredSiteName || "Saroj Shrestha";
+const ROBOTS_INDEX = "index, follow, max-image-preview:none";
 
-const FAVICON_BLOCK = `  <link rel="icon" href="/favicon.ico" sizes="48x48" />
-  <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48.png" />
-  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/img/favicon-48.png" />`;
+const FAVICON_BLOCK = `  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/img/favicon.svg" />`;
 
 const HOME_TITLE =
-  settings.seo?.defaultTitle || "Saroj Shrestha – Umbraco & .NET Developer";
+  settings.seo?.defaultTitle || "Saroj Shrestha | Umbraco & .NET Developer";
 const HOME_DESC =
   settings.seo?.defaultDescription ||
-  "Saroj Shrestha — Umbraco and .NET developer in Kathmandu, Nepal. Works at ZAAKS!; explore projects, experience, and skills, or connect on GitHub and LinkedIn.";
+  "Saroj Shrestha is an Umbraco and .NET developer in Kathmandu at ZAAKS!. Projects, experience, and open source on GitHub.";
 
 function buildPagesMap() {
   const map = {
@@ -72,7 +69,7 @@ function relMeLinks() {
 
 function metaBlock(meta) {
   const url = ORIGIN + (meta.path === "/" ? "/" : meta.path);
-  const robots = meta.noindex ? "noindex, follow" : "index, follow, max-image-preview:large";
+  const robots = meta.noindex ? "noindex, follow" : ROBOTS_INDEX;
   let extra = "";
   if (meta.homeGraph) {
     const graph = JSON.stringify(buildWebsitePersonGraph(settings));
@@ -91,12 +88,9 @@ function metaBlock(meta) {
   <meta property="og:title" content="${escAttr(meta.title)}" />
   <meta property="og:description" content="${escAttr(meta.description)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${DEFAULT_IMAGE}" />
-  <meta property="og:image:alt" content="${escAttr(OG_IMAGE_ALT)}" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="${escAttr(meta.title)}" />
-  <meta name="twitter:description" content="${escAttr(meta.description)}" />
-  <meta name="twitter:image" content="${DEFAULT_IMAGE}" />${extra}`;
+  <meta name="twitter:description" content="${escAttr(meta.description)}" />${extra}`;
 }
 
 function stripOldSeo(html) {
