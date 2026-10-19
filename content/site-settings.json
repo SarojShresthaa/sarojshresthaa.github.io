@@ -1,6 +1,6 @@
 {
   "status": "published",
-  "siteName": "saroj.dev",
+  "siteName": "Saroj ",
   "tagline": "Umbraco & .NET Developer at ZAAKS! · Kathmandu",
   "logo": "/img/favicon.svg",
   "favicon": "/img/favicon.svg",
@@ -9,7 +9,9 @@
     "defaultTitle": "Saroj Shrestha | Umbraco & .NET Developer",
     "defaultDescription": "Saroj Shrestha is an Umbraco and .NET developer in Kathmandu at ZAAKS!. Projects, experience, and open source on GitHub.",
     "structuredSiteName": "Saroj Shrestha",
-    "structuredSiteAlternateNames": ["saroj.dev"],
+    "structuredSiteAlternateNames": [
+      "saroj.dev"
+    ],
     "keywords": "Saroj Shrestha, Umbraco developer, .NET developer, ZAAKS, Kathmandu"
   },
   "navigation": [
