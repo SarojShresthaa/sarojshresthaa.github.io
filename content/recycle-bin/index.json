@@ -3,6 +3,27 @@
   "title": "Recycle bin",
   "items": [
     {
+      "id": "1792384286813-ptest",
+      "deletedAt": "2026-10-19T04:31:26.813Z",
+      "type": "project",
+      "slug": "ptest",
+      "title": "ptest",
+      "data": {
+        "status": "published",
+        "slug": "ptest",
+        "title": "ptest",
+        "category": "main-work",
+        "description": "",
+        "longDescription": "",
+        "thumbnail": "",
+        "gallery": [],
+        "technologies": [],
+        "githubUrl": "",
+        "demoUrl": "",
+        "featured": false
+      }
+    },
+    {
       "id": "1791736366553-hello",
       "deletedAt": "2026-10-11T16:32:46.553Z",
       "type": "page",
