@@ -35,8 +35,7 @@
     "viewAllHref": "/projects"
   },
   "featuredProjectSlugs": [
-    "block-field-visibility",
-    "open-source-github"
+    "block-field-visibility"
   ],
   "skillsSection": {
     "heading": "skills",
@@ -47,5 +46,6 @@
     "heading": "contact",
     "lead": "Fastest way to reach Saroj Shrestha: GitHub or LinkedIn below. A short note about your Umbraco situation is enough to start.",
     "messageBoxHeading": "Message me here"
-  }
+  },
+  "_featuredSlugs": "block-field-visibility\n"
 }
